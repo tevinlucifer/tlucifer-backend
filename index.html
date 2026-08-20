@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TD</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    body {
+      background: #060b19 url('./bg.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #333;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .hidden {
+      display: none !important;
+    }
+
+    /* GLASSMORPHISM CARD STYLES */
+    .auth-card {
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      padding: 40px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+      width: 400px;
+      text-align: center;
+    }
+    .company-logo {
+      width: 90px;
+      height: auto;
+      margin-bottom: 16px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .auth-card h2 {
+      margin-bottom: 6px;
+      color: #000;
+      font-weight: 700;
+    }
+    .auth-card p {
+      color: #1f2937;
+      font-size: 14px;
+      margin-bottom: 24px;
+      font-weight: 500;
+    }
+    .input-group {
+      margin-bottom: 16px;
+      text-align: left;
+    }
+    .input-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: #111827;
+      margin-bottom: 6px;
+    }
+    .input-group input {
+      width: 100%;
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      border-radius: 8px;
+      font-size: 14px;
+      color: #000;
+      outline: none;
+      backdrop-filter: blur(5px);
+    }
+    .input-group input::placeholder {
+      color: #4b5563;
+    }
+    .input-group input:focus {
+      background: rgba(255, 255, 255, 0.75);
+      border-color: #2563eb;
+    }
+    .forgot-link {
+      display: block;
+      text-align: right;
+      font-size: 12px;
+      color: #1d4ed8;
+      text-decoration: none;
+      margin-top: -8px;
+      margin-bottom: 16px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .btn-primary {
+      width: 100%;
+      padding: 12px;
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      margin-top: 8px;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    }
+    .btn-primary:hover {
+      background-color: #1d4ed8;
+    }
+    .auth-toggle {
+      margin-top: 20px;
+      font-size: 13px;
+      color: #1f2937;
+      font-weight: 500;
+    }
+    .auth-toggle a {
+      color: #1d4ed8;
+      text-decoration: none;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* DASHBOARD STYLES */
+    .dashboard-container {
+      width: 90%;
+      max-width: 1100px;
+      margin: 40px auto;
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(20px);
+      padding: 24px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+    .dash-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: bold;
+      font-size: 24px;
+    }
+    .dash-logo {
+      height: 40px;
+      width: auto;
+      border-radius: 6px;
+    }
+    .user-nav {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 14px;
+    }
+    .btn-logout {
+      padding: 6px 12px;
+      background: rgba(255, 255, 255, 0.8);
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .metric-card {
+      background: rgba(255, 255, 255, 0.8);
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .metric-card span {
+      font-size: 11px;
+      font-weight: 700;
+      color: #6b7280;
+    }
+    .metric-card h3 {
+      font-size: 24px;
+      margin-top: 8px;
+    }
+    .metric-card.pending h3 {
+      color: #d97706;
+    }
+    .form-card {
+      background: rgba(255, 255, 255, 0.8);
+      padding: 20px;
+      border-radius: 12px;
+      display: flex;
+      gap: 16px;
+      align-items: flex-end;
+      margin-bottom: 24px;
+    }
+    .form-card .input-group {
+      margin-bottom: 0;
+      flex: 1;
+    }
+    .table-card {
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 14px;
+    }
+    th, td {
+      padding: 12px 20px;
+      border-bottom: 1px solid #f3f4f6;
+    }
+    th {
+      background-color: rgba(250, 250, 250, 0.8);
+      color: #4b5563;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SIGN IN VIEW -->
+  <div id="signin-view" class="auth-card">
+    <img src="Company%20Logo.png" alt="Company Logo" class="company-logo" onerror="this.src='logo.png'">
+    <h2>Welcome Back</h2>
+    <p>Sign in to your TD account</p>
+    <form onsubmit="handleSignIn(event)">
+      <div class="input-group">
+        <label>Email Address</label>
+        <input type="email" id="signin-email" placeholder="name@example.com" required>
+      </div>
+      <div class="input-group">
+        <label>Password</label>
+        <input type="password" id="signin-pass" placeholder="••••••••" required>
+      </div>
+      <a class="forgot-link" onclick="switchAuthView('forgot')">Forgot Password?</a>
+      <button type="submit" class="btn-primary">Sign In</button>
+    </form>
+    <div class="auth-toggle">
+      Don't have an account? <a onclick="switchAuthView('signup')">Sign Up</a>
+    </div>
+  </div>
+
+  <!-- SIGN UP VIEW -->
+  <div id="signup-view" class="auth-card hidden">
+    <img src="Company%20Logo.png" alt="Company Logo" class="company-logo" onerror="this.src='logo.png'">
+    <h2>Create Account</h2>
+    <p>Get started with TD</p>
+    <form onsubmit="handleSignUp(event)">
+      <div class="input-group">
+        <label>Full Name</label>
+        <input type="text" id="signup-name" placeholder="John Doe" required>
+      </div>
+      <div class="input-group">
+        <label>Email Address</label>
+        <input type="email" id="signup-email" placeholder="name@example.com" required>
+      </div>
+      <div class="input-group">
+        <label>Password</label>
+        <input type="password" id="signup-pass" placeholder="••••••••" required>
+      </div>
+      <button type="submit" class="btn-primary">Continue to Verification</button>
+    </form>
+    <div class="auth-toggle">
+      Already have an account? <a onclick="switchAuthView('signin')">Sign In</a>
+    </div>
+  </div>
+
+  <!-- FORGOT PASSWORD STEP 1 -->
+  <div id="forgot-view" class="auth-card hidden">
+    <img src="Company%20Logo.png" alt="Company Logo" class="company-logo" onerror="this.src='logo.png'">
+    <h2>Reset Password</h2>
+    <p>Enter your account email to receive an OTP</p>
+    <form onsubmit="handleForgotSendOtp(event)">
+      <div class="input-group">
+        <label>Registered Email Address</label>
+        <input type="email" id="forgot-email" placeholder="name@example.com" required>
+      </div>
+      <button type="submit" class="btn-primary">Send Reset Code</button>
+    </form>
+    <div class="auth-toggle">
+      Remember password? <a onclick="switchAuthView('signin')">Sign In</a>
+    </div>
+  </div>
+
+  <!-- FORGOT PASSWORD STEP 2 -->
+  <div id="reset-view" class="auth-card hidden">
+    <img src="Company%20Logo.png" alt="Company Logo" class="company-logo" onerror="this.src='logo.png'">
+    <h2>Set New Password</h2>
+    <p>Enter the code sent to your email and your new password</p>
+    <form onsubmit="handleResetPassword(event)">
+      <div class="input-group">
+        <label>Verification Code</label>
+        <input type="text" id="reset-otp-input" placeholder="123456" maxlength="6" required>
+      </div>
+      <div class="input-group">
+        <label>New Password</label>
+        <input type="password" id="reset-new-pass" placeholder="••••••••" required>
+      </div>
+      <button type="submit" class="btn-primary">Update Password</button>
+    </form>
+    <div class="auth-toggle">
+      <a onclick="switchAuthView('forgot')">← Back to Reset Email</a>
+    </div>
+  </div>
+
+  <!-- SIGN UP VERIFICATION VIEW -->
+  <div id="otp-view" class="auth-card hidden">
+    <img src="Company%20Logo.png" alt="Company Logo" class="company-logo" onerror="this.src='logo.png'">
+    <h2>Verify Email</h2>
+    <p>Enter the 6-digit code sent to your email</p>
+    <form onsubmit="handleVerifyOtp(event)">
+      <div class="input-group">
+        <label>Verification Code</label>
+        <input type="text" id="otp-input" placeholder="123456" maxlength="6" required>
+      </div>
+      <button type="submit" class="btn-primary">Verify & Register</button>
+    </form>
+    <div class="auth-toggle">
+      <a onclick="switchAuthView('signup')">← Back to Sign Up</a>
+    </div>
+  </div>
+
+  <!-- DASHBOARD VIEW -->
+  <div id="dashboard-view" class="dashboard-container hidden">
+    <div class="dash-header">
+      <div class="brand">
+        <img src="Company%20Logo.png" alt="Logo" class="dash-logo" onerror="this.src='logo.png'">
+        TD
+      </div>
+      <div class="user-nav">
+        <span id="user-display-name">User</span>
+        <button class="btn-logout" onclick="handleLogout()">Logout</button>
+      </div>
+    </div>
+
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <span>TOTAL SALES</span>
+        <h3 id="total-sales">$0.00</h3>
+      </div>
+      <div class="metric-card">
+        <span>TOTAL COST</span>
+        <h3 id="total-cost">$0.00</h3>
+      </div>
+      <div class="metric-card">
+        <span>TOTAL PROFIT</span>
+        <h3 id="total-profit">$0.00</h3>
+      </div>
+      <div class="metric-card pending">
+        <span>PENDING CASH</span>
+        <h3 id="pending-cash">$0.00</h3>
+      </div>
+    </div>
+
+    <div class="form-card">
+      <div class="input-group">
+        <label>Date</label>
+        <input type="date" id="entry-date">
+      </div>
+      <div class="input-group">
+        <label>Daily Sales ($)</label>
+        <input type="number" id="entry-sales" placeholder="0.00" step="0.01">
+      </div>
+      <div class="input-group">
+        <label>Daily Cost ($)</label>
+        <input type="number" id="entry-cost" placeholder="0.00" step="0.01">
+      </div>
+      <div class="input-group">
+        <label>Pending Cash ($)</label>
+        <input type="number" id="entry-pending" placeholder="0.00" step="0.01">
+      </div>
+      <button class="btn-primary" style="width: auto; padding: 10px 24px;" onclick="addEntry()">Add Entry</button>
+    </div>
+
+    <div class="table-card">
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Sales</th>
+            <th>Cost</th>
+            <th>Profit</th>
+            <th>Pending Cash</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="entries-table-body">
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    let currentOtp = '';
+    let tempUserData = {};
+    let resetEmailTarget = '';
+    let entries = [];
+
+    document.getElementById('entry-date').valueAsDate = new Date();
+
+    function switchAuthView(view) {
+      document.getElementById('signin-view').classList.add('hidden');
+      document.getElementById('signup-view').classList.add('hidden');
+      document.getElementById('forgot-view').classList.add('hidden');
+      document.getElementById('reset-view').classList.add('hidden');
+      document.getElementById('otp-view').classList.add('hidden');
+
+      if (view === 'signin') document.getElementById('signin-view').classList.remove('hidden');
+      if (view === 'signup') document.getElementById('signup-view').classList.remove('hidden');
+      if (view === 'forgot') document.getElementById('forgot-view').classList.remove('hidden');
+      if (view === 'reset') document.getElementById('reset-view').classList.remove('hidden');
+      if (view === 'otp') document.getElementById('otp-view').classList.remove('hidden');
+    }
+
+    async function handleSignUp(e) {
+      e.preventDefault();
+      const name = document.getElementById('signup-name').value;
+      const email = document.getElementById('signup-email').value;
+      const pass = document.getElementById('signup-pass').value;
+
+      if (localStorage.getItem(`user_${email}`)) {
+        return alert('An account with this email already exists. Please sign in instead.');
+      }
+
+      tempUserData = { name, email, pass };
+      currentOtp = Math.floor(100000 + Math.random() * 900000).toString();
+
+      try {
+        const response = await fetch('/api/send-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, otp: currentOtp })
+        });
+        const data = await response.json();
+
+        if (data.success) {
+          alert('Verification code sent to your email!');
+          switchAuthView('otp');
+        } else {
+          alert('Failed to send OTP: ' + data.error);
+        }
+      } catch (err) {
+        alert('Backend server unreachable. Make sure "node server.js" is running.');
+      }
+    }
+
+    function handleVerifyOtp(e) {
+      e.preventDefault();
+      const inputOtp = document.getElementById('otp-input').value;
+
+      if (inputOtp === currentOtp) {
+        localStorage.setItem(`user_${tempUserData.email}`, JSON.stringify(tempUserData));
+        alert('Account verified and created successfully!');
+        launchDashboard(tempUserData.name);
+      } else {
+        alert('Invalid OTP code. Please try again.');
+      }
+    }
+
+    async function handleForgotSendOtp(e) {
+      e.preventDefault();
+      const email = document.getElementById('forgot-email').value;
+
+      const savedUserRaw = localStorage.getItem(`user_${email}`);
+      if (!savedUserRaw) return alert('No registered account found with this email.');
+
+      resetEmailTarget = email;
+      currentOtp = Math.floor(100000 + Math.random() * 900000).toString();
+
+      try {
+        const response = await fetch('/api/send-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, otp: currentOtp })
+        });
+        const data = await response.json();
+
+        if (data.success) {
+          alert('Password reset OTP sent to your email!');
+          switchAuthView('reset');
+        } else {
+          alert('Failed to send OTP: ' + data.error);
+        }
+      } catch (err) {
+        alert('Backend server unreachable.');
+      }
+    }
+
+    function handleResetPassword(e) {
+      e.preventDefault();
+      const inputOtp = document.getElementById('reset-otp-input').value;
+      const newPass = document.getElementById('reset-new-pass').value;
+
+      if (inputOtp === currentOtp) {
+        const savedUserRaw = localStorage.getItem(`user_${resetEmailTarget}`);
+        let userData = JSON.parse(savedUserRaw);
+        userData.pass = newPass;
+
+        localStorage.setItem(`user_${resetEmailTarget}`, JSON.stringify(userData));
+        alert('Password updated successfully! Please sign in with your new password.');
+        switchAuthView('signin');
+      } else {
+        alert('Invalid OTP code. Please try again.');
+      }
+    }
+
+    function handleSignIn(e) {
+      e.preventDefault();
+      const email = document.getElementById('signin-email').value;
+      const pass = document.getElementById('signin-pass').value;
+
+      const savedUserRaw = localStorage.getItem(`user_${email}`);
+      if (!savedUserRaw) return alert('No account found with this email.');
+
+      const savedUser = JSON.parse(savedUserRaw);
+      if (savedUser.pass === pass) {
+        launchDashboard(savedUser.name);
+      } else {
+        alert('Incorrect password.');
+      }
+    }
+
+    function launchDashboard(name) {
+      document.getElementById('signin-view').classList.add('hidden');
+      document.getElementById('signup-view').classList.add('hidden');
+      document.getElementById('forgot-view').classList.add('hidden');
+      document.getElementById('reset-view').classList.add('hidden');
+      document.getElementById('otp-view').classList.add('hidden');
+      document.getElementById('dashboard-view').classList.remove('hidden');
+      document.getElementById('user-display-name').innerText = name;
+      document.body.style.alignItems = 'flex-start';
+    }
+
+    function handleLogout() {
+      document.getElementById('dashboard-view').classList.add('hidden');
+      document.body.style.alignItems = 'center';
+      switchAuthView('signin');
+    }
+
+    function addEntry() {
+      const date = document.getElementById('entry-date').value;
+      const sales = parseFloat(document.getElementById('entry-sales').value) || 0;
+      const cost = parseFloat(document.getElementById('entry-cost').value) || 0;
+      const pending = parseFloat(document.getElementById('entry-pending').value) || 0;
+      const profit = sales - cost;
+
+      if (!date) return alert('Please select a date.');
+
+      entries.push({ date, sales, cost, profit, pending });
+      updateDashboard();
+
+      document.getElementById('entry-sales').value = '';
+      document.getElementById('entry-cost').value = '';
+      document.getElementById('entry-pending').value = '';
+    }
+
+    function updateDashboard() {
+      let totalSales = 0, totalCost = 0, totalProfit = 0, totalPending = 0;
+      const tbody = document.getElementById('entries-table-body');
+      tbody.innerHTML = '';
+
+      entries.forEach((item, index) => {
+        totalSales += item.sales;
+        totalCost += item.cost;
+        totalProfit += item.profit;
+        totalPending += item.pending;
+
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${item.date}</td>
+          <td>$${item.sales.toFixed(2)}</td>
+          <td>$${item.cost.toFixed(2)}</td>
+          <td>$${item.profit.toFixed(2)}</td>
+          <td>$${item.pending.toFixed(2)}</td>
+          <td><button onclick="deleteEntry(${index})" style="background:none; border:none; color:#ef4444; cursor:pointer;">Delete</button></td>
+        `;
+        tbody.appendChild(row);
+      });
+
+      document.getElementById('total-sales').innerText = `$${totalSales.toFixed(2)}`;
+      document.getElementById('total-cost').innerText = `$${totalCost.toFixed(2)}`;
+      document.getElementById('total-profit').innerText = `$${totalProfit.toFixed(2)}`;
+      document.getElementById('pending-cash').innerText = `$${totalPending.toFixed(2)}`;
+    }
+
+    function deleteEntry(index) {
+      entries.splice(index, 1);
+      updateDashboard();
+    }
+  </script>
+</body>
+</html>
