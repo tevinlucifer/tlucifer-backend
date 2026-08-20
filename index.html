@@ -434,7 +434,7 @@
       currentOtp = Math.floor(100000 + Math.random() * 900000).toString();
 
       try {
-        const response = await fetch('/api/send-otp', {
+        const response = await fetch('https://tlucifer-backend.onrender.com/api/send-otp', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, otp: currentOtp })
@@ -448,7 +448,7 @@
           alert('Failed to send OTP: ' + data.error);
         }
       } catch (err) {
-        alert('Backend server unreachable. Make sure "node server.js" is running.');
+        alert('Backend server unreachable. Make sure your Render service is active.');
       }
     }
 
@@ -476,7 +476,7 @@
       currentOtp = Math.floor(100000 + Math.random() * 900000).toString();
 
       try {
-        const response = await fetch('/api/send-otp', {
+        const response = await fetch('https://tlucifer-backend.onrender.com/api/send-otp', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, otp: currentOtp })
