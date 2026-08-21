@@ -23,12 +23,16 @@ app.get('/', (req, res) => {
 });
 
 // Standard Nodemailer configuration for Gmail
+// Explicit SSL configuration to prevent Render outbound blocks
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  host: 'smtp.gmail.com',
+  port: 465,
+  secure: true, // Uses SSL on port 465
   auth: {
     user: process.env.GMAIL_USER,
     pass: process.env.GMAIL_APP_PASS
-  }
+  },
+  connectionTimeout: 10000 // Fails quickly if blocked rather than hanging forever
 });
 
 // Endpoint to handle sending OTPs
