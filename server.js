@@ -1,14 +1,13 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const nodemailer = require('nodemailer');
 const path = require('path');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Serve static files (CSS, JS, images)
+// Serve static files
 app.use(express.static(__dirname));
 
 // Serve index.html
@@ -22,20 +21,7 @@ app.get('/', (req, res) => {
   });
 });
 
-// Standard Nodemailer configuration for Gmail
-// Explicit SSL configuration to prevent Render outbound blocks
-const transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
-  port: 465,
-  secure: true, // Uses SSL on port 465
-  auth: {
-    user: process.env.GMAIL_USER,
-    pass: process.env.GMAIL_APP_PASS
-  },
-  connectionTimeout: 10000 // Fails quickly if blocked rather than hanging forever
-});
-
-// Endpoint to handle sending OTPs
+// Endpoint to send OTP via Resend HTTP API
 app.post('/api/send-otp', async (req, res) => {
   const { email, otp } = req.body;
 
@@ -44,19 +30,32 @@ app.post('/api/send-otp', async (req, res) => {
   }
 
   try {
-    await transporter.sendMail({
-      from: `"TLucifer Security" <${process.env.GMAIL_USER}>`,
-      to: email,
-      subject: 'TLucifer Verification Code',
-      html: `
-        <div style="font-family: Arial, sans-serif; padding: 20px;">
-          <h2>TLucifer Security Code</h2>
-          <p>Your verification code is:</p>
-          <h1 style="color: #2563eb; letter-spacing: 4px;">${otp}</h1>
-          <p>This code will expire shortly. Do not share it with anyone.</p>
-        </div>
-      `
+    const response = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        from: 'TLucifer Security <onboarding@resend.dev>',
+        to: [email],
+        subject: 'TLucifer Verification Code',
+        html: `
+          <div style="font-family: Arial, sans-serif; padding: 20px;">
+            <h2>TLucifer Security Code</h2>
+            <p>Your verification code is:</p>
+            <h1 style="color: #2563eb; letter-spacing: 4px;">${otp}</h1>
+            <p>This code will expire shortly. Do not share it with anyone.</p>
+          </div>
+        `
+      })
     });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to send email via Resend');
+    }
 
     res.json({ success: true, message: 'OTP sent successfully to email', emailSent: true });
   } catch (error) {
