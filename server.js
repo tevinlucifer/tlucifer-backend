@@ -21,7 +21,7 @@ app.get('/', (req, res) => {
   });
 });
 
-// Endpoint to send OTP via Resend HTTP API
+// Endpoint to send OTP via Brevo API
 app.post('/api/send-otp', async (req, res) => {
   const { email, otp } = req.body;
 
@@ -30,28 +30,28 @@ app.post('/api/send-otp', async (req, res) => {
   }
 
   // 1. Sanitize and validate API key existence
-  const apiKey = process.env.RESEND_API_KEY ? process.env.RESEND_API_KEY.trim() : null;
+  const apiKey = process.env.BREVO_API_KEY ? process.env.BREVO_API_KEY.trim() : null;
 
   if (!apiKey) {
-    console.error("ERROR: RESEND_API_KEY is not defined in environment variables.");
+    console.error("ERROR: BREVO_API_KEY is missing on backend.");
     return res.status(500).json({ 
       success: false, 
-      error: 'Server Error: RESEND_API_KEY is missing on backend.' 
+      error: 'Server Error: BREVO_API_KEY is missing on backend.' 
     });
   }
 
   try {
-    const response = await fetch('https://api.resend.com/emails', {
+    const response = await fetch('https://api.brevo.com/v3/smtp/email', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${apiKey}`,
+        'api-key': apiKey,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        from: 'TLucifer Security <onboarding@resend.dev>',
-        to: [email],
+        sender: { name: 'TLucifer Security', email: 'tevingampalage29@gmail.com' },
+        to: [{ email: email }],
         subject: 'TLucifer Verification Code',
-        html: `
+        htmlContent: `
           <div style="font-family: Arial, sans-serif; padding: 20px;">
             <h2>TLucifer Security Code</h2>
             <p>Your verification code is:</p>
@@ -62,11 +62,10 @@ app.post('/api/send-otp', async (req, res) => {
       })
     });
 
-    const data = await response.json();
-
     if (!response.ok) {
-      console.error('Resend API Error details:', data);
-      throw new Error(data.message || 'Failed to send email via Resend');
+      const errorData = await response.json();
+      console.error('Brevo API Error:', errorData);
+      throw new Error(errorData.message || 'Failed to send OTP via Brevo');
     }
 
     res.json({ success: true, message: 'OTP sent successfully to email', emailSent: true });
