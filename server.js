@@ -8,7 +8,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Serve static files
+// Serve static files (CSS, JS, images)
 app.use(express.static(__dirname));
 
 // Serve index.html
@@ -22,21 +22,18 @@ app.get('/', (req, res) => {
   });
 });
 
-// Hardcode Gmail's IPv4 address directly into host
+// Standard Nodemailer configuration for Gmail
 const transporter = nodemailer.createTransport({
-  host: '142.250.27.108', // Direct IPv4 for smtp.gmail.com
-  port: 465,
-  secure: true, // SSL for port 465
+  host: 'smtp.gmail.com',
+  port: 587,
+  secure: false, // TLS via STARTTLS
   auth: {
     user: process.env.GMAIL_USER,
     pass: process.env.GMAIL_APP_PASS
-  },
-  tls: {
-    rejectUnauthorized: false,
-    servername: 'smtp.gmail.com' // Fixes TLS certificate domain matching
   }
 });
 
+// Endpoint to handle sending OTPs
 app.post('/api/send-otp', async (req, res) => {
   const { email, otp } = req.body;
 
