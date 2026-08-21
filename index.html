@@ -3,26 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TD - Dashboard Overview</title>
+  <title>TD - Management System</title>
   <style>
     :root {
       --bg-overlay: rgba(6, 11, 25, 0.75);
       --card-bg: rgba(248, 249, 250, 0.9);
+      --sidebar-bg: rgba(255, 255, 255, 0.85);
       --text-main: #111827;
       --text-muted: #6b7280;
       --widget-bg: rgba(255, 255, 255, 0.55);
       --input-bg: rgba(255, 255, 255, 0.7);
       --table-header-bg: rgba(243, 244, 246, 0.9);
+      --active-item-bg: rgba(37, 99, 235, 0.1);
+      --active-item-color: #2563eb;
     }
 
     body.dark-theme {
       --bg-overlay: rgba(0, 0, 0, 0.88);
       --card-bg: rgba(17, 24, 39, 0.85);
+      --sidebar-bg: rgba(17, 24, 39, 0.85);
       --text-main: #f9fafb;
       --text-muted: #9ca3af;
       --widget-bg: rgba(31, 41, 55, 0.75);
       --input-bg: rgba(55, 65, 81, 0.8);
       --table-header-bg: rgba(31, 41, 55, 0.9);
+      --active-item-bg: rgba(37, 99, 235, 0.25);
+      --active-item-color: #60a5fa;
     }
 
     * {
@@ -103,16 +109,6 @@
     .input-group input::placeholder {
       color: var(--text-muted);
     }
-    .input-group input:focus {
-      border-color: #2563eb;
-    }
-    .password-hint {
-      font-size: 11px;
-      color: var(--text-muted);
-      margin-top: 5px;
-      line-height: 1.3;
-      font-weight: 500;
-    }
     .forgot-link {
       display: block;
       text-align: right;
@@ -153,11 +149,75 @@
       cursor: pointer;
     }
 
-    /* DASHBOARD WRAPPER */
-    .dashboard-wrapper {
+    /* APP LAYOUT WITH SIDEBAR */
+    .app-container {
+      display: flex;
       width: 100%;
-      max-width: 1200px;
-      margin: 0 auto;
+      max-width: 1440px;
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    /* LEFT SIDEBAR */
+    .sidebar {
+      width: 260px;
+      background: var(--sidebar-bg);
+      backdrop-filter: blur(15px);
+      border-radius: 24px;
+      padding: 24px 16px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+    }
+    .sidebar-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--text-main);
+      padding: 0 12px 24px 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      margin-bottom: 16px;
+    }
+    .sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: 14px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .nav-item:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-main);
+    }
+    .nav-item.active {
+      background: var(--active-item-bg);
+      color: var(--active-item-color);
+      border: 1px solid rgba(37, 99, 235, 0.2);
+    }
+    .nav-item-icon {
+      font-size: 16px;
+      width: 20px;
+      text-align: center;
+    }
+
+    /* MAIN CONTENT WRAPPER */
+    .dashboard-wrapper {
+      flex: 1;
+      width: 100%;
     }
 
     /* TOP NAVBAR */
@@ -169,35 +229,9 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 30px;
+      margin-bottom: 24px;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
       border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    .nav-brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 18px;
-      font-weight: 800;
-      letter-spacing: 0.5px;
-      color: var(--text-main);
-    }
-    .brand-icon {
-      width: 32px;
-      height: 32px;
-      background: #2563eb;
-      transform: rotate(45deg);
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .brand-icon::after {
-      content: '';
-      width: 12px;
-      height: 12px;
-      background: white;
-      border-radius: 3px;
     }
     .nav-links {
       display: flex;
@@ -205,7 +239,7 @@
       gap: 12px;
     }
     .nav-btn {
-      padding: 10px 24px;
+      padding: 8px 20px;
       border-radius: 20px;
       border: none;
       background: transparent;
@@ -213,7 +247,6 @@
       font-weight: 600;
       color: var(--text-muted);
       cursor: pointer;
-      text-decoration: none;
     }
     .nav-btn.active {
       background: #2563eb;
@@ -236,7 +269,6 @@
       justify-content: center;
       cursor: pointer;
       font-size: 16px;
-      margin-right: 4px;
     }
     .icon-circle {
       width: 36px;
@@ -284,7 +316,7 @@
       margin-bottom: 24px;
     }
     .header-title h1 {
-      font-size: 38px;
+      font-size: 34px;
       font-weight: 800;
       color: #ffffff;
       margin-bottom: 4px;
@@ -292,7 +324,7 @@
     }
     .header-title p {
       color: #d1d5db;
-      font-size: 15px;
+      font-size: 14px;
     }
     .header-actions {
       display: flex;
@@ -317,9 +349,6 @@
       border-radius: 20px;
       font-size: 14px;
       font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 8px;
       cursor: pointer;
     }
 
@@ -335,7 +364,6 @@
       backdrop-filter: blur(10px);
       padding: 24px;
       border-radius: 20px;
-      position: relative;
       box-shadow: 0 4px 15px rgba(0,0,0,0.1);
       border: 1px solid rgba(255, 255, 255, 0.1);
     }
@@ -412,9 +440,6 @@
       font-weight: 700;
       color: var(--text-main);
       margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
     }
 
     /* EMBEDDED TD WIDGET STYLING */
@@ -438,11 +463,6 @@
       font-weight: 800;
       font-size: 18px;
       color: var(--text-main);
-    }
-    .td-embedded-widget .dash-logo {
-      height: 28px;
-      width: auto;
-      border-radius: 6px;
     }
     .td-embedded-widget .metrics-grid {
       display: grid;
@@ -544,7 +564,6 @@
       font-size: 14px;
       font-weight: 600;
       cursor: pointer;
-      width: fit-content;
     }
     .chart-container {
       display: flex;
@@ -553,8 +572,8 @@
       margin-top: 10px;
     }
     .donut-chart {
-      width: 160px;
-      height: 160px;
+      width: 140px;
+      height: 140px;
       border-radius: 50%;
       background: conic-gradient(
         #1d4ed8 0% 30.3%, 
@@ -565,14 +584,19 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      position: relative;
     }
     .donut-chart::before {
       content: '';
-      width: 80px;
-      height: 80px;
+      width: 70px;
+      height: 70px;
       background: var(--card-bg);
       border-radius: 50%;
+    }
+    .placeholder-panel {
+      padding: 40px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 16px;
     }
   </style>
 </head>
@@ -586,11 +610,11 @@
     <form id="signin-form" autocomplete="off">
       <div class="input-group">
         <label>Email Address</label>
-        <input type="email" id="signin-email" placeholder="name@example.com" autocomplete="off" required>
+        <input type="email" id="signin-email" placeholder="name@example.com" required>
       </div>
       <div class="input-group">
         <label>Password</label>
-        <input type="password" id="signin-pass" placeholder="••••••••" autocomplete="current-password" required>
+        <input type="password" id="signin-pass" placeholder="••••••••" required>
         <a class="forgot-link" id="btn-to-forgot">Forgot Password?</a>
       </div>
       <button type="submit" id="btn-signin-submit" class="btn-primary">Sign In</button>
@@ -608,16 +632,15 @@
     <form id="signup-form" autocomplete="off">
       <div class="input-group">
         <label>Full Name</label>
-        <input type="text" id="signup-name" placeholder="John Doe" autocomplete="off" required>
+        <input type="text" id="signup-name" placeholder="John Doe" required>
       </div>
       <div class="input-group">
         <label>Email Address</label>
-        <input type="email" id="signup-email" placeholder="name@example.com" autocomplete="off" required>
+        <input type="email" id="signup-email" placeholder="name@example.com" required>
       </div>
       <div class="input-group">
         <label>Password</label>
-        <input type="password" id="signup-pass" placeholder="••••••••" autocomplete="new-password" required>
-        <p class="password-hint">Min. 8 characters with letters, numbers & allowed signs (_ or @)</p>
+        <input type="password" id="signup-pass" placeholder="••••••••" required>
       </div>
       <button type="submit" id="btn-signup-submit" class="btn-primary">Continue to Verification</button>
     </form>
@@ -626,219 +649,245 @@
     </div>
   </div>
 
-  <!-- OTP VERIFICATION VIEW -->
+  <!-- OTP VIEW -->
   <div id="otp-view" class="auth-card hidden">
     <img src="Company%20Logo.png" alt="Company Logo" class="company-logo" onerror="this.src='logo.png'">
     <h2>Verify Email</h2>
-    <p>We've sent a 6-digit code to your email.</p>
+    <p>We've sent a code to your email.</p>
     <form id="otp-form" autocomplete="off">
       <div class="input-group">
         <label>Verification Code</label>
-        <input type="text" id="otp-input" placeholder="123456" maxlength="6" autocomplete="off" required style="text-align: center; letter-spacing: 4px; font-size: 18px;">
+        <input type="text" id="otp-input" placeholder="123456" maxlength="6" required style="text-align: center; letter-spacing: 4px; font-size: 18px;">
       </div>
       <button type="submit" id="btn-otp-submit" class="btn-primary">Verify & Proceed</button>
     </form>
-    <div class="auth-toggle">
-      Didn't get the code? <a id="btn-back-to-signup">Start Over</a>
-    </div>
   </div>
 
   <!-- FORGOT PASSWORD VIEW -->
   <div id="forgot-view" class="auth-card hidden">
     <img src="Company%20Logo.png" alt="Company Logo" class="company-logo" onerror="this.src='logo.png'">
     <h2>Reset Password</h2>
-    <p>Enter your email to receive a password reset link</p>
+    <p>Enter your email to reset password</p>
     <form id="forgot-form" autocomplete="off">
       <div class="input-group">
-        <label>Registered Email Address</label>
-        <input type="email" id="forgot-email" placeholder="name@example.com" autocomplete="off" required>
+        <label>Registered Email</label>
+        <input type="email" id="forgot-email" placeholder="name@example.com" required>
       </div>
-      <button type="submit" class="btn-primary">Send Reset Email</button>
+      <button type="submit" class="btn-primary">Send Reset Link</button>
     </form>
     <div class="auth-toggle">
-      Remember password? <a id="btn-forgot-to-signin">Sign In</a>
+      <a id="btn-forgot-to-signin">Back to Sign In</a>
     </div>
   </div>
 
-  <!-- STREAMLINE DASHBOARD VIEW -->
-  <div id="dashboard-view" class="dashboard-wrapper hidden">
+  <!-- DASHBOARD MAIN CONTAINER -->
+  <div id="dashboard-view" class="app-container hidden">
     
-    <!-- TOP NAVIGATION BAR -->
-    <header class="navbar">
-      <div class="nav-brand">
-        <div class="brand-icon"></div>
-        TD
+    <!-- LEFT SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div style="width: 32px; height: 32px; background: #2563eb; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">TD</div>
+        TD System
       </div>
-      <nav class="nav-links">
-        <a class="nav-btn active">Dashboard</a>
-        <a class="nav-btn">Analytics</a>
-        <a class="nav-btn">Projects</a>
+      <nav class="sidebar-nav">
+        <a class="nav-item active" data-panel="overview"><span class="nav-item-icon">📊</span> Overview</a>
+        <a class="nav-item" data-panel="sales"><span class="nav-item-icon">💼</span> Sales</a>
+        <a class="nav-item" data-panel="accounting"><span class="nav-item-icon">💳</span> Accounting</a>
+        <a class="nav-item" data-panel="stock"><span class="nav-item-icon">📦</span> Stock Management</a>
+        <a class="nav-item" data-panel="production"><span class="nav-item-icon">⚙️</span> Production</a>
+        <a class="nav-item" data-panel="workforce"><span class="nav-item-icon">👥</span> Workforce</a>
+        <a class="nav-item" data-panel="metrics"><span class="nav-item-icon">📈</span> Performance Metrics</a>
+        <a class="nav-item" data-panel="documentation"><span class="nav-item-icon">📄</span> Documentation</a>
+        <a class="nav-item" data-panel="access"><span class="nav-item-icon">🛡️</span> Access Control</a>
+        <a class="nav-item" data-panel="settings"><span class="nav-item-icon">⚙️</span> Settings</a>
       </nav>
-      <div class="user-profile">
-        <button id="theme-toggle" class="theme-toggle-btn" title="Toggle Theme">🌙</button>
-        <div class="icon-circle">🔍</div>
-        <div class="user-info">
-          <span>Hello!</span>
-          <strong id="user-display-name">Jack Rowe</strong>
-        </div>
-        <button class="btn-logout" id="btn-logout">Logout</button>
-      </div>
-    </header>
+    </aside>
 
-    <!-- HEADER TITLE & FILTERS -->
-    <section class="dashboard-header">
-      <div class="header-title">
-        <h1>Dashboard Overview</h1>
-        <p>Monitor your business performance in real-time</p>
-      </div>
-      <div class="header-actions">
-        <select class="select-dropdown">
-          <option>This Month</option>
-          <option>Last Month</option>
-          <option>This Year</option>
-        </select>
-        <button class="btn-filter">
-          <span>Y</span> Filter
-        </button>
-      </div>
-    </section>
-
-    <!-- METRICS OVERVIEW CARDS -->
-    <section class="overview-grid">
-      <div class="stat-card blue">
-        <div class="stat-header">
-          <span class="stat-title">Total Revenue</span>
-          <div class="stat-icon">$</div>
-        </div>
-        <div class="stat-value">$24,580</div>
-        <div class="stat-growth">+12% from last month</div>
-      </div>
-
-      <div class="stat-card">
-        <div class="stat-header">
-          <span class="stat-title">Active Users</span>
-          <div class="stat-icon">👤</div>
-        </div>
-        <div class="stat-value">1,245</div>
-        <div class="stat-growth">+8% growth</div>
-      </div>
-
-      <div class="stat-card">
-        <div class="stat-header">
-          <span class="stat-title">New Signups</span>
-          <div class="stat-icon">➔</div>
-        </div>
-        <div class="stat-value blue-text">320</div>
-        <div class="stat-growth">+5% this week</div>
-      </div>
-
-      <div class="stat-card">
-        <div class="stat-header">
-          <span class="stat-title">Conversion Rate</span>
-          <div class="stat-icon">🕒</div>
-        </div>
-        <div class="stat-value">4.8%</div>
-        <div class="stat-growth">+1.2% increase</div>
-      </div>
-    </section>
-
-    <!-- LOWER ANALYTICS SECTION -->
-    <section class="charts-grid">
+    <!-- RIGHT CONTENT WRAPPER -->
+    <main class="dashboard-wrapper">
       
-      <!-- SALES CONTAINER BOX -->
-      <div class="widget-box">
-        <div class="widget-box-title">📊 Sales</div>
-        <div class="td-embedded-widget">
-          <div class="dash-header">
-            <div class="brand">
-              <img src="Company%20Logo.png" alt="Logo" class="dash-logo" onerror="this.src='logo.png'">
-              TD
-            </div>
+      <!-- TOP NAVIGATION BAR -->
+      <header class="navbar">
+        <div class="nav-links">
+          <button class="nav-btn active">Dashboard</button>
+          <button class="nav-btn">Analytics</button>
+          <button class="nav-btn">Projects</button>
+        </div>
+        <div class="user-profile">
+          <button id="theme-toggle" class="theme-toggle-btn" title="Toggle Theme">🌙</button>
+          <div class="icon-circle">🔍</div>
+          <div class="user-info">
+            <span>Hello!</span>
+            <strong id="user-display-name">User</strong>
           </div>
+          <button class="btn-logout" id="btn-logout">Logout</button>
+        </div>
+      </header>
 
-          <div class="metrics-grid">
-            <div class="metric-card">
-              <span>TOTAL SALES</span>
-              <h3 id="total-sales">$0.00</h3>
-            </div>
-            <div class="metric-card">
-              <span>TOTAL COST</span>
-              <h3 id="total-cost">$0.00</h3>
-            </div>
-            <div class="metric-card">
-              <span>TOTAL PROFIT</span>
-              <h3 id="total-profit">$0.00</h3>
-            </div>
-            <div class="metric-card pending">
-              <span>PENDING CASH</span>
-              <h3 id="pending-cash">$0.00</h3>
-            </div>
-          </div>
+      <!-- HEADER TITLE -->
+      <section class="dashboard-header">
+        <div class="header-title">
+          <h1 id="page-title">Overview</h1>
+          <p id="page-subtitle">Monitor your business performance in real-time</p>
+        </div>
+        <div class="header-actions">
+          <select class="select-dropdown">
+            <option>This Month</option>
+            <option>Last Month</option>
+            <option>This Year</option>
+          </select>
+          <button class="btn-filter">Filter</button>
+        </div>
+      </section>
 
-          <div class="form-card">
-            <div class="input-group">
-              <label>Date</label>
-              <input type="date" id="entry-date">
+      <!-- OVERVIEW PANEL CONTENT -->
+      <div id="panel-overview" class="panel-content">
+        <section class="overview-grid">
+          <div class="stat-card blue">
+            <div class="stat-header">
+              <span class="stat-title">Total Revenue</span>
+              <div class="stat-icon">$</div>
             </div>
-            <div class="input-group">
-              <label>Daily Sales ($)</label>
-              <input type="number" id="entry-sales" placeholder="0.00" step="0.01">
-            </div>
-            <div class="input-group">
-              <label>Daily Cost ($)</label>
-              <input type="number" id="entry-cost" placeholder="0.00" step="0.01">
-            </div>
-            <div class="input-group">
-              <label>Pending Cash ($)</label>
-              <input type="number" id="entry-pending" placeholder="0.00" step="0.01">
-            </div>
-            <button class="btn-primary" style="width: auto; padding: 6px 14px; font-size: 12px;" id="btn-add-entry">Add Entry</button>
+            <div class="stat-value">$24,580</div>
+            <div class="stat-growth">+12% from last month</div>
           </div>
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-title">Active Users</span>
+              <div class="stat-icon">👤</div>
+            </div>
+            <div class="stat-value">1,245</div>
+            <div class="stat-growth">+8% growth</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-title">New Signups</span>
+              <div class="stat-icon">➔</div>
+            </div>
+            <div class="stat-value blue-text">320</div>
+            <div class="stat-growth">+5% this week</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-title">Conversion Rate</span>
+              <div class="stat-icon">🕒</div>
+            </div>
+            <div class="stat-value">4.8%</div>
+            <div class="stat-growth">+1.2% increase</div>
+          </div>
+        </section>
 
-          <div class="table-card">
-            <table>
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>Sales</th>
-                  <th>Cost</th>
-                  <th>Profit</th>
-                  <th>Pending Cash</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody id="entries-table-body">
-              </tbody>
-            </table>
+        <section class="charts-grid">
+          <div class="widget-box">
+            <div class="widget-box-title">📊 Activity Summary</div>
+            <p style="color: var(--text-muted); font-size: 14px;">Select the <strong>Sales</strong> panel from the left sidebar to view and manage your sales entries and transactions.</p>
           </div>
+          <div class="widget-box">
+            <div class="revenue-analytics">
+              <div>
+                <div class="revenue-title">Revenue Analytics</div>
+                <div class="revenue-amount">$120</div>
+                <button class="btn-payment">Payment</button>
+              </div>
+              <div class="chart-container">
+                <div style="font-size: 12px; color: var(--text-muted); line-height: 1.8;">
+                  <div><strong style="color:#1d4ed8;">Q4:</strong> 30.3%</div>
+                  <div><strong style="color:#3b82f6;">Q1:</strong> 13.1%</div>
+                  <div><strong style="color:#60a5fa;">Q2:</strong> 28.6%</div>
+                  <div><strong style="color:#93c5fd;">Q3:</strong> 28%</div>
+                </div>
+                <div class="donut-chart"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- SALES PANEL CONTENT (CONTAINING THE REQUESTED TD BOX) -->
+      <div id="panel-sales" class="panel-content hidden">
+        <section class="charts-grid" style="grid-template-columns: 1fr;">
+          <div class="widget-box">
+            <div class="widget-box-title">📊 Sales Management</div>
+            <div class="td-embedded-widget">
+              <div class="dash-header">
+                <div class="brand">
+                  <img src="Company%20Logo.png" alt="Logo" style="height:28px; width:auto; border-radius:6px;" onerror="this.src='logo.png'">
+                  TD Sales Entry
+                </div>
+              </div>
+
+              <div class="metrics-grid">
+                <div class="metric-card">
+                  <span>TOTAL SALES</span>
+                  <h3 id="total-sales">$0.00</h3>
+                </div>
+                <div class="metric-card">
+                  <span>TOTAL COST</span>
+                  <h3 id="total-cost">$0.00</h3>
+                </div>
+                <div class="metric-card">
+                  <span>TOTAL PROFIT</span>
+                  <h3 id="total-profit">$0.00</h3>
+                </div>
+                <div class="metric-card pending">
+                  <span>PENDING CASH</span>
+                  <h3 id="pending-cash">$0.00</h3>
+                </div>
+              </div>
+
+              <div class="form-card">
+                <div class="input-group">
+                  <label>Date</label>
+                  <input type="date" id="entry-date">
+                </div>
+                <div class="input-group">
+                  <label>Daily Sales ($)</label>
+                  <input type="number" id="entry-sales" placeholder="0.00" step="0.01">
+                </div>
+                <div class="input-group">
+                  <label>Daily Cost ($)</label>
+                  <input type="number" id="entry-cost" placeholder="0.00" step="0.01">
+                </div>
+                <div class="input-group">
+                  <label>Pending Cash ($)</label>
+                  <input type="number" id="entry-pending" placeholder="0.00" step="0.01">
+                </div>
+                <button class="btn-primary" style="width: auto; padding: 6px 14px; font-size: 12px;" id="btn-add-entry">Add Entry</button>
+              </div>
+
+              <div class="table-card">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>Sales</th>
+                      <th>Cost</th>
+                      <th>Profit</th>
+                      <th>Pending Cash</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="entries-table-body">
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- PLACEHOLDER PANELS FOR OTHER SIDEBAR ITEMS -->
+      <div id="panel-generic" class="panel-content hidden">
+        <div class="widget-box placeholder-panel">
+          <h2 id="generic-title" style="margin-bottom: 10px; color: var(--text-main);">Panel Title</h2>
+          <p>This module is currently active. Additional metrics and configurations can be placed here.</p>
         </div>
       </div>
 
-      <!-- REVENUE ANALYTICS BOX -->
-      <div class="widget-box">
-        <div class="revenue-analytics">
-          <div>
-            <div class="revenue-title">Revenue Analytics</div>
-            <div class="revenue-amount">$120</div>
-            <button class="btn-payment">Payment</button>
-          </div>
-          <div class="chart-container">
-            <div style="font-size: 12px; color: var(--text-muted); line-height: 1.8;">
-              <div><strong style="color:#1d4ed8;">Q4:</strong> 30.3%</div>
-              <div><strong style="color:#3b82f6;">Q1:</strong> 13.1%</div>
-              <div><strong style="color:#60a5fa;">Q2:</strong> 28.6%</div>
-              <div><strong style="color:#93c5fd;">Q3:</strong> 28%</div>
-            </div>
-            <div class="donut-chart"></div>
-          </div>
-        </div>
-      </div>
-
-    </section>
-
+    </main>
   </div>
 
-  <!-- FIREBASE MODULE & SCRIPT LOGIC -->
+  <!-- FIREBASE & JS SCRIPT -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { 
@@ -872,7 +921,6 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getDatabase(app);
-
     const BACKEND_URL = "https://tlucifer-backend.onrender.com";
 
     let tempUserData = { mode: '', name: '', email: '', pass: '', generatedOtp: '' };
@@ -885,23 +933,41 @@
     const themeBtn = document.getElementById('theme-toggle');
     themeBtn.addEventListener('click', () => {
       document.body.classList.toggle('dark-theme');
-      if (document.body.classList.contains('dark-theme')) {
-        themeBtn.innerText = '☀️';
-      } else {
-        themeBtn.innerText = '🌙';
-      }
+      themeBtn.innerText = document.body.classList.contains('dark-theme') ? '☀️' : '🌙';
+    });
+
+    // SIDEBAR TAB SWITCHING
+    const navItems = document.querySelectorAll('.sidebar-nav .nav-item');
+    navItems.forEach(item => {
+      item.addEventListener('click', () => {
+        navItems.forEach(nav => nav.classList.remove('active'));
+        item.classList.add('active');
+
+        const panelKey = item.getAttribute('data-panel');
+        const panelName = item.innerText.trim();
+        
+        document.getElementById('page-title').innerText = panelName;
+        document.getElementById('page-subtitle').innerText = `Manage and view ${panelName.toLowerCase()} details`;
+
+        document.querySelectorAll('.panel-content').forEach(p => p.classList.add('hidden'));
+
+        if (panelKey === 'overview') {
+          document.getElementById('panel-overview').classList.remove('hidden');
+        } else if (panelKey === 'sales') {
+          document.getElementById('panel-sales').classList.remove('hidden');
+        } else {
+          document.getElementById('generic-title').innerText = panelName;
+          document.getElementById('panel-generic').classList.remove('hidden');
+        }
+      });
     });
 
     function clearAllForms() {
       document.querySelectorAll('form').forEach(form => form.reset());
-      document.querySelectorAll('input').forEach(input => {
-        if (input.type !== 'date') input.value = '';
-      });
     }
 
     function switchAuthView(view) {
       clearAllForms();
-
       document.getElementById('signin-view').classList.add('hidden');
       document.getElementById('signup-view').classList.add('hidden');
       document.getElementById('otp-view').classList.add('hidden');
@@ -914,7 +980,7 @@
       if (view === 'forgot') document.getElementById('forgot-view').classList.remove('hidden');
       if (view === 'dashboard') {
         document.getElementById('dashboard-view').classList.remove('hidden');
-        document.body.style.alignItems = 'flex-start';
+        document.body.style.alignItems = 'stretch';
       } else {
         document.body.style.alignItems = 'center';
       }
@@ -924,9 +990,8 @@
     document.getElementById('btn-to-signin').addEventListener('click', () => switchAuthView('signin'));
     document.getElementById('btn-to-forgot').addEventListener('click', () => switchAuthView('forgot'));
     document.getElementById('btn-forgot-to-signin').addEventListener('click', () => switchAuthView('signin'));
-    document.getElementById('btn-back-to-signup').addEventListener('click', () => switchAuthView('signin'));
 
-    // AUTH OBSERVER & REALTIME DATABASE SYNC
+    // AUTH STATE OBSERVER
     onAuthStateChanged(auth, (user) => {
       if (user) {
         currentUser = user;
@@ -951,23 +1016,13 @@
       }
     });
 
-    function isValidPassword(password) {
-      const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d_@]{8,}$/;
-      return passwordRegex.test(password);
-    }
-
-    // SIGNUP & OTP REQUEST
+    // SIGNIN / SIGNUP / OTP HANDLERS
     document.getElementById('signup-form').addEventListener('submit', async (e) => {
       e.preventDefault();
-      
       const submitBtn = document.getElementById('btn-signup-submit');
       const name = document.getElementById('signup-name').value;
       const email = document.getElementById('signup-email').value;
       const pass = document.getElementById('signup-pass').value;
-
-      if (!isValidPassword(pass)) {
-        return alert("Password must be at least 8 characters long and include letters, numbers, and allowed signs (_ or @).");
-      }
 
       const generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
       tempUserData = { mode: 'signup', name, email, pass, generatedOtp };
@@ -981,27 +1036,23 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, otp: generatedOtp })
         });
-
         const result = await response.json();
-
         if (result.success) {
-          alert('Verification code sent to your email address!');
+          alert('Verification code sent to your email!');
           switchAuthView('otp');
         } else {
-          alert('Failed to send OTP: ' + (result.error || 'Server error'));
+          alert('Error: ' + (result.error || 'Failed to send OTP'));
         }
-      } catch (error) {
-        alert('Backend Connection Error: ' + error.message);
+      } catch (err) {
+        alert('Backend Error: ' + err.message);
       } finally {
         submitBtn.innerText = "Continue to Verification";
         submitBtn.disabled = false;
       }
     });
 
-    // SIGN IN & OTP REQUEST
     document.getElementById('signin-form').addEventListener('submit', async (e) => {
       e.preventDefault();
-
       const submitBtn = document.getElementById('btn-signin-submit');
       const email = document.getElementById('signin-email').value;
       const pass = document.getElementById('signin-pass').value;
@@ -1018,94 +1069,66 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, otp: generatedOtp })
         });
-
         const result = await response.json();
-
         if (result.success) {
-          alert('Verification code sent to your email address!');
+          alert('Verification code sent to your email!');
           switchAuthView('otp');
         } else {
-          alert('Failed to send OTP: ' + (result.error || 'Server error'));
+          alert('Error: ' + (result.error || 'Failed to send OTP'));
         }
-      } catch (error) {
-        alert('Backend Connection Error: ' + error.message);
+      } catch (err) {
+        alert('Backend Error: ' + err.message);
       } finally {
         submitBtn.innerText = "Sign In";
         submitBtn.disabled = false;
       }
     });
 
-    // VERIFY OTP & COMPLETE ACTION
     document.getElementById('otp-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const enteredOtp = document.getElementById('otp-input').value.trim();
 
       if (enteredOtp !== tempUserData.generatedOtp) {
-        return alert("Invalid verification code. Please check your email and try again.");
+        return alert("Invalid verification code.");
       }
 
       try {
         if (tempUserData.mode === 'signup') {
           const userCredential = await createUserWithEmailAndPassword(auth, tempUserData.email, tempUserData.pass);
           await updateProfile(userCredential.user, { displayName: tempUserData.name });
-          alert('Email verified! Account created successfully.');
-        } else if (tempUserData.mode === 'signin') {
+        } else {
           await signInWithEmailAndPassword(auth, tempUserData.email, tempUserData.pass);
         }
         clearAllForms();
-      } catch (error) {
-        alert('Authentication Error: ' + error.message);
+      } catch (err) {
+        alert('Auth Error: ' + err.message);
       }
     });
 
-    // FORGOT PASSWORD
-    document.getElementById('forgot-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const email = document.getElementById('forgot-email').value;
-
-      try {
-        await sendPasswordResetEmail(auth, email);
-        alert('Password reset link sent to your email address!');
-        switchAuthView('signin');
-      } catch (error) {
-        alert('Error: ' + error.message);
-      }
-    });
-
-    // LOGOUT
     document.getElementById('btn-logout').addEventListener('click', async () => {
-      try {
-        await signOut(auth);
-        localStorage.clear();
-        sessionStorage.clear();
-        clearAllForms();
-        switchAuthView('signin');
-      } catch (error) {
-        alert('Logout error: ' + error.message);
-      }
+      await signOut(auth);
+      switchAuthView('signin');
     });
 
-    // REALTIME DATABASE DASHBOARD OPERATIONS
+    // SALES DATA CALCULATIONS
     document.getElementById('btn-add-entry').addEventListener('click', async () => {
-      if (!currentUser) return alert('Session expired. Please log in again.');
-
+      if (!currentUser) return alert('Session expired.');
       const date = document.getElementById('entry-date').value;
       const sales = parseFloat(document.getElementById('entry-sales').value) || 0;
       const cost = parseFloat(document.getElementById('entry-cost').value) || 0;
       const pending = parseFloat(document.getElementById('entry-pending').value) || 0;
       const profit = sales - cost;
 
-      if (!date) return alert('Please select a date.');
+      if (!date) return alert('Select a date.');
 
       try {
         const entriesRef = ref(db, `users/${currentUser.uid}/entries`);
         await push(entriesRef, { date, sales, cost, profit, pending });
-
         document.getElementById('entry-sales').value = '';
         document.getElementById('entry-cost').value = '';
         document.getElementById('entry-pending').value = '';
-      } catch (error) {
-        alert('Error saving record: ' + error.message);
+      } catch (err) {
+        alert('Error: ' + err.message);
       }
     });
 
@@ -1141,12 +1164,7 @@
         button.addEventListener('click', async (e) => {
           const entryId = e.target.getAttribute('data-id');
           if (currentUser && entryId) {
-            try {
-              const itemRef = ref(db, `users/${currentUser.uid}/entries/${entryId}`);
-              await remove(itemRef);
-            } catch (err) {
-              alert('Error removing record: ' + err.message);
-            }
+            await remove(ref(db, `users/${currentUser.uid}/entries/${entryId}`));
           }
         });
       });
