@@ -231,14 +231,14 @@
     <img src="Company%20Logo.png" alt="Company Logo" class="company-logo" onerror="this.src='logo.png'">
     <h2>Welcome Back</h2>
     <p>Sign in to your TD account</p>
-    <form id="signin-form">
+    <form id="signin-form" autocomplete="off">
       <div class="input-group">
         <label>Email Address</label>
-        <input type="email" id="signin-email" placeholder="name@example.com" required>
+        <input type="email" id="signin-email" placeholder="name@example.com" autocomplete="off" required>
       </div>
       <div class="input-group">
         <label>Password</label>
-        <input type="password" id="signin-pass" placeholder="••••••••" required>
+        <input type="password" id="signin-pass" placeholder="••••••••" autocomplete="current-password" required>
       </div>
       <a class="forgot-link" id="btn-to-forgot">Forgot Password?</a>
       <button type="submit" class="btn-primary">Sign In</button>
@@ -253,18 +253,18 @@
     <img src="Company%20Logo.png" alt="Company Logo" class="company-logo" onerror="this.src='logo.png'">
     <h2>Create Account</h2>
     <p>Get started with TD</p>
-    <form id="signup-form">
+    <form id="signup-form" autocomplete="off">
       <div class="input-group">
         <label>Full Name</label>
-        <input type="text" id="signup-name" placeholder="John Doe" required>
+        <input type="text" id="signup-name" placeholder="John Doe" autocomplete="off" required>
       </div>
       <div class="input-group">
         <label>Email Address</label>
-        <input type="email" id="signup-email" placeholder="name@example.com" required>
+        <input type="email" id="signup-email" placeholder="name@example.com" autocomplete="off" required>
       </div>
       <div class="input-group">
         <label>Password</label>
-        <input type="password" id="signup-pass" placeholder="••••••••" required>
+        <input type="password" id="signup-pass" placeholder="••••••••" autocomplete="new-password" required>
       </div>
       <button type="submit" id="btn-signup-submit" class="btn-primary">Continue to Verification</button>
     </form>
@@ -278,10 +278,10 @@
     <img src="Company%20Logo.png" alt="Company Logo" class="company-logo" onerror="this.src='logo.png'">
     <h2>Verify Email</h2>
     <p>We've sent a 6-digit code to your email.</p>
-    <form id="otp-form">
+    <form id="otp-form" autocomplete="off">
       <div class="input-group">
         <label>Verification Code</label>
-        <input type="text" id="otp-input" placeholder="123456" maxlength="6" required style="text-align: center; letter-spacing: 4px; font-size: 18px;">
+        <input type="text" id="otp-input" placeholder="123456" maxlength="6" autocomplete="off" required style="text-align: center; letter-spacing: 4px; font-size: 18px;">
       </div>
       <button type="submit" class="btn-primary">Verify & Register</button>
     </form>
@@ -295,10 +295,10 @@
     <img src="Company%20Logo.png" alt="Company Logo" class="company-logo" onerror="this.src='logo.png'">
     <h2>Reset Password</h2>
     <p>Enter your email to receive a password reset link</p>
-    <form id="forgot-form">
+    <form id="forgot-form" autocomplete="off">
       <div class="input-group">
         <label>Registered Email Address</label>
-        <input type="email" id="forgot-email" placeholder="name@example.com" required>
+        <input type="email" id="forgot-email" placeholder="name@example.com" autocomplete="off" required>
       </div>
       <button type="submit" class="btn-primary">Send Reset Email</button>
     </form>
@@ -412,8 +412,20 @@
 
     document.getElementById('entry-date').valueAsDate = new Date();
 
+    // CLEAR ALL INPUT FIELDS IN ALL FORMS
+    function clearAllForms() {
+      document.querySelectorAll('form').forEach(form => form.reset());
+      document.querySelectorAll('input').forEach(input => {
+        if (input.type !== 'date') {
+          input.value = '';
+        }
+      });
+    }
+
     // VIEW SWITCHING LOGIC
     function switchAuthView(view) {
+      clearAllForms(); // Clear all input values when switching views
+
       document.getElementById('signin-view').classList.add('hidden');
       document.getElementById('signup-view').classList.add('hidden');
       document.getElementById('otp-view').classList.add('hidden');
@@ -449,6 +461,13 @@
       }
     });
 
+    // PASSWORD VALIDATION FUNCTION
+    function isValidPassword(password) {
+      // Must be at least 8 characters, containing A-Z / a-z, numbers, and allowed signs (_ or @)
+      const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d_@]{8,}$/;
+      return passwordRegex.test(password);
+    }
+
     // 1. STEP ONE: REQUEST OTP FROM RENDER BACKEND
     document.getElementById('signup-form').addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -458,8 +477,8 @@
       const email = document.getElementById('signup-email').value;
       const pass = document.getElementById('signup-pass').value;
 
-      if (pass.length < 6) {
-        return alert("Password must be at least 6 characters long.");
+      if (!isValidPassword(pass)) {
+        return alert("Password must be at least 8 characters long and include letters, numbers, and allowed signs (_ or @).");
       }
 
       // Generate a 6-digit OTP code
@@ -507,7 +526,7 @@
         const userCredential = await createUserWithEmailAndPassword(auth, tempUserData.email, tempUserData.pass);
         await updateProfile(userCredential.user, { displayName: tempUserData.name });
         alert('Email verified! Account created successfully.');
-        document.getElementById('otp-input').value = '';
+        clearAllForms();
       } catch (error) {
         alert('Firebase Registration Error: ' + error.message);
       }
@@ -544,6 +563,10 @@
     document.getElementById('btn-logout').addEventListener('click', async () => {
       try {
         await signOut(auth);
+        localStorage.clear();
+        sessionStorage.clear();
+        clearAllForms();
+        switchAuthView('signin');
       } catch (error) {
         alert('Logout error: ' + error.message);
       }
