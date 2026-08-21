@@ -24,9 +24,7 @@ app.get('/', (req, res) => {
 
 // Standard Nodemailer configuration for Gmail
 const transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
-  port: 587,
-  secure: false, // TLS via STARTTLS
+  service: 'gmail',
   auth: {
     user: process.env.GMAIL_USER,
     pass: process.env.GMAIL_APP_PASS
