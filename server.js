@@ -8,10 +8,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Serve static files (images, CSS, JS)
+// Serve static files
 app.use(express.static(__dirname));
 
-// Serve index.html with error logging
+// Serve index.html
 app.get('/', (req, res) => {
   const filePath = path.join(__dirname, 'index.html');
   res.sendFile(filePath, (err) => {
@@ -22,16 +22,19 @@ app.get('/', (req, res) => {
   });
 });
 
-// Nodemailer transport configured with IPv4 to work on Render
+// Hardcode Gmail's IPv4 address directly into host
 const transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
-  port: 587,
-  secure: false, // use TLS
+  host: '142.250.27.108', // Direct IPv4 for smtp.gmail.com
+  port: 465,
+  secure: true, // SSL for port 465
   auth: {
     user: process.env.GMAIL_USER,
     pass: process.env.GMAIL_APP_PASS
   },
-  family: 4 // Forces IPv4 connection to avoid ENETUNREACH errors on Render
+  tls: {
+    rejectUnauthorized: false,
+    servername: 'smtp.gmail.com' // Fixes TLS certificate domain matching
+  }
 });
 
 app.post('/api/send-otp', async (req, res) => {
