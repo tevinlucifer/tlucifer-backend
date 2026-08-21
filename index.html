@@ -83,13 +83,20 @@
       background: rgba(255, 255, 255, 0.75);
       border-color: #2563eb;
     }
+    .password-hint {
+      font-size: 11px;
+      color: #1f2937;
+      margin-top: 5px;
+      line-height: 1.3;
+      font-weight: 500;
+    }
     .forgot-link {
       display: block;
       text-align: right;
       font-size: 12px;
       color: #1d4ed8;
       text-decoration: none;
-      margin-top: -8px;
+      margin-top: 6px;
       margin-bottom: 16px;
       cursor: pointer;
       font-weight: 600;
@@ -239,8 +246,8 @@
       <div class="input-group">
         <label>Password</label>
         <input type="password" id="signin-pass" placeholder="••••••••" autocomplete="current-password" required>
+        <a class="forgot-link" id="btn-to-forgot">Forgot Password?</a>
       </div>
-      <a class="forgot-link" id="btn-to-forgot">Forgot Password?</a>
       <button type="submit" class="btn-primary">Sign In</button>
     </form>
     <div class="auth-toggle">
@@ -265,6 +272,7 @@
       <div class="input-group">
         <label>Password</label>
         <input type="password" id="signup-pass" placeholder="••••••••" autocomplete="new-password" required>
+        <p class="password-hint">Min. 8 characters with letters, numbers & allowed signs (_ or @)</p>
       </div>
       <button type="submit" id="btn-signup-submit" class="btn-primary">Continue to Verification</button>
     </form>
@@ -389,10 +397,18 @@
       signOut, 
       onAuthStateChanged 
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { 
+      getDatabase, 
+      ref, 
+      push, 
+      onValue, 
+      remove 
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyAHaToGc7F2vlQt6bDXRMMHjnqRf4OANfc",
       authDomain: "tlucifer-auth.firebaseapp.com",
+      databaseURL: "https://tlucifer-auth-default-rtdb.firebaseio.com",
       projectId: "tlucifer-auth",
       storageBucket: "tlucifer-auth.firebasestorage.app",
       messagingSenderId: "249663219994",
@@ -402,29 +418,25 @@
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
+    const db = getDatabase(app);
 
-    // Live Render Backend URL for OTP Dispatch
     const BACKEND_URL = "https://tlucifer-backend.onrender.com";
 
-    // Temporary storage for sign up state
     let tempUserData = { name: '', email: '', pass: '', generatedOtp: '' };
+    let currentUser = null;
     let entries = [];
 
     document.getElementById('entry-date').valueAsDate = new Date();
 
-    // CLEAR ALL INPUT FIELDS IN ALL FORMS
     function clearAllForms() {
       document.querySelectorAll('form').forEach(form => form.reset());
       document.querySelectorAll('input').forEach(input => {
-        if (input.type !== 'date') {
-          input.value = '';
-        }
+        if (input.type !== 'date') input.value = '';
       });
     }
 
-    // VIEW SWITCHING LOGIC
     function switchAuthView(view) {
-      clearAllForms(); // Clear all input values when switching views
+      clearAllForms();
 
       document.getElementById('signin-view').classList.add('hidden');
       document.getElementById('signup-view').classList.add('hidden');
@@ -444,31 +456,44 @@
       }
     }
 
-    // NAVIGATION LISTENERS
     document.getElementById('btn-to-signup').addEventListener('click', () => switchAuthView('signup'));
     document.getElementById('btn-to-signin').addEventListener('click', () => switchAuthView('signin'));
     document.getElementById('btn-to-forgot').addEventListener('click', () => switchAuthView('forgot'));
     document.getElementById('btn-forgot-to-signin').addEventListener('click', () => switchAuthView('signin'));
     document.getElementById('btn-back-to-signup').addEventListener('click', () => switchAuthView('signup'));
 
-    // FIREBASE AUTH STATE OBSERVER
+    // AUTH OBSERVER & REALTIME DATABASE SYNC
     onAuthStateChanged(auth, (user) => {
       if (user) {
+        currentUser = user;
         document.getElementById('user-display-name').innerText = user.displayName || user.email.split('@')[0];
         switchAuthView('dashboard');
+
+        // Fetch user-specific records from Firebase Realtime Database
+        const entriesRef = ref(db, `users/${user.uid}/entries`);
+        onValue(entriesRef, (snapshot) => {
+          entries = [];
+          const data = snapshot.val();
+          if (data) {
+            Object.keys(data).forEach(key => {
+              entries.push({ id: key, ...data[key] });
+            });
+          }
+          updateDashboard();
+        });
       } else {
+        currentUser = null;
+        entries = [];
         switchAuthView('signin');
       }
     });
 
-    // PASSWORD VALIDATION FUNCTION
     function isValidPassword(password) {
-      // Must be at least 8 characters, containing A-Z / a-z, numbers, and allowed signs (_ or @)
       const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d_@]{8,}$/;
       return passwordRegex.test(password);
     }
 
-    // 1. STEP ONE: REQUEST OTP FROM RENDER BACKEND
+    // SIGNUP & OTP REQUEST
     document.getElementById('signup-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       
@@ -481,10 +506,7 @@
         return alert("Password must be at least 8 characters long and include letters, numbers, and allowed signs (_ or @).");
       }
 
-      // Generate a 6-digit OTP code
       const generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
-      
-      // Store user inputs temporarily
       tempUserData = { name, email, pass, generatedOtp };
 
       submitBtn.innerText = "Sending Code...";
@@ -513,7 +535,7 @@
       }
     });
 
-    // 2. STEP TWO: VERIFY OTP AND REGISTER ACCOUNT IN FIREBASE
+    // VERIFY OTP & CREATE ACCOUNT
     document.getElementById('otp-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const enteredOtp = document.getElementById('otp-input').value.trim();
@@ -532,7 +554,7 @@
       }
     });
 
-    // SIGN IN WITH FIREBASE
+    // SIGN IN
     document.getElementById('signin-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const email = document.getElementById('signin-email').value;
@@ -545,7 +567,7 @@
       }
     });
 
-    // FORGOT PASSWORD VIA FIREBASE EMAIL
+    // FORGOT PASSWORD
     document.getElementById('forgot-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const email = document.getElementById('forgot-email').value;
@@ -559,7 +581,7 @@
       }
     });
 
-    // LOGOUT WITH FIREBASE
+    // LOGOUT
     document.getElementById('btn-logout').addEventListener('click', async () => {
       try {
         await signOut(auth);
@@ -572,8 +594,10 @@
       }
     });
 
-    // DASHBOARD LOGIC
-    document.getElementById('btn-add-entry').addEventListener('click', () => {
+    // REALTIME DATABASE DASHBOARD OPERATIONS
+    document.getElementById('btn-add-entry').addEventListener('click', async () => {
+      if (!currentUser) return alert('Session expired. Please log in again.');
+
       const date = document.getElementById('entry-date').value;
       const sales = parseFloat(document.getElementById('entry-sales').value) || 0;
       const cost = parseFloat(document.getElementById('entry-cost').value) || 0;
@@ -582,12 +606,16 @@
 
       if (!date) return alert('Please select a date.');
 
-      entries.push({ date, sales, cost, profit, pending });
-      updateDashboard();
+      try {
+        const entriesRef = ref(db, `users/${currentUser.uid}/entries`);
+        await push(entriesRef, { date, sales, cost, profit, pending });
 
-      document.getElementById('entry-sales').value = '';
-      document.getElementById('entry-cost').value = '';
-      document.getElementById('entry-pending').value = '';
+        document.getElementById('entry-sales').value = '';
+        document.getElementById('entry-cost').value = '';
+        document.getElementById('entry-pending').value = '';
+      } catch (error) {
+        alert('Error saving record: ' + error.message);
+      }
     });
 
     function updateDashboard() {
@@ -595,7 +623,7 @@
       const tbody = document.getElementById('entries-table-body');
       tbody.innerHTML = '';
 
-      entries.forEach((item, index) => {
+      entries.forEach((item) => {
         totalSales += item.sales;
         totalCost += item.cost;
         totalProfit += item.profit;
@@ -608,7 +636,7 @@
           <td>$${item.cost.toFixed(2)}</td>
           <td>$${item.profit.toFixed(2)}</td>
           <td>$${item.pending.toFixed(2)}</td>
-          <td><button class="btn-delete" data-index="${index}" style="background:none; border:none; color:#ef4444; cursor:pointer;">Delete</button></td>
+          <td><button class="btn-delete" data-id="${item.id}" style="background:none; border:none; color:#ef4444; cursor:pointer;">Delete</button></td>
         `;
         tbody.appendChild(row);
       });
@@ -619,10 +647,16 @@
       document.getElementById('pending-cash').innerText = `$${totalPending.toFixed(2)}`;
 
       document.querySelectorAll('.btn-delete').forEach(button => {
-        button.addEventListener('click', (e) => {
-          const index = e.target.getAttribute('data-index');
-          entries.splice(index, 1);
-          updateDashboard();
+        button.addEventListener('click', async (e) => {
+          const entryId = e.target.getAttribute('data-id');
+          if (currentUser && entryId) {
+            try {
+              const itemRef = ref(db, `users/${currentUser.uid}/entries/${entryId}`);
+              await remove(itemRef);
+            } catch (err) {
+              alert('Error removing record: ' + err.message);
+            }
+          }
         });
       });
     }
