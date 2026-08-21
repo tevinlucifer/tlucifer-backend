@@ -29,11 +29,22 @@ app.post('/api/send-otp', async (req, res) => {
     return res.status(400).json({ success: false, error: 'Email and OTP are required.' });
   }
 
+  // 1. Sanitize and validate API key existence
+  const apiKey = process.env.RESEND_API_KEY ? process.env.RESEND_API_KEY.trim() : null;
+
+  if (!apiKey) {
+    console.error("ERROR: RESEND_API_KEY is not defined in environment variables.");
+    return res.status(500).json({ 
+      success: false, 
+      error: 'Server Error: RESEND_API_KEY is missing on backend.' 
+    });
+  }
+
   try {
     const response = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
+        'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
@@ -54,6 +65,7 @@ app.post('/api/send-otp', async (req, res) => {
     const data = await response.json();
 
     if (!response.ok) {
+      console.error('Resend API Error details:', data);
       throw new Error(data.message || 'Failed to send email via Resend');
     }
 
