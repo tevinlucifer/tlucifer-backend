@@ -248,7 +248,7 @@
         <input type="password" id="signin-pass" placeholder="••••••••" autocomplete="current-password" required>
         <a class="forgot-link" id="btn-to-forgot">Forgot Password?</a>
       </div>
-      <button type="submit" class="btn-primary">Sign In</button>
+      <button type="submit" id="btn-signin-submit" class="btn-primary">Sign In</button>
     </form>
     <div class="auth-toggle">
       Don't have an account? <a id="btn-to-signup">Sign Up</a>
@@ -291,7 +291,7 @@
         <label>Verification Code</label>
         <input type="text" id="otp-input" placeholder="123456" maxlength="6" autocomplete="off" required style="text-align: center; letter-spacing: 4px; font-size: 18px;">
       </div>
-      <button type="submit" class="btn-primary">Verify & Register</button>
+      <button type="submit" id="btn-otp-submit" class="btn-primary">Verify & Proceed</button>
     </form>
     <div class="auth-toggle">
       Didn't get the code? <a id="btn-back-to-signup">Start Over</a>
@@ -422,7 +422,7 @@
 
     const BACKEND_URL = "https://tlucifer-backend.onrender.com";
 
-    let tempUserData = { name: '', email: '', pass: '', generatedOtp: '' };
+    let tempUserData = { mode: '', name: '', email: '', pass: '', generatedOtp: '' };
     let currentUser = null;
     let entries = [];
 
@@ -460,7 +460,7 @@
     document.getElementById('btn-to-signin').addEventListener('click', () => switchAuthView('signin'));
     document.getElementById('btn-to-forgot').addEventListener('click', () => switchAuthView('forgot'));
     document.getElementById('btn-forgot-to-signin').addEventListener('click', () => switchAuthView('signin'));
-    document.getElementById('btn-back-to-signup').addEventListener('click', () => switchAuthView('signup'));
+    document.getElementById('btn-back-to-signup').addEventListener('click', () => switchAuthView('signin'));
 
     // AUTH OBSERVER & REALTIME DATABASE SYNC
     onAuthStateChanged(auth, (user) => {
@@ -507,7 +507,7 @@
       }
 
       const generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
-      tempUserData = { name, email, pass, generatedOtp };
+      tempUserData = { mode: 'signup', name, email, pass, generatedOtp };
 
       submitBtn.innerText = "Sending Code...";
       submitBtn.disabled = true;
@@ -535,7 +535,44 @@
       }
     });
 
-    // VERIFY OTP & CREATE ACCOUNT
+    // SIGN IN & OTP REQUEST
+    document.getElementById('signin-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const submitBtn = document.getElementById('btn-signin-submit');
+      const email = document.getElementById('signin-email').value;
+      const pass = document.getElementById('signin-pass').value;
+
+      const generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
+      tempUserData = { mode: 'signin', email, pass, generatedOtp };
+
+      submitBtn.innerText = "Sending Code...";
+      submitBtn.disabled = true;
+
+      try {
+        const response = await fetch(`${BACKEND_URL}/api/send-otp`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, otp: generatedOtp })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          alert('Verification code sent to your email address!');
+          switchAuthView('otp');
+        } else {
+          alert('Failed to send OTP: ' + (result.error || 'Server error'));
+        }
+      } catch (error) {
+        alert('Backend Connection Error: ' + error.message);
+      } finally {
+        submitBtn.innerText = "Sign In";
+        submitBtn.disabled = false;
+      }
+    });
+
+    // VERIFY OTP & COMPLETE ACTION (SIGN UP OR SIGN IN)
     document.getElementById('otp-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const enteredOtp = document.getElementById('otp-input').value.trim();
@@ -545,25 +582,16 @@
       }
 
       try {
-        const userCredential = await createUserWithEmailAndPassword(auth, tempUserData.email, tempUserData.pass);
-        await updateProfile(userCredential.user, { displayName: tempUserData.name });
-        alert('Email verified! Account created successfully.');
+        if (tempUserData.mode === 'signup') {
+          const userCredential = await createUserWithEmailAndPassword(auth, tempUserData.email, tempUserData.pass);
+          await updateProfile(userCredential.user, { displayName: tempUserData.name });
+          alert('Email verified! Account created successfully.');
+        } else if (tempUserData.mode === 'signin') {
+          await signInWithEmailAndPassword(auth, tempUserData.email, tempUserData.pass);
+        }
         clearAllForms();
       } catch (error) {
-        alert('Firebase Registration Error: ' + error.message);
-      }
-    });
-
-    // SIGN IN
-    document.getElementById('signin-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const email = document.getElementById('signin-email').value;
-      const pass = document.getElementById('signin-pass').value;
-
-      try {
-        await signInWithEmailAndPassword(auth, email, pass);
-      } catch (error) {
-        alert('Sign-in failed: ' + error.message);
+        alert('Authentication Error: ' + error.message);
       }
     });
 
