@@ -446,7 +446,6 @@
 </head>
 <body class="dark-theme">
 
-  <!-- SIGN IN VIEW -->
   <div id="signin-view" class="auth-card">
     <img src="Company%20Logo.png" alt="Company Logo" class="company-logo" onerror="this.src='logo.png'">
     <h2>Welcome Back</h2>
@@ -468,7 +467,6 @@
     </div>
   </div>
 
-  <!-- SIGN UP VIEW -->
   <div id="signup-view" class="auth-card hidden">
     <img src="Company%20Logo.png" alt="Company Logo" class="company-logo" onerror="this.src='logo.png'">
     <h2>Create Account</h2>
@@ -493,7 +491,6 @@
     </div>
   </div>
 
-  <!-- OTP VIEW -->
   <div id="otp-view" class="auth-card hidden">
     <img src="Company%20Logo.png" alt="Company Logo" class="company-logo" onerror="this.src='logo.png'">
     <h2>Verify Email</h2>
@@ -507,7 +504,6 @@
     </form>
   </div>
 
-  <!-- FORGOT PASSWORD VIEW -->
   <div id="forgot-view" class="auth-card hidden">
     <img src="Company%20Logo.png" alt="Company Logo" class="company-logo" onerror="this.src='logo.png'">
     <h2>Reset Password</h2>
@@ -524,10 +520,8 @@
     </div>
   </div>
 
-  <!-- DASHBOARD MAIN CONTAINER -->
   <div id="dashboard-view" class="app-container hidden">
     
-    <!-- LEFT SIDEBAR -->
     <aside class="sidebar">
       <div class="sidebar-brand">
         <div style="width: 32px; height: 32px; background: #2563eb; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">TD</div>
@@ -547,10 +541,8 @@
       </nav>
     </aside>
 
-    <!-- RIGHT CONTENT WRAPPER -->
     <main class="dashboard-wrapper">
       
-      <!-- TOP NAVBAR -->
       <header class="navbar">
         <div class="nav-links">
           <button class="nav-btn active">Dashboard</button>
@@ -567,7 +559,6 @@
         </div>
       </header>
 
-      <!-- HEADER TITLE -->
       <section class="dashboard-header">
         <div class="header-title">
           <h1 id="page-title">Overview</h1>
@@ -575,7 +566,6 @@
         </div>
       </section>
 
-      <!-- OVERVIEW PANEL -->
       <div id="panel-overview" class="panel-content">
         <div class="widget-box">
           <div class="widget-box-title">System Overview</div>
@@ -583,23 +573,19 @@
         </div>
       </div>
 
-      <!-- SALES PANEL CONTENT -->
       <div id="panel-sales" class="panel-content hidden">
         
-        <!-- Income / Cost Main Tabs -->
         <div class="tab-group">
           <button class="tab-btn active" id="tab-sales-income">📈 Income</button>
           <button class="tab-btn" id="tab-sales-cost">📉 Cost</button>
         </div>
 
-        <!-- Sub Categories -->
         <div class="tab-group" id="sales-subcategory-group">
           <button class="tab-btn active sub-tab" data-sub="Rooms">🏨 Rooms</button>
           <button class="tab-btn sub-tab" data-sub="Food">🍔 Food</button>
           <button class="tab-btn sub-tab" data-sub="Function">🎉 Function</button>
         </div>
 
-        <!-- Add Bill Form Card -->
         <div class="widget-box">
           <div class="widget-box-title" id="sales-form-title">Add Rooms Bill</div>
           <div class="form-row">
@@ -618,7 +604,6 @@
             <button class="btn-primary" id="btn-add-bill" style="width: auto; padding: 10px 20px;">Add Bill</button>
           </div>
 
-          <!-- Bills Table -->
           <div class="table-card">
             <table>
               <thead>
@@ -637,7 +622,6 @@
           </div>
         </div>
 
-        <!-- DAILY SALES REPORT SECTION -->
         <div class="widget-box">
           <div class="widget-box-title">📊 Sales Daily Summary Report</div>
           <div class="report-grid">
@@ -658,7 +642,6 @@
 
       </div>
 
-      <!-- STOCK MANAGEMENT PANEL CONTENT -->
       <div id="panel-stock" class="panel-content hidden">
         <div class="widget-box">
           <div class="widget-box-title">Stock Management</div>
@@ -681,7 +664,6 @@
         </div>
       </div>
 
-      <!-- STOCK MODAL -->
       <div id="stock-modal" class="modal-overlay hidden">
         <div class="auth-card" style="width: 450px; text-align: left;">
           <h2 style="color: var(--text-main); margin-bottom: 16px;">Add New Stock</h2>
@@ -704,7 +686,6 @@
         </div>
       </div>
 
-      <!-- GENERIC PLACEHOLDER PANEL -->
       <div id="panel-generic" class="panel-content hidden">
         <div class="widget-box">
           <h2 id="generic-title" style="margin-bottom: 10px;">Panel</h2>
@@ -715,7 +696,6 @@
     </main>
   </div>
 
-  <!-- FIREBASE & JS LOGIC -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { 
@@ -738,7 +718,7 @@
     const firebaseConfig = {
       apiKey: "AIzaSyAHaToGc7F2vlQt6bDXRMMHjnqRf4OANfc",
       authDomain: "tlucifer-auth.firebaseapp.com",
-      databaseURL: "https://tlucifer-auth-default-rtdb.firebaseio.com",
+      databaseURL: "https://tlucifer-auth-default-rtdb.asia-southeast1.firebasedatabase.app",
       projectId: "tlucifer-auth",
       storageBucket: "tlucifer-auth.firebasestorage.app",
       messagingSenderId: "249663219994",
@@ -952,7 +932,6 @@
         tab.classList.add('active');
         currentSubCategory = tab.getAttribute('data-sub');
 
-        // FIX: CLEAR INPUT FIELDS WHEN MOVING BETWEEN SUB-CATEGORIES
         clearSalesInputs();
         updateSalesFormHeader();
       });
@@ -967,12 +946,11 @@
     function updateSalesFormHeader() {
       document.getElementById('sales-form-title').innerText = `Add ${currentSubCategory} ${currentSalesType} Bill`;
       
-      // Auto-generate Code Example
       const prefix = currentSubCategory.substring(0, 2).toUpperCase();
       document.getElementById('bill-code').placeholder = `${prefix}00${salesData.length + 1}`;
     }
 
-    // FIX: ADD BILL TO FIREBASE
+    // ADD BILL TO FIREBASE
     document.getElementById('btn-add-bill').addEventListener('click', () => {
       if (!currentUser) return;
 
@@ -993,9 +971,13 @@
         category: currentSubCategory,
         type: currentSalesType,
         timestamp: Date.now()
-      }).then(() => {
+      })
+      .then(() => {
         clearSalesInputs();
-      }).catch(err => alert(err.message));
+      })
+      .catch((err) => {
+        alert("Failed to save bill: " + err.message);
+      });
     });
 
     function renderSalesTable() {
@@ -1006,11 +988,8 @@
       let totalCost = 0;
 
       salesData.forEach(item => {
-        if (item.type === "Income") {
-          totalIncome += item.price;
-        } else if (item.type === "Cost") {
-          totalCost += item.price;
-        }
+        if (item.type === 'Income') totalIncome += item.price;
+        if (item.type === 'Cost') totalCost += item.price;
 
         const tr = document.createElement('tr');
         tr.innerHTML = `
@@ -1018,36 +997,27 @@
           <td>${item.name}</td>
           <td>$${item.price.toFixed(2)}</td>
           <td>${item.category}</td>
-          <td style="color: ${item.type === 'Income' ? '#10b981' : '#ef4444'}; font-weight: 600;">${item.type}</td>
-          <td><button class="btn-danger" data-id="${item.id}">Delete</button></td>
+          <td><span style="color: ${item.type === 'Income' ? '#10b981' : '#ef4444'}; font-weight: bold;">${item.type}</span></td>
+          <td><button class="btn-danger" onclick="deleteSalesItem('${item.id}')">Delete</button></td>
         `;
         tbody.appendChild(tr);
       });
 
-      // Bind delete events
-      tbody.querySelectorAll('.btn-danger').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          const id = e.target.getAttribute('data-id');
-          remove(ref(db, `users/${currentUser.uid}/sales/${id}`));
-        });
-      });
-
-      // FIX & REPORT: UPDATE SALES SUMMARY REPORT METRICS
       document.getElementById('report-total-income').innerText = `$${totalIncome.toFixed(2)}`;
       document.getElementById('report-total-cost').innerText = `$${totalCost.toFixed(2)}`;
-      
-      const netProfit = totalIncome - totalCost;
-      const profitElem = document.getElementById('report-net-profit');
-      profitElem.innerText = `$${netProfit.toFixed(2)}`;
-      profitElem.style.color = netProfit >= 0 ? '#10b981' : '#ef4444';
+      document.getElementById('report-net-profit').innerText = `$${(totalIncome - totalCost).toFixed(2)}`;
     }
 
+    window.deleteSalesItem = function(id) {
+      if (!currentUser) return;
+      remove(ref(db, `users/${currentUser.uid}/sales/${id}`));
+    };
+
     // ==========================================
-    // STOCK MANAGEMENT FUNCTIONALITY & FIXES
+    // STOCK MODULE FUNCTIONALITY
     // ==========================================
 
     const stockModal = document.getElementById('stock-modal');
-
     document.getElementById('btn-open-stock-modal').addEventListener('click', () => {
       document.getElementById('stock-code').value = `S00${stockData.length + 1}`;
       document.getElementById('stock-name').value = '';
@@ -1059,7 +1029,6 @@
       stockModal.classList.add('hidden');
     });
 
-    // FIX: SAVE STOCK TO FIREBASE
     document.getElementById('btn-save-stock').addEventListener('click', () => {
       if (!currentUser) return;
 
@@ -1078,9 +1047,13 @@
         name,
         price,
         timestamp: Date.now()
-      }).then(() => {
+      })
+      .then(() => {
         stockModal.classList.add('hidden');
-      }).catch(err => alert(err.message));
+      })
+      .catch((err) => {
+        alert("Failed to save stock: " + err.message);
+      });
     });
 
     function renderStockTable() {
@@ -1093,18 +1066,16 @@
           <td>${item.code}</td>
           <td>${item.name}</td>
           <td>$${item.price.toFixed(2)}</td>
-          <td><button class="btn-danger" data-id="${item.id}">Delete</button></td>
+          <td><button class="btn-danger" onclick="deleteStockItem('${item.id}')">Delete</button></td>
         `;
         tbody.appendChild(tr);
       });
-
-      tbody.querySelectorAll('.btn-danger').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          const id = e.target.getAttribute('data-id');
-          remove(ref(db, `users/${currentUser.uid}/stocks/${id}`));
-        });
-      });
     }
+
+    window.deleteStockItem = function(id) {
+      if (!currentUser) return;
+      remove(ref(db, `users/${currentUser.uid}/stocks/${id}`));
+    };
 
   </script>
 </body>
