@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TD - Management System</title>
+  <!-- FAVICON UPDATE -->
+  <link rel="icon" type="image/png" href="./Company%20Logo.png">
   <style>
     :root {
       --bg-overlay: rgba(6, 11, 25, 0.75);
@@ -190,6 +192,12 @@
       padding: 0 12px 24px 12px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       margin-bottom: 16px;
+    }
+    .sidebar-brand-img {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      object-fit: cover;
     }
     .sidebar-nav {
       display: flex;
@@ -523,8 +531,9 @@
   <div id="dashboard-view" class="app-container hidden">
     
     <aside class="sidebar">
+      <!-- SIDEBAR BRAND LOGO UPDATE -->
       <div class="sidebar-brand">
-        <div style="width: 32px; height: 32px; background: #2563eb; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">TD</div>
+        <img src="Company%20Logo.png" alt="Company Logo" class="sidebar-brand-img" onerror="this.src='logo.png'">
         TD System
       </div>
       <nav class="sidebar-nav">
@@ -905,7 +914,7 @@
     document.getElementById('btn-logout').addEventListener('click', () => signOut(auth));
 
     // ==========================================
-    // SALES MODULE FUNCTIONALITY & FIXES
+    // SALES MODULE FUNCTIONALITY
     // ==========================================
 
     const tabIncome = document.getElementById('tab-sales-income');
@@ -997,9 +1006,14 @@
           <td>${item.name}</td>
           <td>$${item.price.toFixed(2)}</td>
           <td>${item.category}</td>
-          <td><span style="color: ${item.type === 'Income' ? '#10b981' : '#ef4444'}; font-weight: bold;">${item.type}</span></td>
-          <td><button class="btn-danger" onclick="deleteSalesItem('${item.id}')">Delete</button></td>
+          <td>${item.type}</td>
+          <td><button class="btn-danger" data-id="${item.id}">Delete</button></td>
         `;
+        
+        tr.querySelector('.btn-danger').addEventListener('click', () => {
+          remove(ref(db, `users/${currentUser.uid}/sales/${item.id}`));
+        });
+
         tbody.appendChild(tr);
       });
 
@@ -1007,11 +1021,6 @@
       document.getElementById('report-total-cost').innerText = `$${totalCost.toFixed(2)}`;
       document.getElementById('report-net-profit').innerText = `$${(totalIncome - totalCost).toFixed(2)}`;
     }
-
-    window.deleteSalesItem = function(id) {
-      if (!currentUser) return;
-      remove(ref(db, `users/${currentUser.uid}/sales/${id}`));
-    };
 
     // ==========================================
     // STOCK MODULE FUNCTIONALITY
@@ -1042,18 +1051,13 @@
       }
 
       const stockRef = ref(db, `users/${currentUser.uid}/stocks`);
-      push(stockRef, {
-        code,
-        name,
-        price,
-        timestamp: Date.now()
-      })
-      .then(() => {
-        stockModal.classList.add('hidden');
-      })
-      .catch((err) => {
-        alert("Failed to save stock: " + err.message);
-      });
+      push(stockRef, { code, name, price, timestamp: Date.now() })
+        .then(() => {
+          stockModal.classList.add('hidden');
+        })
+        .catch((err) => {
+          alert("Failed to save stock: " + err.message);
+        });
     });
 
     function renderStockTable() {
@@ -1066,17 +1070,16 @@
           <td>${item.code}</td>
           <td>${item.name}</td>
           <td>$${item.price.toFixed(2)}</td>
-          <td><button class="btn-danger" onclick="deleteStockItem('${item.id}')">Delete</button></td>
+          <td><button class="btn-danger" data-id="${item.id}">Delete</button></td>
         `;
+
+        tr.querySelector('.btn-danger').addEventListener('click', () => {
+          remove(ref(db, `users/${currentUser.uid}/stocks/${item.id}`));
+        });
+
         tbody.appendChild(tr);
       });
     }
-
-    window.deleteStockItem = function(id) {
-      if (!currentUser) return;
-      remove(ref(db, `users/${currentUser.uid}/stocks/${id}`));
-    };
-
   </script>
 </body>
 </html>
