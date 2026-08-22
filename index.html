@@ -376,6 +376,8 @@
       display: flex;
       gap: 10px;
       margin-bottom: 16px;
+      align-items: center;
+      flex-wrap: wrap;
     }
     .tab-btn {
       padding: 10px 20px;
@@ -443,35 +445,46 @@
 
     .report-modal-card {
       background: var(--card-bg);
-      width: 650px;
-      max-width: 90%;
+      width: 720px;
+      max-width: 95%;
       padding: 28px;
       border-radius: 20px;
       border: 1px solid rgba(255, 255, 255, 0.2);
       box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     }
 
-    .report-grid {
+    .report-grid-4 {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
       margin-bottom: 20px;
     }
     .report-card {
-      padding: 16px;
+      padding: 14px;
       border-radius: 12px;
       background: var(--input-bg);
       border: 1px solid rgba(255, 255, 255, 0.1);
     }
     .report-card span {
-      font-size: 11px;
+      font-size: 10px;
       color: var(--text-muted);
       font-weight: 700;
       text-transform: uppercase;
     }
     .report-card h3 {
-      font-size: 20px;
+      font-size: 16px;
       margin-top: 6px;
+      word-break: break-all;
+    }
+    .calendar-picker {
+      padding: 8px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: var(--input-bg);
+      color: var(--text-main);
+      font-weight: 600;
+      outline: none;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -657,18 +670,22 @@
 
         <div class="widget-box">
           <div class="widget-box-title">📊 Sales Daily Summary Report</div>
-          <div class="report-grid">
+          <div class="report-grid-4" style="margin-top: 10px;">
             <div class="report-card">
-              <span>TOTAL INCOMES</span>
+              <span>TOTAL INCOME</span>
               <h3 id="report-total-income" style="color: #10b981;">Rs. 0.00</h3>
             </div>
             <div class="report-card">
-              <span>TOTAL COSTS</span>
+              <span>TOTAL COST</span>
               <h3 id="report-total-cost" style="color: #ef4444;">Rs. 0.00</h3>
             </div>
             <div class="report-card">
               <span>NET PROFIT</span>
               <h3 id="report-net-profit" style="color: #3b82f6;">Rs. 0.00</h3>
+            </div>
+            <div class="report-card">
+              <span>LOSS</span>
+              <h3 id="report-net-loss" style="color: #f59e0b;">Rs. 0.00</h3>
             </div>
           </div>
         </div>
@@ -734,26 +751,32 @@
             <button class="tab-btn active sales-report-tab" data-period="daily">Daily Report</button>
             <button class="tab-btn sales-report-tab" data-period="monthly">Monthly Report</button>
             <button class="tab-btn sales-report-tab" data-period="yearly">Yearly Report</button>
+            <span style="margin-left: auto; font-size: 12px; font-weight: bold; color: var(--text-muted);">Calendar Date:</span>
+            <input type="date" id="sales-calendar-filter" class="calendar-picker">
           </div>
 
-          <div class="report-grid">
+          <div class="report-grid-4">
             <div class="report-card">
-              <span>TOTAL REVENUE</span>
+              <span>INCOME</span>
               <h3 id="sr-total-revenue" style="color: #10b981;">Rs. 0.00</h3>
             </div>
             <div class="report-card">
-              <span>TOTAL UNIT SOLD</span>
-              <h3 id="sr-total-units" style="color: #3b82f6;">0</h3>
+              <span>COST</span>
+              <h3 id="sr-total-cost" style="color: #ef4444;">Rs. 0.00</h3>
             </div>
             <div class="report-card">
-              <span>AVERAGE ORDER</span>
-              <h3 id="sr-avg-order" style="color: #f59e0b;">Rs. 0.00</h3>
+              <span>NET PROFIT</span>
+              <h3 id="sr-net-profit" style="color: #3b82f6;">Rs. 0.00</h3>
+            </div>
+            <div class="report-card">
+              <span>LOSS</span>
+              <h3 id="sr-net-loss" style="color: #f59e0b;">Rs. 0.00</h3>
             </div>
           </div>
 
           <div class="widget-box" style="margin-bottom: 0; padding: 16px;">
-            <div class="widget-box-title" style="font-size: 14px;">Sales Breakdown by Category</div>
-            <div class="report-grid" style="margin-bottom: 0; margin-top: 10px;">
+            <div class="widget-box-title" style="font-size: 14px;">Sales & Cost Breakdown by Category</div>
+            <div class="report-grid-4" style="margin-bottom: 0; margin-top: 10px;">
               <div class="report-card">
                 <span>ROOMS</span>
                 <h3 id="sr-cat-rooms">Rs. 0.00</h3>
@@ -765,6 +788,10 @@
               <div class="report-card">
                 <span>FUNCTION</span>
                 <h3 id="sr-cat-function">Rs. 0.00</h3>
+              </div>
+              <div class="report-card">
+                <span>STOCK (COST)</span>
+                <h3 id="sr-cat-stock">Rs. 0.00</h3>
               </div>
             </div>
           </div>
@@ -782,9 +809,11 @@
           <div class="tab-group">
             <button class="tab-btn active stock-report-tab" data-period="daily">Daily Stock</button>
             <button class="tab-btn stock-report-tab" data-period="monthly">Monthly Stock</button>
+            <span style="margin-left: auto; font-size: 12px; font-weight: bold; color: var(--text-muted);">Calendar Date:</span>
+            <input type="date" id="stock-calendar-filter" class="calendar-picker">
           </div>
 
-          <div class="report-grid">
+          <div class="report-grid-4">
             <div class="report-card">
               <span>TOTAL STOCK VALUE</span>
               <h3 id="st-total-val" style="color: #ef4444;">Rs. 0.00</h3>
@@ -796,6 +825,10 @@
             <div class="report-card">
               <span>AVG PRICE / ITEM</span>
               <h3 id="st-avg-price" style="color: #f59e0b;">Rs. 0.00</h3>
+            </div>
+            <div class="report-card">
+              <span>FILTER STATUS</span>
+              <h3 id="st-filter-status" style="font-size: 12px; color: #10b981; margin-top: 10px;">Active</h3>
             </div>
           </div>
         </div>
@@ -853,12 +886,18 @@
 
     let currentSalesType = "Income"; 
     let currentSubCategory = "Rooms";
+    let activeSalesPeriod = "daily";
+    let activeStockPeriod = "daily";
 
     const themeBtn = document.getElementById('theme-toggle');
     themeBtn.addEventListener('click', () => {
       document.body.classList.toggle('dark-theme');
       themeBtn.innerText = document.body.classList.contains('dark-theme') ? '☀️' : '🌙';
     });
+
+    const todayStr = new Date().toISOString().split('T')[0];
+    document.getElementById('sales-calendar-filter').value = todayStr;
+    document.getElementById('stock-calendar-filter').value = todayStr;
 
     const navItems = document.querySelectorAll('.sidebar-nav .nav-item');
     navItems.forEach(item => {
@@ -1111,12 +1150,14 @@
         tbody.appendChild(tr);
       });
 
+      const netProfit = totalIncome - totalCost;
       document.getElementById('report-total-income').innerText = `Rs. ${totalIncome.toFixed(2)}`;
       document.getElementById('report-total-cost').innerText = `Rs. ${totalCost.toFixed(2)}`;
-      document.getElementById('report-net-profit').innerText = `Rs. ${(totalIncome - totalCost).toFixed(2)}`;
+      document.getElementById('report-net-profit').innerText = `Rs. ${netProfit > 0 ? netProfit.toFixed(2) : '0.00'}`;
+      document.getElementById('report-net-loss').innerText = `Rs. ${netProfit < 0 ? Math.abs(netProfit).toFixed(2) : '0.00'}`;
     }
 
-    // STOCK LOGIC & AUTOMATIC COST ADDITION TO SALES
+    // STOCK LOGIC
     const stockModal = document.getElementById('stock-modal');
     document.getElementById('btn-open-stock-modal').addEventListener('click', () => {
       document.getElementById('stock-code').value = `S00${stockData.length + 1}`;
@@ -1145,7 +1186,6 @@
       const stockRef = ref(db, `users/${currentUser.uid}/stocks`);
       push(stockRef, { code, name, price, timestamp: now })
         .then(() => {
-          // ALSO SAVE AS COST UNDER SALES CATEGORY
           const salesRef = ref(db, `users/${currentUser.uid}/sales`);
           return push(salesRef, {
             code: `STK-${code}`,
@@ -1185,13 +1225,13 @@
       });
     }
 
-    // REPORT MODALS & CALCULATIONS
+    // REPORT MODALS, CALENDAR FILTERING & CALCULATIONS
     const salesReportModal = document.getElementById('sales-report-modal');
     const stockReportModal = document.getElementById('stock-report-modal');
 
     document.getElementById('btn-open-sales-report').addEventListener('click', () => {
       salesReportModal.classList.remove('hidden');
-      generateSalesReport('daily');
+      generateSalesReport(activeSalesPeriod);
     });
     document.getElementById('btn-close-sales-report').addEventListener('click', () => {
       salesReportModal.classList.add('hidden');
@@ -1199,7 +1239,7 @@
 
     document.getElementById('btn-open-stock-report').addEventListener('click', () => {
       stockReportModal.classList.remove('hidden');
-      generateStockReport('daily');
+      generateStockReport(activeStockPeriod);
     });
     document.getElementById('btn-close-stock-report').addEventListener('click', () => {
       stockReportModal.classList.add('hidden');
@@ -1209,7 +1249,8 @@
       tab.addEventListener('click', (e) => {
         document.querySelectorAll('.sales-report-tab').forEach(t => t.classList.remove('active'));
         e.target.classList.add('active');
-        generateSalesReport(e.target.getAttribute('data-period'));
+        activeSalesPeriod = e.target.getAttribute('data-period');
+        generateSalesReport(activeSalesPeriod);
       });
     });
 
@@ -1217,55 +1258,71 @@
       tab.addEventListener('click', (e) => {
         document.querySelectorAll('.stock-report-tab').forEach(t => t.classList.remove('active'));
         e.target.classList.add('active');
-        generateStockReport(e.target.getAttribute('data-period'));
+        activeStockPeriod = e.target.getAttribute('data-period');
+        generateStockReport(activeStockPeriod);
       });
     });
 
-    function filterByPeriod(dataArray, period) {
-      const now = new Date();
+    document.getElementById('sales-calendar-filter').addEventListener('change', () => generateSalesReport(activeSalesPeriod));
+    document.getElementById('stock-calendar-filter').addEventListener('change', () => generateStockReport(activeStockPeriod));
+
+    function filterByPeriodAndCalendar(dataArray, period, calendarValue) {
+      const selectedDate = calendarValue ? new Date(calendarValue) : new Date();
+
       return dataArray.filter(item => {
         const itemDate = new Date(item.timestamp || Date.now());
         if (period === 'daily') {
-          return itemDate.toDateString() === now.toDateString();
+          return itemDate.toDateString() === selectedDate.toDateString();
         } else if (period === 'monthly') {
-          return itemDate.getMonth() === now.getMonth() && itemDate.getFullYear() === now.getFullYear();
+          return itemDate.getMonth() === selectedDate.getMonth() && itemDate.getFullYear() === selectedDate.getFullYear();
         } else if (period === 'yearly') {
-          return itemDate.getFullYear() === now.getFullYear();
+          return itemDate.getFullYear() === selectedDate.getFullYear();
         }
         return true;
       });
     }
 
     function generateSalesReport(period) {
-      const filtered = filterByPeriod(salesData, period);
-      const incomeItems = filtered.filter(i => i.type === 'Income');
+      const calVal = document.getElementById('sales-calendar-filter').value;
+      const filtered = filterByPeriodAndCalendar(salesData, period, calVal);
 
-      let totalRevenue = 0;
+      let totalIncome = 0;
+      let totalCost = 0;
       let roomsTotal = 0;
       let foodTotal = 0;
       let functionTotal = 0;
+      let stockTotal = 0;
 
-      incomeItems.forEach(i => {
-        totalRevenue += i.price;
-        if (i.category === 'Rooms') roomsTotal += i.price;
-        if (i.category === 'Food') foodTotal += i.price;
-        if (i.category === 'Function') functionTotal += i.price;
+      filtered.forEach(i => {
+        if (i.type === 'Income') {
+          totalIncome += i.price;
+          if (i.category === 'Rooms') roomsTotal += i.price;
+          if (i.category === 'Food') foodTotal += i.price;
+          if (i.category === 'Function') functionTotal += i.price;
+        } else if (i.type === 'Cost') {
+          totalCost += i.price;
+          if (i.category === 'Stock') stockTotal += i.price;
+        }
       });
 
-      const unitsSold = incomeItems.length;
-      const avgOrder = unitsSold > 0 ? totalRevenue / unitsSold : 0;
+      const netDifference = totalIncome - totalCost;
+      const netProfit = netDifference > 0 ? netDifference : 0;
+      const netLoss = netDifference < 0 ? Math.abs(netDifference) : 0;
 
-      document.getElementById('sr-total-revenue').innerText = `Rs. ${totalRevenue.toFixed(2)}`;
-      document.getElementById('sr-total-units').innerText = unitsSold;
-      document.getElementById('sr-avg-order').innerText = `Rs. ${avgOrder.toFixed(2)}`;
-      
+      document.getElementById('sr-total-revenue').innerText = `Rs. ${totalIncome.toFixed(2)}`;
+      document.getElementById('sr-total-cost').innerText = `Rs. ${totalCost.toFixed(2)}`;
+      document.getElementById('sr-net-profit').innerText = `Rs. ${netProfit.toFixed(2)}`;
+      document.getElementById('sr-net-loss').innerText = `Rs. ${netLoss.toFixed(2)}`;
+
       document.getElementById('sr-cat-rooms').innerText = `Rs. ${roomsTotal.toFixed(2)}`;
       document.getElementById('sr-cat-food').innerText = `Rs. ${foodTotal.toFixed(2)}`;
       document.getElementById('sr-cat-function').innerText = `Rs. ${functionTotal.toFixed(2)}`;
+      document.getElementById('sr-cat-stock').innerText = `Rs. ${stockTotal.toFixed(2)}`;
     }
 
     function generateStockReport(period) {
-      const filtered = filterByPeriod(stockData, period);
+      const calVal = document.getElementById('stock-calendar-filter').value;
+      const filtered = filterByPeriodAndCalendar(stockData, period, calVal);
 
       let totalVal = 0;
       filtered.forEach(s => totalVal += s.price);
