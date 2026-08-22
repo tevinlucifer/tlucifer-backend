@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TD - Management System</title>
-  <!-- FAVICON UPDATE -->
   <link rel="icon" type="image/png" href="./Company%20Logo.png">
   <style>
     :root {
@@ -56,7 +55,6 @@
       display: none !important;
     }
 
-    /* AUTHENTICATION GLASS CARDS */
     .auth-card {
       background: rgba(255, 255, 255, 0.25);
       backdrop-filter: blur(25px);
@@ -135,6 +133,20 @@
     .btn-primary:hover {
       background-color: #1d4ed8;
     }
+    .btn-secondary {
+      padding: 10px 18px;
+      background-color: #10b981;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+    .btn-secondary:hover {
+      background-color: #059669;
+    }
     .btn-danger {
       background-color: #ef4444;
       color: white;
@@ -160,7 +172,6 @@
       cursor: pointer;
     }
 
-    /* APP LAYOUT WITH SIDEBAR */
     .app-container {
       display: flex;
       width: 100%;
@@ -169,7 +180,6 @@
       align-items: stretch;
     }
 
-    /* LEFT SIDEBAR */
     .sidebar {
       width: 260px;
       background: var(--sidebar-bg);
@@ -350,14 +360,18 @@
       border: 1px solid rgba(255, 255, 255, 0.1);
       margin-bottom: 20px;
     }
+    .widget-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
     .widget-box-title {
       font-size: 18px;
       font-weight: 700;
       color: var(--text-main);
-      margin-bottom: 16px;
     }
 
-    /* SEGMENTED TAB BUTTONS */
     .tab-group {
       display: flex;
       gap: 10px;
@@ -413,7 +427,6 @@
       border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     }
 
-    /* MODAL STYLING */
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -428,7 +441,16 @@
       z-index: 1000;
     }
 
-    /* REPORT GRID */
+    .report-modal-card {
+      background: var(--card-bg);
+      width: 650px;
+      max-width: 90%;
+      padding: 28px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
     .report-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -442,9 +464,10 @@
       border: 1px solid rgba(255, 255, 255, 0.1);
     }
     .report-card span {
-      font-size: 12px;
+      font-size: 11px;
       color: var(--text-muted);
-      font-weight: 600;
+      font-weight: 700;
+      text-transform: uppercase;
     }
     .report-card h3 {
       font-size: 20px;
@@ -529,9 +552,7 @@
   </div>
 
   <div id="dashboard-view" class="app-container hidden">
-    
     <aside class="sidebar">
-      <!-- SIDEBAR BRAND LOGO UPDATE -->
       <div class="sidebar-brand">
         <img src="Company%20Logo.png" alt="Company Logo" class="sidebar-brand-img" onerror="this.src='logo.png'">
         TD System
@@ -551,7 +572,6 @@
     </aside>
 
     <main class="dashboard-wrapper">
-      
       <header class="navbar">
         <div class="nav-links">
           <button class="nav-btn active">Dashboard</button>
@@ -583,7 +603,6 @@
       </div>
 
       <div id="panel-sales" class="panel-content hidden">
-        
         <div class="tab-group">
           <button class="tab-btn active" id="tab-sales-income">📈 Income</button>
           <button class="tab-btn" id="tab-sales-cost">📉 Cost</button>
@@ -593,10 +612,15 @@
           <button class="tab-btn active sub-tab" data-sub="Rooms">🏨 Rooms</button>
           <button class="tab-btn sub-tab" data-sub="Food">🍔 Food</button>
           <button class="tab-btn sub-tab" data-sub="Function">🎉 Function</button>
+          <button class="tab-btn sub-tab" data-sub="Stock">📦 Stock</button>
         </div>
 
         <div class="widget-box">
-          <div class="widget-box-title" id="sales-form-title">Add Rooms Bill</div>
+          <div class="widget-header-row">
+            <div class="widget-box-title" id="sales-form-title">Add Rooms Bill</div>
+            <button class="btn-secondary" id="btn-open-sales-report">📄 View Sales Reports</button>
+          </div>
+          
           <div class="form-row">
             <div class="input-group">
               <label>Bill Code</label>
@@ -607,7 +631,7 @@
               <input type="text" id="bill-name" placeholder="Enter Name">
             </div>
             <div class="input-group">
-              <label>Price ($)</label>
+              <label>Price (Rs.)</label>
               <input type="number" id="bill-price" placeholder="0.00" step="0.01">
             </div>
             <button class="btn-primary" id="btn-add-bill" style="width: auto; padding: 10px 20px;">Add Bill</button>
@@ -619,7 +643,7 @@
                 <tr>
                   <th>Code</th>
                   <th>Name</th>
-                  <th>Price ($)</th>
+                  <th>Price (Rs.)</th>
                   <th>Category</th>
                   <th>Type</th>
                   <th>Action</th>
@@ -636,24 +660,27 @@
           <div class="report-grid">
             <div class="report-card">
               <span>TOTAL INCOMES</span>
-              <h3 id="report-total-income" style="color: #10b981;">$0.00</h3>
+              <h3 id="report-total-income" style="color: #10b981;">Rs. 0.00</h3>
             </div>
             <div class="report-card">
               <span>TOTAL COSTS</span>
-              <h3 id="report-total-cost" style="color: #ef4444;">$0.00</h3>
+              <h3 id="report-total-cost" style="color: #ef4444;">Rs. 0.00</h3>
             </div>
             <div class="report-card">
               <span>NET PROFIT</span>
-              <h3 id="report-net-profit" style="color: #3b82f6;">$0.00</h3>
+              <h3 id="report-net-profit" style="color: #3b82f6;">Rs. 0.00</h3>
             </div>
           </div>
         </div>
-
       </div>
 
       <div id="panel-stock" class="panel-content hidden">
         <div class="widget-box">
-          <div class="widget-box-title">Stock Management</div>
+          <div class="widget-header-row">
+            <div class="widget-box-title">Stock Management</div>
+            <button class="btn-secondary" id="btn-open-stock-report">📄 View Stock Reports</button>
+          </div>
+          
           <button class="btn-primary" id="btn-open-stock-modal" style="width: auto; padding: 10px 20px; margin-bottom: 16px;">+ Add Stock</button>
           
           <div class="table-card">
@@ -662,7 +689,7 @@
                 <tr>
                   <th>Stock Code</th>
                   <th>Product Name</th>
-                  <th>Price ($)</th>
+                  <th>Price (Rs.)</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -685,12 +712,91 @@
             <input type="text" id="stock-name" placeholder="e.g. Sugar">
           </div>
           <div class="input-group">
-            <label>Price ($)</label>
+            <label>Price (Rs.)</label>
             <input type="number" id="stock-price" placeholder="0.00" step="0.01">
           </div>
           <div style="display: flex; gap: 10px; margin-top: 20px;">
             <button class="btn-primary" id="btn-save-stock">Save Stock</button>
             <button class="btn-primary" id="btn-cancel-stock" style="background: #4b5563;">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SALES REPORT MODAL -->
+      <div id="sales-report-modal" class="modal-overlay hidden">
+        <div class="report-modal-card">
+          <div class="widget-header-row">
+            <h2 style="color: var(--text-main);" id="sales-report-modal-title">Sales Performance Report</h2>
+            <button class="btn-danger" id="btn-close-sales-report" style="font-size: 14px; padding: 6px 12px;">X</button>
+          </div>
+          
+          <div class="tab-group">
+            <button class="tab-btn active sales-report-tab" data-period="daily">Daily Report</button>
+            <button class="tab-btn sales-report-tab" data-period="monthly">Monthly Report</button>
+            <button class="tab-btn sales-report-tab" data-period="yearly">Yearly Report</button>
+          </div>
+
+          <div class="report-grid">
+            <div class="report-card">
+              <span>TOTAL REVENUE</span>
+              <h3 id="sr-total-revenue" style="color: #10b981;">Rs. 0.00</h3>
+            </div>
+            <div class="report-card">
+              <span>TOTAL UNIT SOLD</span>
+              <h3 id="sr-total-units" style="color: #3b82f6;">0</h3>
+            </div>
+            <div class="report-card">
+              <span>AVERAGE ORDER</span>
+              <h3 id="sr-avg-order" style="color: #f59e0b;">Rs. 0.00</h3>
+            </div>
+          </div>
+
+          <div class="widget-box" style="margin-bottom: 0; padding: 16px;">
+            <div class="widget-box-title" style="font-size: 14px;">Sales Breakdown by Category</div>
+            <div class="report-grid" style="margin-bottom: 0; margin-top: 10px;">
+              <div class="report-card">
+                <span>ROOMS</span>
+                <h3 id="sr-cat-rooms">Rs. 0.00</h3>
+              </div>
+              <div class="report-card">
+                <span>FOOD</span>
+                <h3 id="sr-cat-food">Rs. 0.00</h3>
+              </div>
+              <div class="report-card">
+                <span>FUNCTION</span>
+                <h3 id="sr-cat-function">Rs. 0.00</h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STOCK REPORT MODAL -->
+      <div id="stock-report-modal" class="modal-overlay hidden">
+        <div class="report-modal-card">
+          <div class="widget-header-row">
+            <h2 style="color: var(--text-main);" id="stock-report-modal-title">Stock Analysis Report</h2>
+            <button class="btn-danger" id="btn-close-stock-report" style="font-size: 14px; padding: 6px 12px;">X</button>
+          </div>
+          
+          <div class="tab-group">
+            <button class="tab-btn active stock-report-tab" data-period="daily">Daily Stock</button>
+            <button class="tab-btn stock-report-tab" data-period="monthly">Monthly Stock</button>
+          </div>
+
+          <div class="report-grid">
+            <div class="report-card">
+              <span>TOTAL STOCK VALUE</span>
+              <h3 id="st-total-val" style="color: #ef4444;">Rs. 0.00</h3>
+            </div>
+            <div class="report-card">
+              <span>ITEMS ADDED</span>
+              <h3 id="st-total-count" style="color: #3b82f6;">0</h3>
+            </div>
+            <div class="report-card">
+              <span>AVG PRICE / ITEM</span>
+              <h3 id="st-avg-price" style="color: #f59e0b;">Rs. 0.00</h3>
+            </div>
           </div>
         </div>
       </div>
@@ -745,17 +851,15 @@
     let salesData = [];
     let stockData = [];
 
-    let currentSalesType = "Income"; // "Income" or "Cost"
-    let currentSubCategory = "Rooms"; // "Rooms", "Food", "Function"
+    let currentSalesType = "Income"; 
+    let currentSubCategory = "Rooms";
 
-    // THEME TOGGLE
     const themeBtn = document.getElementById('theme-toggle');
     themeBtn.addEventListener('click', () => {
       document.body.classList.toggle('dark-theme');
       themeBtn.innerText = document.body.classList.contains('dark-theme') ? '☀️' : '🌙';
     });
 
-    // SIDEBAR NAVIGATION
     const navItems = document.querySelectorAll('.sidebar-nav .nav-item');
     navItems.forEach(item => {
       item.addEventListener('click', () => {
@@ -766,7 +870,6 @@
         const panelName = item.innerText.trim();
         
         document.getElementById('page-title').innerText = panelName;
-
         document.querySelectorAll('.panel-content').forEach(p => p.classList.add('hidden'));
 
         if (panelKey === 'overview') {
@@ -806,14 +909,12 @@
     document.getElementById('btn-to-forgot').addEventListener('click', () => switchAuthView('forgot'));
     document.getElementById('btn-forgot-to-signin').addEventListener('click', () => switchAuthView('signin'));
 
-    // AUTH OBSERVER
     onAuthStateChanged(auth, (user) => {
       if (user) {
         currentUser = user;
         document.getElementById('user-display-name').innerText = user.displayName || user.email.split('@')[0];
         switchAuthView('dashboard');
 
-        // Fetch Sales
         onValue(ref(db, `users/${user.uid}/sales`), (snapshot) => {
           salesData = [];
           const data = snapshot.val();
@@ -823,7 +924,6 @@
           renderSalesTable();
         });
 
-        // Fetch Stock
         onValue(ref(db, `users/${user.uid}/stocks`), (snapshot) => {
           stockData = [];
           const data = snapshot.val();
@@ -839,7 +939,6 @@
       }
     });
 
-    // SIGNIN / SIGNUP / OTP LOGIC
     document.getElementById('signup-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const submitBtn = document.getElementById('btn-signup-submit');
@@ -913,10 +1012,7 @@
 
     document.getElementById('btn-logout').addEventListener('click', () => signOut(auth));
 
-    // ==========================================
-    // SALES MODULE FUNCTIONALITY
-    // ==========================================
-
+    // SALES LOGIC
     const tabIncome = document.getElementById('tab-sales-income');
     const tabCost = document.getElementById('tab-sales-cost');
     const subTabs = document.querySelectorAll('.sub-tab');
@@ -954,12 +1050,10 @@
 
     function updateSalesFormHeader() {
       document.getElementById('sales-form-title').innerText = `Add ${currentSubCategory} ${currentSalesType} Bill`;
-      
       const prefix = currentSubCategory.substring(0, 2).toUpperCase();
       document.getElementById('bill-code').placeholder = `${prefix}00${salesData.length + 1}`;
     }
 
-    // ADD BILL TO FIREBASE
     document.getElementById('btn-add-bill').addEventListener('click', () => {
       if (!currentUser) return;
 
@@ -1004,7 +1098,7 @@
         tr.innerHTML = `
           <td>${item.code}</td>
           <td>${item.name}</td>
-          <td>$${item.price.toFixed(2)}</td>
+          <td>Rs. ${item.price.toFixed(2)}</td>
           <td>${item.category}</td>
           <td>${item.type}</td>
           <td><button class="btn-danger" data-id="${item.id}">Delete</button></td>
@@ -1017,15 +1111,12 @@
         tbody.appendChild(tr);
       });
 
-      document.getElementById('report-total-income').innerText = `$${totalIncome.toFixed(2)}`;
-      document.getElementById('report-total-cost').innerText = `$${totalCost.toFixed(2)}`;
-      document.getElementById('report-net-profit').innerText = `$${(totalIncome - totalCost).toFixed(2)}`;
+      document.getElementById('report-total-income').innerText = `Rs. ${totalIncome.toFixed(2)}`;
+      document.getElementById('report-total-cost').innerText = `Rs. ${totalCost.toFixed(2)}`;
+      document.getElementById('report-net-profit').innerText = `Rs. ${(totalIncome - totalCost).toFixed(2)}`;
     }
 
-    // ==========================================
-    // STOCK MODULE FUNCTIONALITY
-    // ==========================================
-
+    // STOCK LOGIC & AUTOMATIC COST ADDITION TO SALES
     const stockModal = document.getElementById('stock-modal');
     document.getElementById('btn-open-stock-modal').addEventListener('click', () => {
       document.getElementById('stock-code').value = `S00${stockData.length + 1}`;
@@ -1044,6 +1135,7 @@
       const code = document.getElementById('stock-code').value.trim();
       const name = document.getElementById('stock-name').value.trim();
       const price = parseFloat(document.getElementById('stock-price').value) || 0;
+      const now = Date.now();
 
       if (!name || price <= 0) {
         alert("Please enter a valid product name and price.");
@@ -1051,7 +1143,19 @@
       }
 
       const stockRef = ref(db, `users/${currentUser.uid}/stocks`);
-      push(stockRef, { code, name, price, timestamp: Date.now() })
+      push(stockRef, { code, name, price, timestamp: now })
+        .then(() => {
+          // ALSO SAVE AS COST UNDER SALES CATEGORY
+          const salesRef = ref(db, `users/${currentUser.uid}/sales`);
+          return push(salesRef, {
+            code: `STK-${code}`,
+            name: `Stock: ${name}`,
+            price: price,
+            category: 'Stock',
+            type: 'Cost',
+            timestamp: now
+          });
+        })
         .then(() => {
           stockModal.classList.add('hidden');
         })
@@ -1069,7 +1173,7 @@
         tr.innerHTML = `
           <td>${item.code}</td>
           <td>${item.name}</td>
-          <td>$${item.price.toFixed(2)}</td>
+          <td>Rs. ${item.price.toFixed(2)}</td>
           <td><button class="btn-danger" data-id="${item.id}">Delete</button></td>
         `;
 
@@ -1079,6 +1183,98 @@
 
         tbody.appendChild(tr);
       });
+    }
+
+    // REPORT MODALS & CALCULATIONS
+    const salesReportModal = document.getElementById('sales-report-modal');
+    const stockReportModal = document.getElementById('stock-report-modal');
+
+    document.getElementById('btn-open-sales-report').addEventListener('click', () => {
+      salesReportModal.classList.remove('hidden');
+      generateSalesReport('daily');
+    });
+    document.getElementById('btn-close-sales-report').addEventListener('click', () => {
+      salesReportModal.classList.add('hidden');
+    });
+
+    document.getElementById('btn-open-stock-report').addEventListener('click', () => {
+      stockReportModal.classList.remove('hidden');
+      generateStockReport('daily');
+    });
+    document.getElementById('btn-close-stock-report').addEventListener('click', () => {
+      stockReportModal.classList.add('hidden');
+    });
+
+    document.querySelectorAll('.sales-report-tab').forEach(tab => {
+      tab.addEventListener('click', (e) => {
+        document.querySelectorAll('.sales-report-tab').forEach(t => t.classList.remove('active'));
+        e.target.classList.add('active');
+        generateSalesReport(e.target.getAttribute('data-period'));
+      });
+    });
+
+    document.querySelectorAll('.stock-report-tab').forEach(tab => {
+      tab.addEventListener('click', (e) => {
+        document.querySelectorAll('.stock-report-tab').forEach(t => t.classList.remove('active'));
+        e.target.classList.add('active');
+        generateStockReport(e.target.getAttribute('data-period'));
+      });
+    });
+
+    function filterByPeriod(dataArray, period) {
+      const now = new Date();
+      return dataArray.filter(item => {
+        const itemDate = new Date(item.timestamp || Date.now());
+        if (period === 'daily') {
+          return itemDate.toDateString() === now.toDateString();
+        } else if (period === 'monthly') {
+          return itemDate.getMonth() === now.getMonth() && itemDate.getFullYear() === now.getFullYear();
+        } else if (period === 'yearly') {
+          return itemDate.getFullYear() === now.getFullYear();
+        }
+        return true;
+      });
+    }
+
+    function generateSalesReport(period) {
+      const filtered = filterByPeriod(salesData, period);
+      const incomeItems = filtered.filter(i => i.type === 'Income');
+
+      let totalRevenue = 0;
+      let roomsTotal = 0;
+      let foodTotal = 0;
+      let functionTotal = 0;
+
+      incomeItems.forEach(i => {
+        totalRevenue += i.price;
+        if (i.category === 'Rooms') roomsTotal += i.price;
+        if (i.category === 'Food') foodTotal += i.price;
+        if (i.category === 'Function') functionTotal += i.price;
+      });
+
+      const unitsSold = incomeItems.length;
+      const avgOrder = unitsSold > 0 ? totalRevenue / unitsSold : 0;
+
+      document.getElementById('sr-total-revenue').innerText = `Rs. ${totalRevenue.toFixed(2)}`;
+      document.getElementById('sr-total-units').innerText = unitsSold;
+      document.getElementById('sr-avg-order').innerText = `Rs. ${avgOrder.toFixed(2)}`;
+      
+      document.getElementById('sr-cat-rooms').innerText = `Rs. ${roomsTotal.toFixed(2)}`;
+      document.getElementById('sr-cat-food').innerText = `Rs. ${foodTotal.toFixed(2)}`;
+      document.getElementById('sr-cat-function').innerText = `Rs. ${functionTotal.toFixed(2)}`;
+    }
+
+    function generateStockReport(period) {
+      const filtered = filterByPeriod(stockData, period);
+
+      let totalVal = 0;
+      filtered.forEach(s => totalVal += s.price);
+      const count = filtered.length;
+      const avgPrice = count > 0 ? totalVal / count : 0;
+
+      document.getElementById('st-total-val').innerText = `Rs. ${totalVal.toFixed(2)}`;
+      document.getElementById('st-total-count').innerText = count;
+      document.getElementById('st-avg-price').innerText = `Rs. ${avgPrice.toFixed(2)}`;
     }
   </script>
 </body>
