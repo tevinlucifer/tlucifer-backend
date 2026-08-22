@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const SibApiV3Sdk = require('@getbrevo/brevo');
 
 const app = express();
 app.use(cors());
@@ -21,7 +22,7 @@ app.get('/', (req, res) => {
   });
 });
 
-// Endpoint to send OTP via Brevo API
+// Endpoint to send OTP via Brevo API SDK
 app.post('/api/send-otp', async (req, res) => {
   const { email, otp } = req.body;
 
@@ -29,7 +30,6 @@ app.post('/api/send-otp', async (req, res) => {
     return res.status(400).json({ success: false, error: 'Email and OTP are required.' });
   }
 
-  // 1. Sanitize and validate API key existence
   const apiKey = process.env.BREVO_API_KEY ? process.env.BREVO_API_KEY.trim() : null;
 
   if (!apiKey) {
@@ -40,38 +40,35 @@ app.post('/api/send-otp', async (req, res) => {
     });
   }
 
+  // Initialize Brevo API client
+  const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
+  apiInstance.setApiKey(SibApiV3Sdk.TransactionalEmailsApiApiKeys.apiKey, apiKey);
+
+  // Configure transactional email content
+  const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
+  sendSmtpEmail.subject = "TLucifer Verification Code";
+  sendSmtpEmail.sender = { name: "TLucifer Security", email: "tevingampalage29@gmail.com" }; // MUST be verified in Brevo Dashboard
+  sendSmtpEmail.to = [{ email: email }];
+  sendSmtpEmail.htmlContent = `
+    <div style="font-family: Arial, sans-serif; padding: 20px;">
+      <h2>TLucifer Security Code</h2>
+      <p>Your verification code is:</p>
+      <h1 style="color: #2563eb; letter-spacing: 4px;">${otp}</h1>
+      <p>This code will expire shortly. Do not share it with anyone.</p>
+    </div>
+  `;
+
   try {
-    const response = await fetch('https://api.brevo.com/v3/smtp/email', {
-      method: 'POST',
-      headers: {
-        'api-key': apiKey,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        sender: { name: 'TLucifer Security', email: 'tevingampalage29@gmail.com' },
-        to: [{ email: email }],
-        subject: 'TLucifer Verification Code',
-        htmlContent: `
-          <div style="font-family: Arial, sans-serif; padding: 20px;">
-            <h2>TLucifer Security Code</h2>
-            <p>Your verification code is:</p>
-            <h1 style="color: #2563eb; letter-spacing: 4px;">${otp}</h1>
-            <p>This code will expire shortly. Do not share it with anyone.</p>
-          </div>
-        `
-      })
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.error('Brevo API Error:', errorData);
-      throw new Error(errorData.message || 'Failed to send OTP via Brevo');
-    }
-
-    res.json({ success: true, message: 'OTP sent successfully to email', emailSent: true });
+    const data = await apiInstance.sendTransacEmail(sendSmtpEmail);
+    console.log('Brevo Email Sent successfully:', data);
+    return res.json({ success: true, message: 'OTP sent successfully to email', emailSent: true });
   } catch (error) {
-    console.error('Error sending OTP:', error);
-    res.status(500).json({ success: false, error: error.message });
+    const errorMessage = error.response && error.response.body && error.response.body.message
+      ? error.response.body.message
+      : error.message;
+
+    console.error('Brevo API Error:', errorMessage);
+    return res.status(500).json({ success: false, error: errorMessage });
   }
 });
 
