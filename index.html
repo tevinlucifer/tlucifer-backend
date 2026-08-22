@@ -445,7 +445,7 @@
 
     .report-modal-card {
       background: var(--card-bg);
-      width: 720px;
+      width: 760px;
       max-width: 95%;
       padding: 28px;
       border-radius: 20px;
@@ -464,6 +464,12 @@
       border-radius: 12px;
       background: var(--input-bg);
       border: 1px solid rgba(255, 255, 255, 0.1);
+      cursor: pointer;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+    .report-card:hover {
+      transform: translateY(-2px);
+      border-color: #3b82f6;
     }
     .report-card span {
       font-size: 10px;
@@ -671,19 +677,19 @@
         <div class="widget-box">
           <div class="widget-box-title">📊 Sales Daily Summary Report</div>
           <div class="report-grid-4" style="margin-top: 10px;">
-            <div class="report-card">
+            <div class="report-card" id="card-dash-income">
               <span>TOTAL INCOME</span>
               <h3 id="report-total-income" style="color: #10b981;">Rs. 0.00</h3>
             </div>
-            <div class="report-card">
+            <div class="report-card" id="card-dash-cost">
               <span>TOTAL COST</span>
               <h3 id="report-total-cost" style="color: #ef4444;">Rs. 0.00</h3>
             </div>
-            <div class="report-card">
+            <div class="report-card" id="card-dash-profit">
               <span>NET PROFIT</span>
               <h3 id="report-net-profit" style="color: #3b82f6;">Rs. 0.00</h3>
             </div>
-            <div class="report-card">
+            <div class="report-card" id="card-dash-loss">
               <span>LOSS</span>
               <h3 id="report-net-loss" style="color: #f59e0b;">Rs. 0.00</h3>
             </div>
@@ -698,7 +704,11 @@
             <button class="btn-secondary" id="btn-open-stock-report">📄 View Stock Reports</button>
           </div>
           
-          <button class="btn-primary" id="btn-open-stock-modal" style="width: auto; padding: 10px 20px; margin-bottom: 16px;">+ Add Stock</button>
+          <div style="display: flex; gap: 16px; align-items: center; margin-bottom: 16px;">
+            <button class="btn-primary" id="btn-open-stock-modal" style="width: auto; padding: 10px 20px; margin-top: 0;">+ Add Stock</button>
+            <span style="font-size: 13px; font-weight: bold; color: var(--text-muted); margin-left: auto;">Filter By Calendar Date:</span>
+            <input type="date" id="stock-panel-calendar-filter" class="calendar-picker">
+          </div>
           
           <div class="table-card">
             <table>
@@ -756,19 +766,19 @@
           </div>
 
           <div class="report-grid-4">
-            <div class="report-card">
+            <div class="report-card" id="card-report-income">
               <span>INCOME</span>
               <h3 id="sr-total-revenue" style="color: #10b981;">Rs. 0.00</h3>
             </div>
-            <div class="report-card">
+            <div class="report-card" id="card-report-cost">
               <span>COST</span>
               <h3 id="sr-total-cost" style="color: #ef4444;">Rs. 0.00</h3>
             </div>
-            <div class="report-card">
+            <div class="report-card" id="card-report-profit">
               <span>NET PROFIT</span>
               <h3 id="sr-net-profit" style="color: #3b82f6;">Rs. 0.00</h3>
             </div>
-            <div class="report-card">
+            <div class="report-card" id="card-report-loss">
               <span>LOSS</span>
               <h3 id="sr-net-loss" style="color: #f59e0b;">Rs. 0.00</h3>
             </div>
@@ -830,6 +840,54 @@
               <span>FILTER STATUS</span>
               <h3 id="st-filter-status" style="font-size: 12px; color: #10b981; margin-top: 10px;">Active</h3>
             </div>
+          </div>
+
+          <div class="widget-box" style="margin-bottom: 0; padding: 16px;">
+            <div class="widget-box-title" style="font-size: 14px; margin-bottom: 10px;">Items Added on Selected Period</div>
+            <div class="table-card">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Stock Code</th>
+                    <th>Product Name</th>
+                    <th>Price (Rs.)</th>
+                  </tr>
+                </thead>
+                <tbody id="stock-report-table-body">
+                </tbody>
+              </table>
+            </div>
+            <div style="text-align: right; margin-top: 10px; font-weight: 700; font-size: 15px; color: var(--text-main);">
+              Total Stock Value: <span id="st-table-total-val" style="color: #10b981;">Rs. 0.00</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CATEGORY DETAILS DRILLDOWN MODAL -->
+      <div id="metric-details-modal" class="modal-overlay hidden">
+        <div class="report-modal-card">
+          <div class="widget-header-row">
+            <h2 style="color: var(--text-main);" id="metric-details-title">Details View</h2>
+            <button class="btn-danger" id="btn-close-metric-details" style="font-size: 14px; padding: 6px 12px;">X</button>
+          </div>
+          <div class="table-card" style="max-height: 300px;">
+            <table>
+              <thead>
+                <tr>
+                  <th>Code</th>
+                  <th>Name</th>
+                  <th>Category</th>
+                  <th>Type</th>
+                  <th>Price (Rs.)</th>
+                </tr>
+              </thead>
+              <tbody id="metric-details-tbody">
+              </tbody>
+            </table>
+          </div>
+          <div style="text-align: right; margin-top: 16px; font-size: 18px; font-weight: 800; color: var(--text-main);">
+            Total: <span id="metric-details-total" style="color: #3b82f6;">Rs. 0.00</span>
           </div>
         </div>
       </div>
@@ -898,6 +956,7 @@
     const todayStr = new Date().toISOString().split('T')[0];
     document.getElementById('sales-calendar-filter').value = todayStr;
     document.getElementById('stock-calendar-filter').value = todayStr;
+    document.getElementById('stock-panel-calendar-filter').value = todayStr;
 
     const navItems = document.querySelectorAll('.sidebar-nav .nav-item');
     navItems.forEach(item => {
@@ -958,7 +1017,14 @@
           salesData = [];
           const data = snapshot.val();
           if (data) {
-            Object.keys(data).forEach(key => salesData.push({ id: key, ...data[key] }));
+            Object.keys(data).forEach(key => {
+              const item = data[key];
+              salesData.push({
+                id: key,
+                ...item,
+                price: parseFloat(item.price) || 0
+              });
+            });
           }
           renderSalesTable();
         });
@@ -967,7 +1033,14 @@
           stockData = [];
           const data = snapshot.val();
           if (data) {
-            Object.keys(data).forEach(key => stockData.push({ id: key, ...data[key] }));
+            Object.keys(data).forEach(key => {
+              const item = data[key];
+              stockData.push({
+                id: key,
+                ...item,
+                price: parseFloat(item.price) || 0
+              });
+            });
           }
           renderStockTable();
         });
@@ -1204,11 +1277,21 @@
         });
     });
 
+    document.getElementById('stock-panel-calendar-filter').addEventListener('change', renderStockTable);
+
     function renderStockTable() {
       const tbody = document.getElementById('stock-table-body');
       tbody.innerHTML = '';
 
-      stockData.forEach(item => {
+      const filterVal = document.getElementById('stock-panel-calendar-filter').value;
+      const selectedDate = filterVal ? new Date(filterVal) : new Date();
+
+      const filteredStocks = stockData.filter(item => {
+        const itemDate = new Date(item.timestamp || Date.now());
+        return itemDate.toDateString() === selectedDate.toDateString();
+      });
+
+      filteredStocks.forEach(item => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td>${item.code}</td>
@@ -1325,14 +1408,97 @@
       const filtered = filterByPeriodAndCalendar(stockData, period, calVal);
 
       let totalVal = 0;
-      filtered.forEach(s => totalVal += s.price);
+      const tbody = document.getElementById('stock-report-table-body');
+      tbody.innerHTML = '';
+
+      filtered.forEach(s => {
+        totalVal += s.price;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${s.code}</td>
+          <td>${s.name}</td>
+          <td>Rs. ${s.price.toFixed(2)}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
       const count = filtered.length;
       const avgPrice = count > 0 ? totalVal / count : 0;
 
       document.getElementById('st-total-val').innerText = `Rs. ${totalVal.toFixed(2)}`;
       document.getElementById('st-total-count').innerText = count;
       document.getElementById('st-avg-price').innerText = `Rs. ${avgPrice.toFixed(2)}`;
+      document.getElementById('st-table-total-val').innerText = `Rs. ${totalVal.toFixed(2)}`;
     }
+
+    // DRILLDOWN METRIC CARD MODAL
+    const metricModal = document.getElementById('metric-details-modal');
+    document.getElementById('btn-close-metric-details').addEventListener('click', () => {
+      metricModal.classList.add('hidden');
+    });
+
+    function openMetricDetails(metricType) {
+      const titleEl = document.getElementById('metric-details-title');
+      const tbody = document.getElementById('metric-details-tbody');
+      const totalEl = document.getElementById('metric-details-total');
+      tbody.innerHTML = '';
+
+      const calVal = document.getElementById('sales-calendar-filter').value;
+      const filtered = filterByPeriodAndCalendar(salesData, activeSalesPeriod, calVal);
+
+      let itemsToDisplay = [];
+      let totalSum = 0;
+
+      if (metricType === 'income') {
+        titleEl.innerText = "Income Details Breakdown";
+        itemsToDisplay = filtered.filter(i => i.type === 'Income');
+      } else if (metricType === 'cost') {
+        titleEl.innerText = "Cost Details Breakdown";
+        itemsToDisplay = filtered.filter(i => i.type === 'Cost');
+      } else if (metricType === 'profit') {
+        titleEl.innerText = "Net Profit Calculation Breakdown";
+        itemsToDisplay = filtered;
+      } else if (metricType === 'loss') {
+        titleEl.innerText = "Loss Calculation Breakdown";
+        itemsToDisplay = filtered;
+      }
+
+      itemsToDisplay.forEach(item => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${item.code}</td>
+          <td>${item.name}</td>
+          <td>${item.category}</td>
+          <td>${item.type}</td>
+          <td>Rs. ${item.price.toFixed(2)}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      const totalIncome = filtered.filter(i => i.type === 'Income').reduce((acc, curr) => acc + curr.price, 0);
+      const totalCost = filtered.filter(i => i.type === 'Cost').reduce((acc, curr) => acc + curr.price, 0);
+
+      if (metricType === 'income') totalSum = totalIncome;
+      else if (metricType === 'cost') totalSum = totalCost;
+      else if (metricType === 'profit') totalSum = Math.max(0, totalIncome - totalCost);
+      else if (metricType === 'loss') totalSum = totalCost > totalIncome ? (totalCost - totalIncome) : 0;
+
+      totalEl.innerText = `Rs. ${totalSum.toFixed(2)}`;
+      metricModal.classList.remove('hidden');
+    }
+
+    ['card-dash-income', 'card-report-income'].forEach(id => {
+      document.getElementById(id).addEventListener('click', () => openMetricDetails('income'));
+    });
+    ['card-dash-cost', 'card-report-cost'].forEach(id => {
+      document.getElementById(id).addEventListener('click', () => openMetricDetails('cost'));
+    });
+    ['card-dash-profit', 'card-report-profit'].forEach(id => {
+      document.getElementById(id).addEventListener('click', () => openMetricDetails('profit'));
+    });
+    ['card-dash-loss', 'card-report-loss'].forEach(id => {
+      document.getElementById(id).addEventListener('click', () => openMetricDetails('loss'));
+    });
   </script>
 </body>
 </html>
