@@ -44,16 +44,29 @@
     /* TOP NAVBAR */
     .top-navbar {
       display: flex;
-      justify-content: flex-end;
+      justify-content: space-between;
       align-items: center;
       padding: 24px 60px;
       width: 100%;
     }
 
-    .nav-right {
+    .nav-left, .nav-right {
       display: flex;
       align-items: center;
       gap: 30px;
+    }
+
+    .power-btn {
+      width: 32px;
+      height: 32px;
+      border: 1.5px solid #fff;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      text-decoration: none;
+      font-size: 16px;
     }
 
     .top-link {
@@ -93,7 +106,17 @@
       flex-direction: column;
       justify-content: center;
       text-align: center;
-      margin-top: 50px;
+    }
+
+    .welcome-header {
+      margin-bottom: 30px;
+    }
+
+    .welcome-header h1 {
+      font-size: 32px;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.2;
     }
 
     .auth-card-right .input-group {
@@ -418,6 +441,15 @@
     .btn-secondary:hover {
       background-color: #059669;
     }
+    .btn-danger {
+      background-color: #ef4444;
+      color: white;
+      border: none;
+      padding: 4px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 11px;
+    }
 
     .form-row {
       display: flex;
@@ -465,6 +497,54 @@
       border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     }
 
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .report-modal-card {
+      background: rgba(17, 24, 39, 0.95);
+      width: 760px;
+      max-width: 95%;
+      padding: 28px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .report-grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .report-card {
+      padding: 14px;
+      border-radius: 12px;
+      background: rgba(55, 65, 81, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      cursor: pointer;
+    }
+    .report-card span {
+      font-size: 10px;
+      color: var(--text-muted);
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .report-card h3 {
+      font-size: 16px;
+      margin-top: 6px;
+      word-break: break-all;
+    }
     .calendar-picker {
       padding: 8px 12px;
       border-radius: 10px;
@@ -481,7 +561,16 @@
 
   <!-- TOP NAVBAR -->
   <header class="top-navbar" id="main-top-navbar">
+    <div class="nav-left">
+      <a href="#" class="power-btn">⏻</a>
+      <a href="#" class="top-link">Home</a>
+      <a href="#" class="top-link">About</a>
+      <a href="#" class="top-link">Service</a>
+      <a href="#" class="top-link">Contact</a>
+      <a href="#" class="top-link">Feedback</a>
+    </div>
     <div class="nav-right">
+      <a href="#" class="top-link">English</a>
       <a href="#" id="top-nav-signup" class="top-link">Sign up</a>
       <button id="top-nav-register" class="btn-register-top">Register</button>
     </div>
@@ -491,6 +580,9 @@
 
     <!-- SIGN IN VIEW -->
     <div id="signin-view" class="auth-card-right">
+      <div class="welcome-header">
+        <h1>Hello !<br>Welcome Back</h1>
+      </div>
       <form id="signin-form" autocomplete="off">
         <div class="input-group">
           <input type="email" id="signin-email" placeholder="Enter Email" required>
@@ -521,6 +613,9 @@
 
     <!-- SIGN UP VIEW -->
     <div id="signup-view" class="auth-card-right hidden">
+      <div class="welcome-header">
+        <h1>Create Account</h1>
+      </div>
       <form id="signup-form" autocomplete="off">
         <div class="input-group">
           <input type="text" id="signup-name" placeholder="Full Name" required>
@@ -540,6 +635,9 @@
 
     <!-- OTP VIEW -->
     <div id="otp-view" class="auth-card-right hidden">
+      <div class="welcome-header">
+        <h1>Verify Email</h1>
+      </div>
       <form id="otp-form" autocomplete="off">
         <div class="input-group">
           <input type="text" id="otp-input" placeholder="Enter OTP" maxlength="6" required style="text-align: center; letter-spacing: 4px;">
@@ -550,6 +648,9 @@
 
     <!-- FORGOT PASSWORD VIEW -->
     <div id="forgot-view" class="auth-card-right hidden">
+      <div class="welcome-header">
+        <h1>Reset Password</h1>
+      </div>
       <form id="forgot-form" autocomplete="off">
         <div class="input-group">
           <input type="email" id="forgot-email" placeholder="Registered Email" required>
