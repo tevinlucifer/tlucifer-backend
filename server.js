@@ -21,10 +21,16 @@ app.get('/', (req, res) => {
 
 // Endpoint to send OTP via direct Brevo REST API
 app.post('/api/send-otp', async (req, res) => {
-  const { email, otp } = req.body;
+  let { email, otp } = req.body;
 
-  if (!email || !otp) {
-    return res.status(400).json({ success: false, error: 'Email and OTP are required.' });
+  // Validate email presence
+  if (!email) {
+    return res.status(400).json({ success: false, error: 'Email address is required.' });
+  }
+
+  // Fallback: If the frontend didn't pass an OTP, generate a 6-digit code here
+  if (!otp) {
+    otp = Math.floor(100000 + Math.random() * 900000).toString();
   }
 
   const apiKey = process.env.BREVO_API_KEY ? process.env.BREVO_API_KEY.trim() : null;
@@ -71,7 +77,12 @@ app.post('/api/send-otp', async (req, res) => {
     }
 
     console.log('Email successfully sent via Brevo API:', data);
-    return res.json({ success: true, message: 'OTP sent successfully to email', data });
+    return res.json({ 
+      success: true, 
+      message: 'OTP sent successfully to email', 
+      otp, // Returns OTP so the client can store/verify if needed
+      data 
+    });
 
   } catch (error) {
     console.error('Server Internal Fetch Error:', error.message);
