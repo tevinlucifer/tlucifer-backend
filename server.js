@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const SibApiV3Sdk = require('@getbrevo/brevo');
+const brevo = require('@getbrevo/brevo');
 
 const app = express();
 app.use(cors());
@@ -40,14 +40,14 @@ app.post('/api/send-otp', async (req, res) => {
     });
   }
 
-  // Initialize Brevo API client
-  const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
-  apiInstance.setApiKey(SibApiV3Sdk.TransactionalEmailsApiApiKeys.apiKey, apiKey);
+  // Initialize Brevo API client (Modern SDK standard)
+  const apiInstance = new brevo.TransactionalEmailsApi();
+  apiInstance.setApiKey(brevo.TransactionalEmailsApiApiKeys.apiKey, apiKey);
 
   // Configure transactional email content
-  const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
+  const sendSmtpEmail = new brevo.SendSmtpEmail();
   sendSmtpEmail.subject = "TLucifer Verification Code";
-  sendSmtpEmail.sender = { name: "TLucifer Security", email: "tevingampalage29@gmail.com" }; // MUST be verified in Brevo Dashboard
+  sendSmtpEmail.sender = { name: "TLucifer Security", email: "tevingampalage29@gmail.com" }; // Must be verified in Brevo Dashboard
   sendSmtpEmail.to = [{ email: email }];
   sendSmtpEmail.htmlContent = `
     <div style="font-family: Arial, sans-serif; padding: 20px;">
@@ -63,9 +63,8 @@ app.post('/api/send-otp', async (req, res) => {
     console.log('Brevo Email Sent successfully:', data);
     return res.json({ success: true, message: 'OTP sent successfully to email', emailSent: true });
   } catch (error) {
-    const errorMessage = error.response && error.response.body && error.response.body.message
-      ? error.response.body.message
-      : error.message;
+    // Robust error logging to catch Brevo response details
+    const errorMessage = error.response?.body?.message || error.body?.message || error.message;
 
     console.error('Brevo API Error:', errorMessage);
     return res.status(500).json({ success: false, error: errorMessage });
