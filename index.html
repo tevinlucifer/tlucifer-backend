@@ -9,24 +9,12 @@
     :root {
       --bg-overlay: rgba(6, 11, 25, 0.75);
       --card-bg: rgba(248, 249, 250, 0.9);
-      --sidebar-bg: rgba(255, 255, 255, 0.85);
-      --text-main: #111827;
-      --text-muted: #6b7280;
-      --widget-bg: rgba(255, 255, 255, 0.55);
-      --input-bg: rgba(255, 255, 255, 0.7);
-      --table-header-bg: rgba(243, 244, 246, 0.9);
-      --active-item-bg: rgba(37, 99, 235, 0.1);
-      --active-item-color: #2563eb;
-    }
-
-    body.dark-theme {
-      --bg-overlay: rgba(0, 0, 0, 0.88);
-      --card-bg: rgba(17, 24, 39, 0.85);
       --sidebar-bg: rgba(17, 24, 39, 0.85);
-      --text-main: #f9fafb;
+      --text-main: #ffffff;
       --text-muted: #9ca3af;
       --widget-bg: rgba(31, 41, 55, 0.75);
-      --input-bg: rgba(55, 65, 81, 0.8);
+      --input-bg: rgba(255, 255, 255, 1);
+      --input-text: #1a202c;
       --table-header-bg: rgba(31, 41, 55, 0.9);
       --active-item-bg: rgba(37, 99, 235, 0.25);
       --active-item-color: #60a5fa;
@@ -46,138 +34,170 @@
       color: var(--text-main);
       min-height: 100vh;
       display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
+      flex-direction: column;
     }
 
     .hidden {
       display: none !important;
     }
 
-    .auth-card {
-      background: rgba(255, 255, 255, 0.25);
-      backdrop-filter: blur(25px);
-      -webkit-backdrop-filter: blur(25px);
-      padding: 40px;
-      border-radius: 20px;
-      border: 1px solid rgba(255, 255, 255, 0.35);
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
-      width: 400px;
-      text-align: center;
-    }
-    .company-logo {
-      width: 90px;
-      height: auto;
-      margin-bottom: 16px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    }
-    .auth-card h2 {
-      margin-bottom: 6px;
-      color: #000;
-      font-weight: 700;
-    }
-    .auth-card p {
-      color: #1f2937;
-      font-size: 14px;
-      margin-bottom: 24px;
-      font-weight: 500;
-    }
-    .input-group {
-      margin-bottom: 16px;
-      text-align: left;
-    }
-    .input-group label {
-      display: block;
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--text-main);
-      margin-bottom: 6px;
-    }
-    .input-group input, .input-group select {
+    /* TOP NAVBAR */
+    .top-navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px 60px;
       width: 100%;
-      padding: 10px 14px;
-      background: var(--input-bg);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 8px;
-      font-size: 14px;
-      color: var(--text-main);
-      outline: none;
-      backdrop-filter: blur(5px);
     }
-    .forgot-link {
-      display: block;
-      text-align: right;
-      font-size: 12px;
-      color: #3b82f6;
-      text-decoration: none;
-      margin-top: 6px;
-      margin-bottom: 16px;
-      cursor: pointer;
-      font-weight: 600;
+
+    .nav-left, .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 30px;
     }
-    .btn-primary {
-      width: 100%;
-      padding: 12px;
-      background-color: #2563eb;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 14px;
-      cursor: pointer;
-      margin-top: 8px;
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
-    }
-    .btn-primary:hover {
-      background-color: #1d4ed8;
-    }
-    .btn-secondary {
-      padding: 10px 18px;
-      background-color: #10b981;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 14px;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-    }
-    .btn-secondary:hover {
-      background-color: #059669;
-    }
-    .btn-danger {
-      background-color: #ef4444;
-      color: white;
-      border: none;
-      padding: 4px 8px;
+
+    .power-btn {
+      width: 32px;
+      height: 32px;
+      border: 1.5px solid #fff;
       border-radius: 6px;
-      cursor: pointer;
-      font-size: 11px;
-    }
-    .btn-danger:hover {
-      background-color: #dc2626;
-    }
-    .auth-toggle {
-      margin-top: 20px;
-      font-size: 13px;
-      color: var(--text-main);
-      font-weight: 500;
-    }
-    .auth-toggle a {
-      color: #3b82f6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
       text-decoration: none;
-      font-weight: 700;
+      font-size: 16px;
+    }
+
+    .top-link {
+      color: #fff;
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 500;
       cursor: pointer;
     }
 
+    .btn-register-top {
+      background: #ffffff;
+      color: #000000;
+      border: none;
+      padding: 10px 28px;
+      border-radius: 25px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    /* AUTH PAGE LAYOUT */
+    .auth-page-container {
+      display: flex;
+      flex: 1;
+      width: 100%;
+      padding-right: 10%;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    .auth-card-right {
+      margin-left: auto;
+      width: 380px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .welcome-header {
+      margin-bottom: 30px;
+    }
+
+    .welcome-header h1 {
+      font-size: 32px;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.2;
+    }
+
+    .auth-card-right .input-group {
+      margin-bottom: 16px;
+    }
+
+    .auth-card-right input {
+      width: 100%;
+      padding: 14px 20px;
+      background: var(--input-bg);
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      color: var(--input-text);
+      outline: none;
+    }
+
+    .auth-card-right input::placeholder {
+      color: #888888;
+    }
+
+    .btn-signin-full {
+      width: 100%;
+      padding: 14px;
+      background: #ffffff;
+      color: #000000;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      margin-top: 10px;
+      margin-bottom: 25px;
+    }
+
+    .btn-signin-full:hover {
+      background: #e2e8f0;
+    }
+
+    /* SOCIAL BUTTONS */
+    .social-buttons {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .btn-social {
+      flex: 1;
+      padding: 10px;
+      background: #ffffff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .auth-toggle-text {
+      font-size: 14px;
+      color: #ffffff;
+      font-weight: 400;
+    }
+
+    .auth-toggle-text a {
+      color: #ffffff;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    /* DASHBOARD LAYOUT */
     .app-container {
       display: flex;
       width: 100%;
       max-width: 1440px;
       gap: 20px;
       align-items: stretch;
+      margin: 20px auto;
+      padding: 0 20px;
     }
 
     .sidebar {
@@ -247,7 +267,7 @@
     }
 
     .navbar {
-      background: var(--card-bg);
+      background: rgba(17, 24, 39, 0.85);
       backdrop-filter: blur(15px);
       padding: 12px 24px;
       border-radius: 40px;
@@ -286,7 +306,7 @@
       width: 38px;
       height: 38px;
       border-radius: 50%;
-      background: var(--input-bg);
+      background: rgba(55, 65, 81, 0.8);
       border: 1px solid rgba(255, 255, 255, 0.2);
       color: var(--text-main);
       display: flex;
@@ -352,7 +372,7 @@
     }
 
     .widget-box {
-      background: var(--card-bg);
+      background: rgba(17, 24, 39, 0.85);
       backdrop-filter: blur(10px);
       padding: 24px;
       border-radius: 20px;
@@ -383,7 +403,7 @@
       padding: 10px 20px;
       border-radius: 12px;
       border: 1px solid rgba(255, 255, 255, 0.1);
-      background: var(--input-bg);
+      background: rgba(55, 65, 81, 0.8);
       color: var(--text-main);
       font-weight: 600;
       cursor: pointer;
@@ -391,6 +411,44 @@
     .tab-btn.active {
       background: #2563eb;
       color: white;
+    }
+
+    .btn-primary {
+      padding: 12px 20px;
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    }
+    .btn-primary:hover {
+      background-color: #1d4ed8;
+    }
+    .btn-secondary {
+      padding: 10px 18px;
+      background-color: #10b981;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+    .btn-secondary:hover {
+      background-color: #059669;
+    }
+    .btn-danger {
+      background-color: #ef4444;
+      color: white;
+      border: none;
+      padding: 4px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 11px;
     }
 
     .form-row {
@@ -403,9 +461,19 @@
       flex: 1;
       margin-bottom: 0;
     }
+    .form-row input {
+      width: 100%;
+      padding: 10px 14px;
+      background: rgba(55, 65, 81, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      font-size: 14px;
+      color: var(--text-main);
+      outline: none;
+    }
 
     .table-card {
-      background: var(--card-bg);
+      background: rgba(17, 24, 39, 0.85);
       border-radius: 10px;
       overflow: hidden;
       max-height: 250px;
@@ -444,7 +512,7 @@
     }
 
     .report-modal-card {
-      background: var(--card-bg);
+      background: rgba(17, 24, 39, 0.95);
       width: 760px;
       max-width: 95%;
       padding: 28px;
@@ -462,14 +530,9 @@
     .report-card {
       padding: 14px;
       border-radius: 12px;
-      background: var(--input-bg);
+      background: rgba(55, 65, 81, 0.8);
       border: 1px solid rgba(255, 255, 255, 0.1);
       cursor: pointer;
-      transition: transform 0.2s ease, border-color 0.2s ease;
-    }
-    .report-card:hover {
-      transform: translateY(-2px);
-      border-color: #3b82f6;
     }
     .report-card span {
       font-size: 10px;
@@ -486,7 +549,7 @@
       padding: 8px 12px;
       border-radius: 10px;
       border: 1px solid rgba(255, 255, 255, 0.2);
-      background: var(--input-bg);
+      background: rgba(55, 65, 81, 0.8);
       color: var(--text-main);
       font-weight: 600;
       outline: none;
@@ -494,82 +557,114 @@
     }
   </style>
 </head>
-<body class="dark-theme">
+<body>
 
-  <div id="signin-view" class="auth-card">
-    <img src="Company%20Logo.png" alt="Company Logo" class="company-logo" onerror="this.src='logo.png'">
-    <h2>Welcome Back</h2>
-    <p>Sign in to your TD account</p>
-    <form id="signin-form" autocomplete="off">
-      <div class="input-group">
-        <label>Email Address</label>
-        <input type="email" id="signin-email" placeholder="name@example.com" required>
-      </div>
-      <div class="input-group">
-        <label>Password</label>
-        <input type="password" id="signin-pass" placeholder="••••••••" required>
-        <a class="forgot-link" id="btn-to-forgot">Forgot Password?</a>
-      </div>
-      <button type="submit" id="btn-signin-submit" class="btn-primary">Sign In</button>
-    </form>
-    <div class="auth-toggle">
-      Don't have an account? <a id="btn-to-signup">Sign Up</a>
+  <!-- TOP NAVBAR -->
+  <header class="top-navbar" id="main-top-navbar">
+    <div class="nav-left">
+      <a href="#" class="power-btn">⏻</a>
+      <a href="#" class="top-link">Home</a>
+      <a href="#" class="top-link">About</a>
+      <a href="#" class="top-link">Service</a>
+      <a href="#" class="top-link">Contact</a>
+      <a href="#" class="top-link">Feedback</a>
     </div>
-  </div>
-
-  <div id="signup-view" class="auth-card hidden">
-    <img src="Company%20Logo.png" alt="Company Logo" class="company-logo" onerror="this.src='logo.png'">
-    <h2>Create Account</h2>
-    <p>Get started with TD</p>
-    <form id="signup-form" autocomplete="off">
-      <div class="input-group">
-        <label>Full Name</label>
-        <input type="text" id="signup-name" placeholder="John Doe" required>
-      </div>
-      <div class="input-group">
-        <label>Email Address</label>
-        <input type="email" id="signup-email" placeholder="name@example.com" required>
-      </div>
-      <div class="input-group">
-        <label>Password</label>
-        <input type="password" id="signup-pass" placeholder="••••••••" required>
-      </div>
-      <button type="submit" id="btn-signup-submit" class="btn-primary">Continue to Verification</button>
-    </form>
-    <div class="auth-toggle">
-      Already have an account? <a id="btn-to-signin">Sign In</a>
+    <div class="nav-right">
+      <a href="#" class="top-link">English</a>
+      <a href="#" id="top-nav-signup" class="top-link">Sign up</a>
+      <button id="top-nav-register" class="btn-register-top">Register</button>
     </div>
-  </div>
+  </header>
 
-  <div id="otp-view" class="auth-card hidden">
-    <img src="Company%20Logo.png" alt="Company Logo" class="company-logo" onerror="this.src='logo.png'">
-    <h2>Verify Email</h2>
-    <p>We've sent a code to your email.</p>
-    <form id="otp-form" autocomplete="off">
-      <div class="input-group">
-        <label>Verification Code</label>
-        <input type="text" id="otp-input" placeholder="123456" maxlength="6" required style="text-align: center; letter-spacing: 4px; font-size: 18px;">
-      </div>
-      <button type="submit" id="btn-otp-submit" class="btn-primary">Verify & Proceed</button>
-    </form>
-  </div>
+  <div class="auth-page-container" id="auth-main-container">
 
-  <div id="forgot-view" class="auth-card hidden">
-    <img src="Company%20Logo.png" alt="Company Logo" class="company-logo" onerror="this.src='logo.png'">
-    <h2>Reset Password</h2>
-    <p>Enter your email to reset password</p>
-    <form id="forgot-form" autocomplete="off">
-      <div class="input-group">
-        <label>Registered Email</label>
-        <input type="email" id="forgot-email" placeholder="name@example.com" required>
+    <!-- SIGN IN VIEW -->
+    <div id="signin-view" class="auth-card-right">
+      <div class="welcome-header">
+        <h1>Hello !<br>Welcome Back</h1>
       </div>
-      <button type="submit" class="btn-primary">Send Reset Link</button>
-    </form>
-    <div class="auth-toggle">
-      <a id="btn-forgot-to-signin">Back to Sign In</a>
+      <form id="signin-form" autocomplete="off">
+        <div class="input-group">
+          <input type="email" id="signin-email" placeholder="Enter Email" required>
+        </div>
+        <div class="input-group">
+          <input type="password" id="signin-pass" placeholder="Password" required>
+        </div>
+        <button type="submit" id="btn-signin-submit" class="btn-signin-full">Sign in</button>
+      </form>
+
+      <!-- SOCIAL LOGINS -->
+      <div class="social-buttons">
+        <button class="btn-social" type="button" aria-label="Sign in with Google">
+          <svg viewBox="0 0 24 24" width="18" height="18"><path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.6l3.1-3.1C17.3 1.7 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.3 9 5 12 5z"/><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.8z"/><path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.3s.2-1.6.4-2.3L1.9 7.3C.7 9.7 0 10.8 0 12s.7 2.3 1.9 4.7l3.7-1.9z"/><path fill="#34A853" d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2.3-6.4-5.2L1.9 16C3.7 19.7 7.5 23 12 23z"/></svg>
+        </button>
+        <button class="btn-social" type="button" aria-label="Sign in with Apple">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="#000"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.34c.66-.8 1.11-1.92.99-3.04-.96.04-2.12.64-2.8 1.44-.61.71-1.14 1.86-1 2.96 1.08.08 2.16-.56 2.81-1.36z"/></svg>
+        </button>
+        <button class="btn-social" type="button" aria-label="Sign in with Facebook">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        </button>
+      </div>
+
+      <div class="auth-toggle-text">
+        Don't have an account ? <a id="btn-to-signup">Create Account</a>
+      </div>
     </div>
+
+    <!-- SIGN UP VIEW -->
+    <div id="signup-view" class="auth-card-right hidden">
+      <div class="welcome-header">
+        <h1>Create Account</h1>
+      </div>
+      <form id="signup-form" autocomplete="off">
+        <div class="input-group">
+          <input type="text" id="signup-name" placeholder="Full Name" required>
+        </div>
+        <div class="input-group">
+          <input type="email" id="signup-email" placeholder="Enter Email" required>
+        </div>
+        <div class="input-group">
+          <input type="password" id="signup-pass" placeholder="Password" required>
+        </div>
+        <button type="submit" id="btn-signup-submit" class="btn-signin-full">Continue to Verification</button>
+      </form>
+      <div class="auth-toggle-text">
+        Already have an account ? <a id="btn-to-signin">Sign In</a>
+      </div>
+    </div>
+
+    <!-- OTP VIEW -->
+    <div id="otp-view" class="auth-card-right hidden">
+      <div class="welcome-header">
+        <h1>Verify Email</h1>
+      </div>
+      <form id="otp-form" autocomplete="off">
+        <div class="input-group">
+          <input type="text" id="otp-input" placeholder="Enter OTP" maxlength="6" required style="text-align: center; letter-spacing: 4px;">
+        </div>
+        <button type="submit" id="btn-otp-submit" class="btn-signin-full">Verify & Proceed</button>
+      </form>
+    </div>
+
+    <!-- FORGOT PASSWORD VIEW -->
+    <div id="forgot-view" class="auth-card-right hidden">
+      <div class="welcome-header">
+        <h1>Reset Password</h1>
+      </div>
+      <form id="forgot-form" autocomplete="off">
+        <div class="input-group">
+          <input type="email" id="forgot-email" placeholder="Registered Email" required>
+        </div>
+        <button type="submit" class="btn-signin-full">Send Reset Link</button>
+      </form>
+      <div class="auth-toggle-text">
+        <a id="btn-forgot-to-signin">Back to Sign In</a>
+      </div>
+    </div>
+
   </div>
 
+  <!-- DASHBOARD VIEW -->
   <div id="dashboard-view" class="app-container hidden">
     <aside class="sidebar">
       <div class="sidebar-brand">
@@ -642,18 +737,18 @@
           
           <div class="form-row">
             <div class="input-group">
-              <label>Bill Code</label>
+              <label style="display:block; font-size:12px; margin-bottom:4px;">Bill Code</label>
               <input type="text" id="bill-code" placeholder="Auto-Generated Code">
             </div>
             <div class="input-group">
-              <label>Name / Customer</label>
+              <label style="display:block; font-size:12px; margin-bottom:4px;">Name / Customer</label>
               <input type="text" id="bill-name" placeholder="Enter Name">
             </div>
             <div class="input-group">
-              <label>Price (Rs.)</label>
+              <label style="display:block; font-size:12px; margin-bottom:4px;">Price (Rs.)</label>
               <input type="number" id="bill-price" placeholder="0.00" step="0.01">
             </div>
-            <button class="btn-primary" id="btn-add-bill" style="width: auto; padding: 10px 20px;">Add Bill</button>
+            <button class="btn-primary" id="btn-add-bill">Add Bill</button>
           </div>
 
           <div class="table-card">
@@ -673,28 +768,6 @@
             </table>
           </div>
         </div>
-
-        <div class="widget-box">
-          <div class="widget-box-title">📊 Sales Daily Summary Report</div>
-          <div class="report-grid-4" style="margin-top: 10px;">
-            <div class="report-card" id="card-dash-income">
-              <span>TOTAL INCOME</span>
-              <h3 id="report-total-income" style="color: #10b981;">Rs. 0.00</h3>
-            </div>
-            <div class="report-card" id="card-dash-cost">
-              <span>TOTAL COST</span>
-              <h3 id="report-total-cost" style="color: #ef4444;">Rs. 0.00</h3>
-            </div>
-            <div class="report-card" id="card-dash-profit">
-              <span>NET PROFIT</span>
-              <h3 id="report-net-profit" style="color: #3b82f6;">Rs. 0.00</h3>
-            </div>
-            <div class="report-card" id="card-dash-loss">
-              <span>LOSS</span>
-              <h3 id="report-net-loss" style="color: #f59e0b;">Rs. 0.00</h3>
-            </div>
-          </div>
-        </div>
       </div>
 
       <div id="panel-stock" class="panel-content hidden">
@@ -705,7 +778,7 @@
           </div>
           
           <div style="display: flex; gap: 16px; align-items: center; margin-bottom: 16px;">
-            <button class="btn-primary" id="btn-open-stock-modal" style="width: auto; padding: 10px 20px; margin-top: 0;">+ Add Stock</button>
+            <button class="btn-primary" id="btn-open-stock-modal">+ Add Stock</button>
             <span style="font-size: 13px; font-weight: bold; color: var(--text-muted); margin-left: auto;">Filter By Calendar Date:</span>
             <input type="date" id="stock-panel-calendar-filter" class="calendar-picker">
           </div>
@@ -723,171 +796,6 @@
               <tbody id="stock-table-body">
               </tbody>
             </table>
-          </div>
-        </div>
-      </div>
-
-      <div id="stock-modal" class="modal-overlay hidden">
-        <div class="auth-card" style="width: 450px; text-align: left;">
-          <h2 style="color: var(--text-main); margin-bottom: 16px;">Add New Stock</h2>
-          <div class="input-group">
-            <label>Stock Code (Auto Generated)</label>
-            <input type="text" id="stock-code" value="S001">
-          </div>
-          <div class="input-group">
-            <label>Product Name</label>
-            <input type="text" id="stock-name" placeholder="e.g. Sugar">
-          </div>
-          <div class="input-group">
-            <label>Price (Rs.)</label>
-            <input type="number" id="stock-price" placeholder="0.00" step="0.01">
-          </div>
-          <div style="display: flex; gap: 10px; margin-top: 20px;">
-            <button class="btn-primary" id="btn-save-stock">Save Stock</button>
-            <button class="btn-primary" id="btn-cancel-stock" style="background: #4b5563;">Cancel</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- SALES REPORT MODAL -->
-      <div id="sales-report-modal" class="modal-overlay hidden">
-        <div class="report-modal-card">
-          <div class="widget-header-row">
-            <h2 style="color: var(--text-main);" id="sales-report-modal-title">Sales Performance Report</h2>
-            <button class="btn-danger" id="btn-close-sales-report" style="font-size: 14px; padding: 6px 12px;">X</button>
-          </div>
-          
-          <div class="tab-group">
-            <button class="tab-btn active sales-report-tab" data-period="daily">Daily Report</button>
-            <button class="tab-btn sales-report-tab" data-period="monthly">Monthly Report</button>
-            <button class="tab-btn sales-report-tab" data-period="yearly">Yearly Report</button>
-            <span style="margin-left: auto; font-size: 12px; font-weight: bold; color: var(--text-muted);">Calendar Date:</span>
-            <input type="date" id="sales-calendar-filter" class="calendar-picker">
-          </div>
-
-          <div class="report-grid-4">
-            <div class="report-card" id="card-report-income">
-              <span>INCOME</span>
-              <h3 id="sr-total-revenue" style="color: #10b981;">Rs. 0.00</h3>
-            </div>
-            <div class="report-card" id="card-report-cost">
-              <span>COST</span>
-              <h3 id="sr-total-cost" style="color: #ef4444;">Rs. 0.00</h3>
-            </div>
-            <div class="report-card" id="card-report-profit">
-              <span>NET PROFIT</span>
-              <h3 id="sr-net-profit" style="color: #3b82f6;">Rs. 0.00</h3>
-            </div>
-            <div class="report-card" id="card-report-loss">
-              <span>LOSS</span>
-              <h3 id="sr-net-loss" style="color: #f59e0b;">Rs. 0.00</h3>
-            </div>
-          </div>
-
-          <div class="widget-box" style="margin-bottom: 0; padding: 16px;">
-            <div class="widget-box-title" style="font-size: 14px;">Sales & Cost Breakdown by Category</div>
-            <div class="report-grid-4" style="margin-bottom: 0; margin-top: 10px;">
-              <div class="report-card">
-                <span>ROOMS</span>
-                <h3 id="sr-cat-rooms">Rs. 0.00</h3>
-              </div>
-              <div class="report-card">
-                <span>FOOD</span>
-                <h3 id="sr-cat-food">Rs. 0.00</h3>
-              </div>
-              <div class="report-card">
-                <span>FUNCTION</span>
-                <h3 id="sr-cat-function">Rs. 0.00</h3>
-              </div>
-              <div class="report-card">
-                <span>STOCK (COST)</span>
-                <h3 id="sr-cat-stock">Rs. 0.00</h3>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- STOCK REPORT MODAL -->
-      <div id="stock-report-modal" class="modal-overlay hidden">
-        <div class="report-modal-card">
-          <div class="widget-header-row">
-            <h2 style="color: var(--text-main);" id="stock-report-modal-title">Stock Analysis Report</h2>
-            <button class="btn-danger" id="btn-close-stock-report" style="font-size: 14px; padding: 6px 12px;">X</button>
-          </div>
-          
-          <div class="tab-group">
-            <button class="tab-btn active stock-report-tab" data-period="daily">Daily Stock</button>
-            <button class="tab-btn stock-report-tab" data-period="monthly">Monthly Stock</button>
-            <span style="margin-left: auto; font-size: 12px; font-weight: bold; color: var(--text-muted);">Calendar Date:</span>
-            <input type="date" id="stock-calendar-filter" class="calendar-picker">
-          </div>
-
-          <div class="report-grid-4">
-            <div class="report-card">
-              <span>TOTAL STOCK VALUE</span>
-              <h3 id="st-total-val" style="color: #ef4444;">Rs. 0.00</h3>
-            </div>
-            <div class="report-card">
-              <span>ITEMS ADDED</span>
-              <h3 id="st-total-count" style="color: #3b82f6;">0</h3>
-            </div>
-            <div class="report-card">
-              <span>AVG PRICE / ITEM</span>
-              <h3 id="st-avg-price" style="color: #f59e0b;">Rs. 0.00</h3>
-            </div>
-            <div class="report-card">
-              <span>FILTER STATUS</span>
-              <h3 id="st-filter-status" style="font-size: 12px; color: #10b981; margin-top: 10px;">Active</h3>
-            </div>
-          </div>
-
-          <div class="widget-box" style="margin-bottom: 0; padding: 16px;">
-            <div class="widget-box-title" style="font-size: 14px; margin-bottom: 10px;">Items Added on Selected Period</div>
-            <div class="table-card">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Stock Code</th>
-                    <th>Product Name</th>
-                    <th>Price (Rs.)</th>
-                  </tr>
-                </thead>
-                <tbody id="stock-report-table-body">
-                </tbody>
-              </table>
-            </div>
-            <div style="text-align: right; margin-top: 10px; font-weight: 700; font-size: 15px; color: var(--text-main);">
-              Total Stock Value: <span id="st-table-total-val" style="color: #10b981;">Rs. 0.00</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- CATEGORY DETAILS DRILLDOWN MODAL -->
-      <div id="metric-details-modal" class="modal-overlay hidden">
-        <div class="report-modal-card">
-          <div class="widget-header-row">
-            <h2 style="color: var(--text-main);" id="metric-details-title">Details View</h2>
-            <button class="btn-danger" id="btn-close-metric-details" style="font-size: 14px; padding: 6px 12px;">X</button>
-          </div>
-          <div class="table-card" style="max-height: 300px;">
-            <table>
-              <thead>
-                <tr>
-                  <th>Code</th>
-                  <th>Name</th>
-                  <th>Category</th>
-                  <th>Type</th>
-                  <th>Price (Rs.)</th>
-                </tr>
-              </thead>
-              <tbody id="metric-details-tbody">
-              </tbody>
-            </table>
-          </div>
-          <div style="text-align: right; margin-top: 16px; font-size: 18px; font-weight: 800; color: var(--text-main);">
-            Total: <span id="metric-details-total" style="color: #3b82f6;">Rs. 0.00</span>
           </div>
         </div>
       </div>
@@ -913,13 +821,6 @@
       signOut, 
       onAuthStateChanged 
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { 
-      getDatabase, 
-      ref, 
-      push, 
-      onValue, 
-      remove 
-    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyAHaToGc7F2vlQt6bDXRMMHjnqRf4OANfc",
@@ -928,37 +829,15 @@
       projectId: "tlucifer-auth",
       storageBucket: "tlucifer-auth.firebasestorage.app",
       messagingSenderId: "249663219994",
-      appId: "1:249663219994:web:69a395dee4ad4331e864a3",
-      measurementId: "G-EGYTDDF8GL"
+      appId: "1:249663219994:web:69a395dee4ad4331e864a3"
     };
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
-    const db = getDatabase(app);
     const BACKEND_URL = "https://tlucifer-backend.onrender.com";
 
-    let tempUserData = { mode: '', name: '', email: '', pass: '', generatedOtp: '' };
+    let tempUserData = { mode: '', name: '', email: '', pass: '' };
     let currentUser = null;
-    let salesData = [];
-    let stockData = [];
-
-    let currentSalesType = "Income"; 
-    let currentSubCategory = "Rooms";
-    let activeSalesPeriod = "daily";
-    let activeStockPeriod = "daily";
-
-    // Theme Toggle
-    const themeBtn = document.getElementById('theme-toggle');
-    themeBtn.addEventListener('click', () => {
-      document.body.classList.toggle('dark-theme');
-      themeBtn.innerText = document.body.classList.contains('dark-theme') ? '☀️' : '🌙';
-    });
-
-    // Date Pickers Default Value
-    const todayStr = new Date().toISOString().split('T')[0];
-    document.getElementById('sales-calendar-filter').value = todayStr;
-    document.getElementById('stock-calendar-filter').value = todayStr;
-    document.getElementById('stock-panel-calendar-filter').value = todayStr;
 
     // Navigation Switcher
     const navItems = document.querySelectorAll('.sidebar-nav .nav-item');
@@ -1001,11 +880,23 @@
     function showView(viewName) {
       Object.keys(views).forEach(key => views[key].classList.add('hidden'));
       views[viewName].classList.remove('hidden');
+
+      const navbar = document.getElementById('main-top-navbar');
+      const authContainer = document.getElementById('auth-main-container');
+
+      if (viewName === 'dashboard') {
+        navbar.classList.add('hidden');
+        authContainer.classList.add('hidden');
+      } else {
+        navbar.classList.remove('hidden');
+        authContainer.classList.remove('hidden');
+      }
     }
 
     document.getElementById('btn-to-signup').addEventListener('click', () => showView('signup'));
     document.getElementById('btn-to-signin').addEventListener('click', () => showView('signin'));
-    document.getElementById('btn-to-forgot').addEventListener('click', () => showView('forgot'));
+    document.getElementById('top-nav-signup')?.addEventListener('click', () => showView('signup'));
+    document.getElementById('top-nav-register')?.addEventListener('click', () => showView('signup'));
     document.getElementById('btn-forgot-to-signin').addEventListener('click', () => showView('signin'));
 
     // SIGN UP FLOW & OTP DISPATCH
@@ -1018,7 +909,6 @@
       tempUserData = { mode: 'signup', name, email, pass };
 
       try {
-        // Send request to updated /api/send-otp backend route
         const res = await fetch(`${BACKEND_URL}/api/send-otp`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
