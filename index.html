@@ -947,18 +947,22 @@
     let activeSalesPeriod = "daily";
     let activeStockPeriod = "daily";
 
+    // Theme Toggle
     const themeBtn = document.getElementById('theme-toggle');
     themeBtn.addEventListener('click', () => {
       document.body.classList.toggle('dark-theme');
       themeBtn.innerText = document.body.classList.contains('dark-theme') ? '☀️' : '🌙';
     });
 
+    // Date Pickers Default Value
     const todayStr = new Date().toISOString().split('T')[0];
     document.getElementById('sales-calendar-filter').value = todayStr;
     document.getElementById('stock-calendar-filter').value = todayStr;
     document.getElementById('stock-panel-calendar-filter').value = todayStr;
 
+    // Navigation Switcher
     const navItems = document.querySelectorAll('.sidebar-nav .nav-item');
+    const panels = document.querySelectorAll('.panel-content');
     navItems.forEach(item => {
       item.addEventListener('click', () => {
         navItems.forEach(nav => nav.classList.remove('active'));
@@ -966,9 +970,11 @@
 
         const panelKey = item.getAttribute('data-panel');
         const panelName = item.innerText.trim();
-        
+
         document.getElementById('page-title').innerText = panelName;
-        document.querySelectorAll('.panel-content').forEach(p => p.classList.add('hidden'));
+        document.getElementById('page-subtitle').innerText = `Manage ${panelName} operations`;
+
+        panels.forEach(p => p.classList.add('hidden'));
 
         if (panelKey === 'overview') {
           document.getElementById('panel-overview').classList.remove('hidden');
@@ -983,521 +989,123 @@
       });
     });
 
-    function switchAuthView(view) {
-      document.getElementById('signin-view').classList.add('hidden');
-      document.getElementById('signup-view').classList.add('hidden');
-      document.getElementById('otp-view').classList.add('hidden');
-      document.getElementById('forgot-view').classList.add('hidden');
-      document.getElementById('dashboard-view').classList.add('hidden');
+    // Auth Views Navigation
+    const views = {
+      signin: document.getElementById('signin-view'),
+      signup: document.getElementById('signup-view'),
+      otp: document.getElementById('otp-view'),
+      forgot: document.getElementById('forgot-view'),
+      dashboard: document.getElementById('dashboard-view')
+    };
 
-      if (view === 'signin') document.getElementById('signin-view').classList.remove('hidden');
-      if (view === 'signup') document.getElementById('signup-view').classList.remove('hidden');
-      if (view === 'otp') document.getElementById('otp-view').classList.remove('hidden');
-      if (view === 'forgot') document.getElementById('forgot-view').classList.remove('hidden');
-      if (view === 'dashboard') {
-        document.getElementById('dashboard-view').classList.remove('hidden');
-        document.body.style.alignItems = 'stretch';
-      } else {
-        document.body.style.alignItems = 'center';
-      }
+    function showView(viewName) {
+      Object.keys(views).forEach(key => views[key].classList.add('hidden'));
+      views[viewName].classList.remove('hidden');
     }
 
-    document.getElementById('btn-to-signup').addEventListener('click', () => switchAuthView('signup'));
-    document.getElementById('btn-to-signin').addEventListener('click', () => switchAuthView('signin'));
-    document.getElementById('btn-to-forgot').addEventListener('click', () => switchAuthView('forgot'));
-    document.getElementById('btn-forgot-to-signin').addEventListener('click', () => switchAuthView('signin'));
+    document.getElementById('btn-to-signup').addEventListener('click', () => showView('signup'));
+    document.getElementById('btn-to-signin').addEventListener('click', () => showView('signin'));
+    document.getElementById('btn-to-forgot').addEventListener('click', () => showView('forgot'));
+    document.getElementById('btn-forgot-to-signin').addEventListener('click', () => showView('signin'));
 
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        currentUser = user;
-        document.getElementById('user-display-name').innerText = user.displayName || user.email.split('@')[0];
-        switchAuthView('dashboard');
-
-        onValue(ref(db, `users/${user.uid}/sales`), (snapshot) => {
-          salesData = [];
-          const data = snapshot.val();
-          if (data) {
-            Object.keys(data).forEach(key => {
-              const item = data[key];
-              salesData.push({
-                id: key,
-                ...item,
-                price: parseFloat(item.price) || 0
-              });
-            });
-          }
-          renderSalesTable();
-        });
-
-        onValue(ref(db, `users/${user.uid}/stocks`), (snapshot) => {
-          stockData = [];
-          const data = snapshot.val();
-          if (data) {
-            Object.keys(data).forEach(key => {
-              const item = data[key];
-              stockData.push({
-                id: key,
-                ...item,
-                price: parseFloat(item.price) || 0
-              });
-            });
-          }
-          renderStockTable();
-        });
-
-      } else {
-        currentUser = null;
-        switchAuthView('signin');
-      }
-    });
-
+    // SIGN UP FLOW & OTP DISPATCH
     document.getElementById('signup-form').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const submitBtn = document.getElementById('btn-signup-submit');
-      const name = document.getElementById('signup-name').value.trim();
-      const email = document.getElementById('signup-email').value.trim();
-      const pass = document.getElementById('signup-pass').value.trim();
+      const name = document.getElementById('signup-name').value;
+      const email = document.getElementById('signup-email').value;
+      const pass = document.getElementById('signup-pass').value;
 
-      submitBtn.innerText = "Sending OTP...";
-      submitBtn.disabled = true;
+      tempUserData = { mode: 'signup', name, email, pass };
 
       try {
-        const generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
-        tempUserData = { mode: 'signup', name, email, pass, generatedOtp };
-
-        await fetch(`${BACKEND_URL}/send-otp`, {
+        // Send request to updated /api/send-otp backend route
+        const res = await fetch(`${BACKEND_URL}/api/send-otp`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, otp: generatedOtp })
+          body: JSON.stringify({ email })
         });
 
-        alert("OTP sent to your email!");
-        switchAuthView('otp');
+        if (!res.ok) {
+          const errData = await res.json();
+          throw new Error(errData.message || 'Failed to send OTP email.');
+        }
+
+        alert(`Verification OTP sent to ${email}. Please check your inbox.`);
+        showView('otp');
       } catch (err) {
-        alert("Failed to send OTP.");
-      } finally {
-        submitBtn.innerText = "Continue to Verification";
-        submitBtn.disabled = false;
+        alert("Error: " + err.message);
       }
     });
 
+    // VERIFY OTP & CREATE USER
+    document.getElementById('otp-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const enteredOtp = document.getElementById('otp-input').value;
+
+      try {
+        const res = await fetch(`${BACKEND_URL}/api/verify-otp`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: tempUserData.email, otp: enteredOtp })
+        });
+
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          if (tempUserData.mode === 'signup') {
+            const userCred = await createUserWithEmailAndPassword(auth, tempUserData.email, tempUserData.pass);
+            await updateProfile(userCred.user, { displayName: tempUserData.name });
+            alert("Account created and verified successfully!");
+          }
+        } else {
+          alert(data.message || "Invalid OTP code.");
+        }
+      } catch (err) {
+        alert("Verification error: " + err.message);
+      }
+    });
+
+    // SIGN IN
     document.getElementById('signin-form').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const email = document.getElementById('signin-email').value.trim();
-      const pass = document.getElementById('signin-pass').value.trim();
+      const email = document.getElementById('signin-email').value;
+      const pass = document.getElementById('signin-pass').value;
 
       try {
         await signInWithEmailAndPassword(auth, email, pass);
       } catch (err) {
-        alert("Invalid credentials!");
+        alert("Authentication failed: " + err.message);
       }
     });
 
-    document.getElementById('otp-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const userOtp = document.getElementById('otp-input').value.trim();
-
-      if (userOtp === tempUserData.generatedOtp) {
-        try {
-          const userCred = await createUserWithEmailAndPassword(auth, tempUserData.email, tempUserData.pass);
-          await updateProfile(userCred.user, { displayName: tempUserData.name });
-          alert("Account verified and created successfully!");
-        } catch (err) {
-          alert(err.message);
-        }
-      } else {
-        alert("Invalid OTP code!");
-      }
-    });
-
+    // FORGOT PASSWORD
     document.getElementById('forgot-form').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const email = document.getElementById('forgot-email').value.trim();
+      const email = document.getElementById('forgot-email').value;
       try {
         await sendPasswordResetEmail(auth, email);
-        alert("Password reset link sent to your email!");
-        switchAuthView('signin');
+        alert("Password reset email sent! Check your inbox.");
+        showView('signin');
       } catch (err) {
-        alert("Error sending reset email!");
+        alert("Error sending reset email: " + err.message);
       }
     });
 
-    document.getElementById('btn-logout').addEventListener('click', () => signOut(auth));
-
-    // SALES LOGIC
-    const tabIncome = document.getElementById('tab-sales-income');
-    const tabCost = document.getElementById('tab-sales-cost');
-    const subTabs = document.querySelectorAll('.sub-tab');
-
-    tabIncome.addEventListener('click', () => {
-      currentSalesType = "Income";
-      tabIncome.classList.add('active');
-      tabCost.classList.remove('active');
-      updateSalesFormHeader();
+    // LOGOUT
+    document.getElementById('btn-logout').addEventListener('click', () => {
+      signOut(auth);
     });
 
-    tabCost.addEventListener('click', () => {
-      currentSalesType = "Cost";
-      tabCost.classList.add('active');
-      tabIncome.classList.remove('active');
-      updateSalesFormHeader();
-    });
-
-    subTabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        subTabs.forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-        currentSubCategory = tab.getAttribute('data-sub');
-
-        clearSalesInputs();
-        updateSalesFormHeader();
-      });
-    });
-
-    function clearSalesInputs() {
-      document.getElementById('bill-code').value = '';
-      document.getElementById('bill-name').value = '';
-      document.getElementById('bill-price').value = '';
-    }
-
-    function updateSalesFormHeader() {
-      document.getElementById('sales-form-title').innerText = `Add ${currentSubCategory} ${currentSalesType} Bill`;
-      const prefix = currentSubCategory.substring(0, 2).toUpperCase();
-      document.getElementById('bill-code').placeholder = `${prefix}00${salesData.length + 1}`;
-    }
-
-    document.getElementById('btn-add-bill').addEventListener('click', () => {
-      if (!currentUser) return;
-
-      const code = document.getElementById('bill-code').value.trim() || document.getElementById('bill-code').placeholder;
-      const name = document.getElementById('bill-name').value.trim();
-      const price = parseFloat(document.getElementById('bill-price').value) || 0;
-
-      if (!name || price <= 0) {
-        alert("Please enter a valid customer name and price.");
-        return;
+    // AUTH STATE LISTENER
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        currentUser = user;
+        document.getElementById('user-display-name').innerText = user.displayName || user.email.split('@')[0];
+        showView('dashboard');
+      } else {
+        currentUser = null;
+        showView('signin');
       }
-
-      const salesRef = ref(db, `users/${currentUser.uid}/sales`);
-      push(salesRef, {
-        code,
-        name,
-        price,
-        category: currentSubCategory,
-        type: currentSalesType,
-        timestamp: Date.now()
-      })
-      .then(() => {
-        clearSalesInputs();
-      })
-      .catch((err) => {
-        alert("Failed to save bill: " + err.message);
-      });
-    });
-
-    function renderSalesTable() {
-      const tbody = document.getElementById('sales-table-body');
-      tbody.innerHTML = '';
-
-      let totalIncome = 0;
-      let totalCost = 0;
-
-      salesData.forEach(item => {
-        if (item.type === 'Income') totalIncome += item.price;
-        if (item.type === 'Cost') totalCost += item.price;
-
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${item.code}</td>
-          <td>${item.name}</td>
-          <td>Rs. ${item.price.toFixed(2)}</td>
-          <td>${item.category}</td>
-          <td>${item.type}</td>
-          <td><button class="btn-danger" data-id="${item.id}">Delete</button></td>
-        `;
-        
-        tr.querySelector('.btn-danger').addEventListener('click', () => {
-          remove(ref(db, `users/${currentUser.uid}/sales/${item.id}`));
-        });
-
-        tbody.appendChild(tr);
-      });
-
-      const netProfit = totalIncome - totalCost;
-      document.getElementById('report-total-income').innerText = `Rs. ${totalIncome.toFixed(2)}`;
-      document.getElementById('report-total-cost').innerText = `Rs. ${totalCost.toFixed(2)}`;
-      document.getElementById('report-net-profit').innerText = `Rs. ${netProfit > 0 ? netProfit.toFixed(2) : '0.00'}`;
-      document.getElementById('report-net-loss').innerText = `Rs. ${netProfit < 0 ? Math.abs(netProfit).toFixed(2) : '0.00'}`;
-    }
-
-    // STOCK LOGIC
-    const stockModal = document.getElementById('stock-modal');
-    document.getElementById('btn-open-stock-modal').addEventListener('click', () => {
-      document.getElementById('stock-code').value = `S00${stockData.length + 1}`;
-      document.getElementById('stock-name').value = '';
-      document.getElementById('stock-price').value = '';
-      stockModal.classList.remove('hidden');
-    });
-
-    document.getElementById('btn-cancel-stock').addEventListener('click', () => {
-      stockModal.classList.add('hidden');
-    });
-
-    document.getElementById('btn-save-stock').addEventListener('click', () => {
-      if (!currentUser) return;
-
-      const code = document.getElementById('stock-code').value.trim();
-      const name = document.getElementById('stock-name').value.trim();
-      const price = parseFloat(document.getElementById('stock-price').value) || 0;
-      const now = Date.now();
-
-      if (!name || price <= 0) {
-        alert("Please enter a valid product name and price.");
-        return;
-      }
-
-      const stockRef = ref(db, `users/${currentUser.uid}/stocks`);
-      push(stockRef, { code, name, price, timestamp: now })
-        .then(() => {
-          const salesRef = ref(db, `users/${currentUser.uid}/sales`);
-          return push(salesRef, {
-            code: `STK-${code}`,
-            name: `Stock: ${name}`,
-            price: price,
-            category: 'Stock',
-            type: 'Cost',
-            timestamp: now
-          });
-        })
-        .then(() => {
-          stockModal.classList.add('hidden');
-        })
-        .catch((err) => {
-          alert("Failed to save stock: " + err.message);
-        });
-    });
-
-    document.getElementById('stock-panel-calendar-filter').addEventListener('change', renderStockTable);
-
-    function renderStockTable() {
-      const tbody = document.getElementById('stock-table-body');
-      tbody.innerHTML = '';
-
-      const filterVal = document.getElementById('stock-panel-calendar-filter').value;
-      const selectedDate = filterVal ? new Date(filterVal) : new Date();
-
-      const filteredStocks = stockData.filter(item => {
-        const itemDate = new Date(item.timestamp || Date.now());
-        return itemDate.toDateString() === selectedDate.toDateString();
-      });
-
-      filteredStocks.forEach(item => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${item.code}</td>
-          <td>${item.name}</td>
-          <td>Rs. ${item.price.toFixed(2)}</td>
-          <td><button class="btn-danger" data-id="${item.id}">Delete</button></td>
-        `;
-
-        tr.querySelector('.btn-danger').addEventListener('click', () => {
-          remove(ref(db, `users/${currentUser.uid}/stocks/${item.id}`));
-        });
-
-        tbody.appendChild(tr);
-      });
-    }
-
-    // REPORT MODALS, CALENDAR FILTERING & CALCULATIONS
-    const salesReportModal = document.getElementById('sales-report-modal');
-    const stockReportModal = document.getElementById('stock-report-modal');
-
-    document.getElementById('btn-open-sales-report').addEventListener('click', () => {
-      salesReportModal.classList.remove('hidden');
-      generateSalesReport(activeSalesPeriod);
-    });
-    document.getElementById('btn-close-sales-report').addEventListener('click', () => {
-      salesReportModal.classList.add('hidden');
-    });
-
-    document.getElementById('btn-open-stock-report').addEventListener('click', () => {
-      stockReportModal.classList.remove('hidden');
-      generateStockReport(activeStockPeriod);
-    });
-    document.getElementById('btn-close-stock-report').addEventListener('click', () => {
-      stockReportModal.classList.add('hidden');
-    });
-
-    document.querySelectorAll('.sales-report-tab').forEach(tab => {
-      tab.addEventListener('click', (e) => {
-        document.querySelectorAll('.sales-report-tab').forEach(t => t.classList.remove('active'));
-        e.target.classList.add('active');
-        activeSalesPeriod = e.target.getAttribute('data-period');
-        generateSalesReport(activeSalesPeriod);
-      });
-    });
-
-    document.querySelectorAll('.stock-report-tab').forEach(tab => {
-      tab.addEventListener('click', (e) => {
-        document.querySelectorAll('.stock-report-tab').forEach(t => t.classList.remove('active'));
-        e.target.classList.add('active');
-        activeStockPeriod = e.target.getAttribute('data-period');
-        generateStockReport(activeStockPeriod);
-      });
-    });
-
-    document.getElementById('sales-calendar-filter').addEventListener('change', () => generateSalesReport(activeSalesPeriod));
-    document.getElementById('stock-calendar-filter').addEventListener('change', () => generateStockReport(activeStockPeriod));
-
-    function filterByPeriodAndCalendar(dataArray, period, calendarValue) {
-      const selectedDate = calendarValue ? new Date(calendarValue) : new Date();
-
-      return dataArray.filter(item => {
-        const itemDate = new Date(item.timestamp || Date.now());
-        if (period === 'daily') {
-          return itemDate.toDateString() === selectedDate.toDateString();
-        } else if (period === 'monthly') {
-          return itemDate.getMonth() === selectedDate.getMonth() && itemDate.getFullYear() === selectedDate.getFullYear();
-        } else if (period === 'yearly') {
-          return itemDate.getFullYear() === selectedDate.getFullYear();
-        }
-        return true;
-      });
-    }
-
-    function generateSalesReport(period) {
-      const calVal = document.getElementById('sales-calendar-filter').value;
-      const filtered = filterByPeriodAndCalendar(salesData, period, calVal);
-
-      let totalIncome = 0;
-      let totalCost = 0;
-      let roomsTotal = 0;
-      let foodTotal = 0;
-      let functionTotal = 0;
-      let stockTotal = 0;
-
-      filtered.forEach(i => {
-        if (i.type === 'Income') {
-          totalIncome += i.price;
-          if (i.category === 'Rooms') roomsTotal += i.price;
-          if (i.category === 'Food') foodTotal += i.price;
-          if (i.category === 'Function') functionTotal += i.price;
-        } else if (i.type === 'Cost') {
-          totalCost += i.price;
-          if (i.category === 'Stock') stockTotal += i.price;
-        }
-      });
-
-      const netDifference = totalIncome - totalCost;
-      const netProfit = netDifference > 0 ? netDifference : 0;
-      const netLoss = netDifference < 0 ? Math.abs(netDifference) : 0;
-
-      document.getElementById('sr-total-revenue').innerText = `Rs. ${totalIncome.toFixed(2)}`;
-      document.getElementById('sr-total-cost').innerText = `Rs. ${totalCost.toFixed(2)}`;
-      document.getElementById('sr-net-profit').innerText = `Rs. ${netProfit.toFixed(2)}`;
-      document.getElementById('sr-net-loss').innerText = `Rs. ${netLoss.toFixed(2)}`;
-
-      document.getElementById('sr-cat-rooms').innerText = `Rs. ${roomsTotal.toFixed(2)}`;
-      document.getElementById('sr-cat-food').innerText = `Rs. ${foodTotal.toFixed(2)}`;
-      document.getElementById('sr-cat-function').innerText = `Rs. ${functionTotal.toFixed(2)}`;
-      document.getElementById('sr-cat-stock').innerText = `Rs. ${stockTotal.toFixed(2)}`;
-    }
-
-    function generateStockReport(period) {
-      const calVal = document.getElementById('stock-calendar-filter').value;
-      const filtered = filterByPeriodAndCalendar(stockData, period, calVal);
-
-      let totalVal = 0;
-      const tbody = document.getElementById('stock-report-table-body');
-      tbody.innerHTML = '';
-
-      filtered.forEach(s => {
-        totalVal += s.price;
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${s.code}</td>
-          <td>${s.name}</td>
-          <td>Rs. ${s.price.toFixed(2)}</td>
-        `;
-        tbody.appendChild(tr);
-      });
-
-      const count = filtered.length;
-      const avgPrice = count > 0 ? totalVal / count : 0;
-
-      document.getElementById('st-total-val').innerText = `Rs. ${totalVal.toFixed(2)}`;
-      document.getElementById('st-total-count').innerText = count;
-      document.getElementById('st-avg-price').innerText = `Rs. ${avgPrice.toFixed(2)}`;
-      document.getElementById('st-table-total-val').innerText = `Rs. ${totalVal.toFixed(2)}`;
-    }
-
-    // DRILLDOWN METRIC CARD MODAL
-    const metricModal = document.getElementById('metric-details-modal');
-    document.getElementById('btn-close-metric-details').addEventListener('click', () => {
-      metricModal.classList.add('hidden');
-    });
-
-    function openMetricDetails(metricType) {
-      const titleEl = document.getElementById('metric-details-title');
-      const tbody = document.getElementById('metric-details-tbody');
-      const totalEl = document.getElementById('metric-details-total');
-      tbody.innerHTML = '';
-
-      const calVal = document.getElementById('sales-calendar-filter').value;
-      const filtered = filterByPeriodAndCalendar(salesData, activeSalesPeriod, calVal);
-
-      let itemsToDisplay = [];
-      let totalSum = 0;
-
-      if (metricType === 'income') {
-        titleEl.innerText = "Income Details Breakdown";
-        itemsToDisplay = filtered.filter(i => i.type === 'Income');
-      } else if (metricType === 'cost') {
-        titleEl.innerText = "Cost Details Breakdown";
-        itemsToDisplay = filtered.filter(i => i.type === 'Cost');
-      } else if (metricType === 'profit') {
-        titleEl.innerText = "Net Profit Calculation Breakdown";
-        itemsToDisplay = filtered;
-      } else if (metricType === 'loss') {
-        titleEl.innerText = "Loss Calculation Breakdown";
-        itemsToDisplay = filtered;
-      }
-
-      itemsToDisplay.forEach(item => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${item.code}</td>
-          <td>${item.name}</td>
-          <td>${item.category}</td>
-          <td>${item.type}</td>
-          <td>Rs. ${item.price.toFixed(2)}</td>
-        `;
-        tbody.appendChild(tr);
-      });
-
-      const totalIncome = filtered.filter(i => i.type === 'Income').reduce((acc, curr) => acc + curr.price, 0);
-      const totalCost = filtered.filter(i => i.type === 'Cost').reduce((acc, curr) => acc + curr.price, 0);
-
-      if (metricType === 'income') totalSum = totalIncome;
-      else if (metricType === 'cost') totalSum = totalCost;
-      else if (metricType === 'profit') totalSum = Math.max(0, totalIncome - totalCost);
-      else if (metricType === 'loss') totalSum = totalCost > totalIncome ? (totalCost - totalIncome) : 0;
-
-      totalEl.innerText = `Rs. ${totalSum.toFixed(2)}`;
-      metricModal.classList.remove('hidden');
-    }
-
-    ['card-dash-income', 'card-report-income'].forEach(id => {
-      document.getElementById(id).addEventListener('click', () => openMetricDetails('income'));
-    });
-    ['card-dash-cost', 'card-report-cost'].forEach(id => {
-      document.getElementById(id).addEventListener('click', () => openMetricDetails('cost'));
-    });
-    ['card-dash-profit', 'card-report-profit'].forEach(id => {
-      document.getElementById(id).addEventListener('click', () => openMetricDetails('profit'));
-    });
-    ['card-dash-loss', 'card-report-loss'].forEach(id => {
-      document.getElementById(id).addEventListener('click', () => openMetricDetails('loss'));
     });
   </script>
 </body>
