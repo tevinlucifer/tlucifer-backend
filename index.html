@@ -7,7 +7,7 @@
   <link rel="icon" type="image/png" href="./Company%20Logo.png">
   <style>
     :root {
-      --bg-overlay: rgba(6, 11, 25, 0.75);
+      --bg-overlay: rgba(0, 0, 0, 0.35);
       --card-bg: rgba(248, 249, 250, 0.9);
       --sidebar-bg: rgba(17, 24, 39, 0.85);
       --text-main: #ffffff;
@@ -50,23 +50,31 @@
       width: 100%;
     }
 
-    .nav-left, .nav-right {
+    .nav-left {
       display: flex;
       align-items: center;
-      gap: 30px;
+      gap: 25px;
     }
 
     .power-btn {
-      width: 32px;
-      height: 32px;
-      border: 1.5px solid #fff;
-      border-radius: 6px;
+      background: transparent;
+      border: none;
+      color: #ffffff;
+      cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #fff;
-      text-decoration: none;
-      font-size: 16px;
+      padding: 4px;
+    }
+
+    .power-btn:hover {
+      color: #ef4444;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 25px;
     }
 
     .top-link {
@@ -75,6 +83,12 @@
       font-size: 15px;
       font-weight: 500;
       cursor: pointer;
+      opacity: 0.9;
+    }
+
+    .top-link:hover {
+      opacity: 1;
+      text-decoration: underline;
     }
 
     .btn-register-top {
@@ -89,12 +103,16 @@
       text-decoration: none;
     }
 
+    .btn-register-top:hover {
+      background: #e2e8f0;
+    }
+
     /* AUTH PAGE LAYOUT */
     .auth-page-container {
       display: flex;
       flex: 1;
       width: 100%;
-      padding-right: 10%;
+      padding-right: 8%;
       align-items: center;
       justify-content: flex-end;
     }
@@ -106,17 +124,20 @@
       flex-direction: column;
       justify-content: center;
       text-align: center;
+      margin-top: 20px;
     }
 
-    .welcome-header {
-      margin-bottom: 30px;
+    .auth-header {
+      text-align: center;
+      margin-bottom: 24px;
     }
 
-    .welcome-header h1 {
+    .auth-header h1 {
       font-size: 32px;
-      font-weight: 700;
+      font-weight: 800;
       color: #ffffff;
       line-height: 1.2;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.6);
     }
 
     .auth-card-right .input-group {
@@ -180,12 +201,13 @@
       font-size: 14px;
       color: #ffffff;
       font-weight: 400;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.6);
     }
 
     .auth-toggle-text a {
       color: #ffffff;
       font-weight: 700;
-      text-decoration: none;
+      text-decoration: underline;
       cursor: pointer;
     }
 
@@ -441,15 +463,6 @@
     .btn-secondary:hover {
       background-color: #059669;
     }
-    .btn-danger {
-      background-color: #ef4444;
-      color: white;
-      border: none;
-      padding: 4px 8px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 11px;
-    }
 
     .form-row {
       display: flex;
@@ -497,54 +510,6 @@
       border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     }
 
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(8px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-    }
-
-    .report-modal-card {
-      background: rgba(17, 24, 39, 0.95);
-      width: 760px;
-      max-width: 95%;
-      padding: 28px;
-      border-radius: 20px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    }
-
-    .report-grid-4 {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-      margin-bottom: 20px;
-    }
-    .report-card {
-      padding: 14px;
-      border-radius: 12px;
-      background: rgba(55, 65, 81, 0.8);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      cursor: pointer;
-    }
-    .report-card span {
-      font-size: 10px;
-      color: var(--text-muted);
-      font-weight: 700;
-      text-transform: uppercase;
-    }
-    .report-card h3 {
-      font-size: 16px;
-      margin-top: 6px;
-      word-break: break-all;
-    }
     .calendar-picker {
       padding: 8px 12px;
       border-radius: 10px;
@@ -562,7 +527,12 @@
   <!-- TOP NAVBAR -->
   <header class="top-navbar" id="main-top-navbar">
     <div class="nav-left">
-      <a href="#" class="power-btn">⏻</a>
+      <button class="power-btn" title="Power / Reset" id="btn-power">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
+          <line x1="12" y1="2" x2="12" y2="12"></line>
+        </svg>
+      </button>
       <a href="#" class="top-link">Home</a>
       <a href="#" class="top-link">About</a>
       <a href="#" class="top-link">Service</a>
@@ -580,7 +550,7 @@
 
     <!-- SIGN IN VIEW -->
     <div id="signin-view" class="auth-card-right">
-      <div class="welcome-header">
+      <div class="auth-header">
         <h1>Hello !<br>Welcome Back</h1>
       </div>
       <form id="signin-form" autocomplete="off">
@@ -613,7 +583,7 @@
 
     <!-- SIGN UP VIEW -->
     <div id="signup-view" class="auth-card-right hidden">
-      <div class="welcome-header">
+      <div class="auth-header">
         <h1>Create Account</h1>
       </div>
       <form id="signup-form" autocomplete="off">
@@ -635,8 +605,8 @@
 
     <!-- OTP VIEW -->
     <div id="otp-view" class="auth-card-right hidden">
-      <div class="welcome-header">
-        <h1>Verify Email</h1>
+      <div class="auth-header">
+        <h1>Enter OTP</h1>
       </div>
       <form id="otp-form" autocomplete="off">
         <div class="input-group">
@@ -648,7 +618,7 @@
 
     <!-- FORGOT PASSWORD VIEW -->
     <div id="forgot-view" class="auth-card-right hidden">
-      <div class="welcome-header">
+      <div class="auth-header">
         <h1>Reset Password</h1>
       </div>
       <form id="forgot-form" autocomplete="off">
@@ -898,6 +868,10 @@
     document.getElementById('top-nav-signup')?.addEventListener('click', () => showView('signup'));
     document.getElementById('top-nav-register')?.addEventListener('click', () => showView('signup'));
     document.getElementById('btn-forgot-to-signin').addEventListener('click', () => showView('signin'));
+    
+    document.getElementById('btn-power')?.addEventListener('click', () => {
+      location.reload();
+    });
 
     // SIGN UP FLOW & OTP DISPATCH
     document.getElementById('signup-form').addEventListener('submit', async (e) => {
