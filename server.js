@@ -9,6 +9,9 @@ app.use(express.json());
 
 app.use(express.static(__dirname));
 
+// Temporary in-memory store for OTPs (email -> otp)
+const otpStorage = {};
+
 app.get('/', (req, res) => {
   const filePath = path.join(__dirname, 'index.html');
   res.sendFile(filePath, (err) => {
@@ -19,19 +22,21 @@ app.get('/', (req, res) => {
   });
 });
 
-// Endpoint to send OTP via direct Brevo REST API
+// Endpoint to send OTP via Brevo REST API
 app.post('/api/send-otp', async (req, res) => {
   let { email, otp } = req.body;
 
-  // Validate email presence
   if (!email) {
     return res.status(400).json({ success: false, error: 'Email address is required.' });
   }
 
-  // Fallback: If the frontend didn't pass an OTP, generate a 6-digit code here
+  // Generate OTP if not provided by the frontend
   if (!otp) {
     otp = Math.floor(100000 + Math.random() * 900000).toString();
   }
+
+  // Save OTP temporarily in memory for verification later
+  otpStorage[email] = otp;
 
   const apiKey = process.env.BREVO_API_KEY ? process.env.BREVO_API_KEY.trim() : null;
 
@@ -52,7 +57,7 @@ app.post('/api/send-otp', async (req, res) => {
         'content-type': 'application/json'
       },
       body: JSON.stringify({
-        sender: { name: "TLucifer Security", email: "tevingampalage29@gmail.com" }, // MUST be verified in Brevo Dashboard
+        sender: { name: "TLucifer Security", email: "tevingampalage29@gmail.com" },
         to: [{ email: email }],
         subject: "TLucifer Verification Code",
         htmlContent: `
@@ -77,16 +82,28 @@ app.post('/api/send-otp', async (req, res) => {
     }
 
     console.log('Email successfully sent via Brevo API:', data);
-    return res.json({ 
-      success: true, 
-      message: 'OTP sent successfully to email', 
-      otp, // Returns OTP so the client can store/verify if needed
-      data 
-    });
+    return res.json({ success: true, message: 'OTP sent successfully to email', data });
 
   } catch (error) {
     console.error('Server Internal Fetch Error:', error.message);
     return res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// Endpoint to verify the submitted OTP code
+app.post('/api/verify-otp', (req, res) => {
+  const { email, otp } = req.body;
+
+  if (!email || !otp) {
+    return res.status(400).json({ success: false, message: 'Email and OTP are required.' });
+  }
+
+  // Check if the OTP matches what was stored for this email
+  if (otpStorage[email] && otpStorage[email] === otp.trim()) {
+    delete otpStorage[email]; // Clear OTP after successful use
+    return res.json({ success: true, message: 'OTP verified successfully.' });
+  } else {
+    return res.status(400).json({ success: false, message: 'Invalid or expired OTP code.' });
   }
 });
 
