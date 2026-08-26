@@ -28,23 +28,48 @@
       transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
     }
 
-body {
-  background-color: #0a0a0f; 
-  /* Using exact file name with matching capitalization */
-  background-image: linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)), url('./Background.jpg');
-  background-position: center center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-size: cover;
-  color: var(--text-main);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  overflow-x: hidden;
-}
+    body {
+      background-color: #0a0a0f; 
+      background-image: linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)), url('./Background.jpg');
+      background-position: center center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      background-size: cover;
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
 
     .hidden {
       display: none !important;
+    }
+
+    /* KEYFRAME ANIMATIONS */
+    @keyframes fadeInSlideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* ANIMATION CLASSES */
+    .animated-card {
+      animation: fadeInSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .animated-view {
+      animation: fadeIn 0.4s ease-out forwards;
     }
 
     /* TOP NAVBAR */
@@ -73,10 +98,12 @@ body {
       align-items: center;
       justify-content: center;
       padding: 4px;
+      transition: transform 0.2s ease, color 0.2s ease;
     }
 
     .power-btn:hover {
       color: #ef4444;
+      transform: rotate(90deg);
     }
 
     .nav-right {
@@ -92,6 +119,7 @@ body {
       font-weight: 500;
       cursor: pointer;
       opacity: 0.9;
+      transition: opacity 0.2s ease;
     }
 
     .top-link:hover {
@@ -109,10 +137,12 @@ body {
       font-size: 14px;
       cursor: pointer;
       text-decoration: none;
+      transition: transform 0.2s ease, background-color 0.2s ease;
     }
 
     .btn-register-top:hover {
       background: #e2e8f0;
+      transform: translateY(-1px);
     }
 
     /* AUTH PAGE LAYOUT */
@@ -156,12 +186,18 @@ body {
       width: 100%;
       padding: 14px 20px;
       background: var(--input-bg);
-      border: none;
+      border: 1px solid transparent;
       border-radius: 8px;
       font-size: 14px;
       color: var(--input-text);
       outline: none;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .auth-card-right input:focus {
+      border-color: #2563eb;
+      box-shadow: 0 4px 16px rgba(37, 99, 235, 0.3);
     }
 
     .auth-card-right input::placeholder {
@@ -181,10 +217,12 @@ body {
       margin-top: 8px;
       margin-bottom: 24px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      transition: transform 0.2s ease, background-color 0.2s ease;
     }
 
     .btn-signin-full:hover {
       background: #e2e8f0;
+      transform: translateY(-1px);
     }
 
     /* SOCIAL BUTTONS */
@@ -206,10 +244,12 @@ body {
       align-items: center;
       justify-content: center;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      transition: transform 0.2s ease, background-color 0.2s ease;
     }
 
     .btn-social:hover {
       background: #f1f5f9;
+      transform: translateY(-2px);
     }
 
     .auth-toggle-text {
@@ -249,6 +289,7 @@ body {
       flex-direction: column;
       flex-shrink: 0;
     }
+
     .sidebar-brand {
       display: flex;
       align-items: center;
@@ -260,17 +301,20 @@ body {
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       margin-bottom: 16px;
     }
+
     .sidebar-brand-img {
       width: 32px;
       height: 32px;
       border-radius: 8px;
       object-fit: cover;
     }
+
     .sidebar-nav {
       display: flex;
       flex-direction: column;
       gap: 6px;
     }
+
     .nav-item {
       display: flex;
       align-items: center;
@@ -282,16 +326,21 @@ body {
       font-size: 14px;
       font-weight: 600;
       cursor: pointer;
+      transition: background-color 0.2s ease, transform 0.1s ease;
     }
+
     .nav-item:hover {
       background: rgba(255, 255, 255, 0.1);
       color: var(--text-main);
+      transform: translateX(4px);
     }
+
     .nav-item.active {
       background: var(--active-item-bg);
       color: var(--active-item-color);
       border: 1px solid rgba(37, 99, 235, 0.2);
     }
+
     .nav-item-icon {
       font-size: 16px;
       width: 20px;
@@ -315,11 +364,13 @@ body {
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
       border: 1px solid rgba(255, 255, 255, 0.1);
     }
+
     .nav-links {
       display: flex;
       align-items: center;
       gap: 12px;
     }
+
     .nav-btn {
       padding: 8px 20px;
       border-radius: 20px;
@@ -330,15 +381,18 @@ body {
       color: var(--text-muted);
       cursor: pointer;
     }
+
     .nav-btn.active {
       background: #2563eb;
       color: white;
     }
+
     .user-profile {
       display: flex;
       align-items: center;
       gap: 12px;
     }
+
     .theme-toggle-btn {
       width: 38px;
       height: 38px;
@@ -352,6 +406,7 @@ body {
       cursor: pointer;
       font-size: 16px;
     }
+
     .icon-circle {
       width: 36px;
       height: 36px;
@@ -363,18 +418,22 @@ body {
       justify-content: center;
       cursor: pointer;
     }
+
     .user-info {
       font-size: 13px;
       line-height: 1.2;
     }
+
     .user-info span {
       display: block;
       color: var(--text-muted);
       font-size: 11px;
     }
+
     .user-info strong {
       color: var(--text-main);
     }
+
     .btn-logout {
       padding: 6px 14px;
       border-radius: 16px;
@@ -385,6 +444,7 @@ body {
       font-weight: 600;
       cursor: pointer;
     }
+
     .btn-logout:hover {
       background: #ef4444;
       color: white;
@@ -396,6 +456,7 @@ body {
       align-items: flex-end;
       margin-bottom: 24px;
     }
+
     .header-title h1 {
       font-size: 34px;
       font-weight: 800;
@@ -403,6 +464,7 @@ body {
       margin-bottom: 4px;
       text-shadow: 0 2px 10px rgba(0,0,0,0.5);
     }
+
     .header-title p {
       color: #d1d5db;
       font-size: 14px;
@@ -417,12 +479,14 @@ body {
       border: 1px solid rgba(255, 255, 255, 0.1);
       margin-bottom: 20px;
     }
+
     .widget-header-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 16px;
     }
+
     .widget-box-title {
       font-size: 18px;
       font-weight: 700;
@@ -436,6 +500,7 @@ body {
       align-items: center;
       flex-wrap: wrap;
     }
+
     .tab-btn {
       padding: 10px 20px;
       border-radius: 12px;
@@ -445,6 +510,7 @@ body {
       font-weight: 600;
       cursor: pointer;
     }
+
     .tab-btn.active {
       background: #2563eb;
       color: white;
@@ -461,9 +527,11 @@ body {
       cursor: pointer;
       box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
     }
+
     .btn-primary:hover {
       background-color: #1d4ed8;
     }
+
     .btn-secondary {
       padding: 10px 18px;
       background-color: #10b981;
@@ -475,6 +543,7 @@ body {
       cursor: pointer;
       box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
     }
+
     .btn-secondary:hover {
       background-color: #059669;
     }
@@ -485,10 +554,12 @@ body {
       align-items: flex-end;
       margin-bottom: 16px;
     }
+
     .form-row .input-group {
       flex: 1;
       margin-bottom: 0;
     }
+
     .form-row input {
       width: 100%;
       padding: 10px 14px;
@@ -508,6 +579,7 @@ body {
       overflow-y: auto;
       border: 1px solid rgba(255, 255, 255, 0.1);
     }
+
     table {
       width: 100%;
       border-collapse: collapse;
@@ -515,11 +587,13 @@ body {
       font-size: 13px;
       color: var(--text-main);
     }
+
     th {
       background: var(--table-header-bg);
       color: var(--text-muted);
       font-weight: 600;
     }
+
     th, td {
       padding: 10px 14px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.05);
@@ -564,7 +638,7 @@ body {
   <div class="auth-page-container" id="auth-main-container">
 
     <!-- SIGN IN VIEW -->
-    <div id="signin-view" class="auth-card-right">
+    <div id="signin-view" class="auth-card-right animated-card">
       <div class="auth-header">
         <h1>Hello !<br>Welcome Back</h1>
       </div>
@@ -597,7 +671,7 @@ body {
     </div>
 
     <!-- SIGN UP VIEW -->
-    <div id="signup-view" class="auth-card-right hidden">
+    <div id="signup-view" class="auth-card-right hidden animated-card">
       <div class="auth-header">
         <h1>Create Account</h1>
       </div>
@@ -619,7 +693,7 @@ body {
     </div>
 
     <!-- OTP VIEW -->
-    <div id="otp-view" class="auth-card-right hidden">
+    <div id="otp-view" class="auth-card-right hidden animated-card">
       <div class="auth-header">
         <h1>Enter OTP</h1>
       </div>
@@ -632,7 +706,7 @@ body {
     </div>
 
     <!-- FORGOT PASSWORD VIEW -->
-    <div id="forgot-view" class="auth-card-right hidden">
+    <div id="forgot-view" class="auth-card-right hidden animated-card">
       <div class="auth-header">
         <h1>Reset Password</h1>
       </div>
@@ -650,7 +724,7 @@ body {
   </div>
 
   <!-- DASHBOARD VIEW -->
-  <div id="dashboard-view" class="app-container hidden">
+  <div id="dashboard-view" class="app-container hidden animated-view">
     <aside class="sidebar">
       <div class="sidebar-brand">
         <img src="Company%20Logo.png" alt="Company Logo" class="sidebar-brand-img" onerror="this.src='logo.png'">
@@ -694,14 +768,14 @@ body {
         </div>
       </section>
 
-      <div id="panel-overview" class="panel-content">
+      <div id="panel-overview" class="panel-content animated-view">
         <div class="widget-box">
           <div class="widget-box-title">System Overview</div>
           <p>Welcome to TD System. Select an action module from the left menu to manage business records.</p>
         </div>
       </div>
 
-      <div id="panel-sales" class="panel-content hidden">
+      <div id="panel-sales" class="panel-content hidden animated-view">
         <div class="tab-group">
           <button class="tab-btn active" id="tab-sales-income">📈 Income</button>
           <button class="tab-btn" id="tab-sales-cost">📉 Cost</button>
@@ -755,7 +829,7 @@ body {
         </div>
       </div>
 
-      <div id="panel-stock" class="panel-content hidden">
+      <div id="panel-stock" class="panel-content hidden animated-view">
         <div class="widget-box">
           <div class="widget-header-row">
             <div class="widget-box-title">Stock Management</div>
@@ -785,7 +859,7 @@ body {
         </div>
       </div>
 
-      <div id="panel-generic" class="panel-content hidden">
+      <div id="panel-generic" class="panel-content hidden animated-view">
         <div class="widget-box">
           <h2 id="generic-title" style="margin-bottom: 10px;">Panel</h2>
           <p>This module is currently loaded.</p>
@@ -840,15 +914,24 @@ body {
 
         panels.forEach(p => p.classList.add('hidden'));
 
+        let targetPanel;
         if (panelKey === 'overview') {
-          document.getElementById('panel-overview').classList.remove('hidden');
+          targetPanel = document.getElementById('panel-overview');
         } else if (panelKey === 'sales') {
-          document.getElementById('panel-sales').classList.remove('hidden');
+          targetPanel = document.getElementById('panel-sales');
         } else if (panelKey === 'stock') {
-          document.getElementById('panel-stock').classList.remove('hidden');
+          targetPanel = document.getElementById('panel-stock');
         } else {
           document.getElementById('generic-title').innerText = panelName;
-          document.getElementById('panel-generic').classList.remove('hidden');
+          targetPanel = document.getElementById('panel-generic');
+        }
+
+        if (targetPanel) {
+          targetPanel.classList.remove('hidden');
+          // Re-trigger CSS animation on panel switch
+          targetPanel.style.animation = 'none';
+          targetPanel.offsetHeight; /* trigger reflow */
+          targetPanel.style.animation = null;
         }
       });
     });
@@ -864,7 +947,13 @@ body {
 
     function showView(viewName) {
       Object.keys(views).forEach(key => views[key].classList.add('hidden'));
-      views[viewName].classList.remove('hidden');
+      const currentView = views[viewName];
+      currentView.classList.remove('hidden');
+
+      // Re-trigger animation
+      currentView.style.animation = 'none';
+      currentView.offsetHeight; /* trigger reflow */
+      currentView.style.animation = null;
 
       const navbar = document.getElementById('main-top-navbar');
       const authContainer = document.getElementById('auth-main-container');
