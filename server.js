@@ -9,7 +9,7 @@ app.use(express.json());
 
 app.use(express.static(__dirname));
 
-// Temporary in-memory store for OTPs (email -> otp)
+// In-memory store for OTPs (email -> { otp, expiresAt })
 const otpStorage = {};
 
 app.get('/', (req, res) => {
@@ -27,16 +27,21 @@ app.post('/api/send-otp', async (req, res) => {
   let { email, otp } = req.body;
 
   if (!email) {
-    return res.status(400).json({ success: false, error: 'Email address is required.' });
+    return res.status(400).json({ success: false, message: 'Email address is required.' });
   }
 
-  // Generate OTP if not provided by the frontend
+  const sanitizedEmail = email.trim().toLowerCase();
+
+  // Generate 6-digit OTP if not provided
   if (!otp) {
     otp = Math.floor(100000 + Math.random() * 900000).toString();
   }
 
-  // Save OTP temporarily in memory for verification later
-  otpStorage[email] = otp;
+  // Save OTP in memory with a 5-minute expiration time
+  otpStorage[sanitizedEmail] = {
+    otp: otp.toString().trim(),
+    expiresAt: Date.now() + 5 * 60 * 1000 // 5 minutes
+  };
 
   const apiKey = process.env.BREVO_API_KEY ? process.env.BREVO_API_KEY.trim() : null;
 
@@ -44,7 +49,7 @@ app.post('/api/send-otp', async (req, res) => {
     console.error("CRITICAL: BREVO_API_KEY environment variable is missing.");
     return res.status(500).json({ 
       success: false, 
-      error: 'Server Misconfiguration: BREVO_API_KEY missing in environment variables.' 
+      message: 'Server Misconfiguration: BREVO_API_KEY missing in environment variables.' 
     });
   }
 
@@ -58,14 +63,14 @@ app.post('/api/send-otp', async (req, res) => {
       },
       body: JSON.stringify({
         sender: { name: "TLucifer Security", email: "tevingampalage29@gmail.com" },
-        to: [{ email: email }],
+        to: [{ email: sanitizedEmail }],
         subject: "TLucifer Verification Code",
         htmlContent: `
-          <div style="font-family: Arial, sans-serif; padding: 20px;">
+          <div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
             <h2>TLucifer Security Code</h2>
             <p>Your verification code is:</p>
             <h1 style="color: #2563eb; letter-spacing: 4px;">${otp}</h1>
-            <p>This code will expire shortly. Do not share it with anyone.</p>
+            <p>This code will expire in 5 minutes. Do not share it with anyone.</p>
           </div>
         `
       })
@@ -77,16 +82,16 @@ app.post('/api/send-otp', async (req, res) => {
       console.error('Brevo API Error Response:', data);
       return res.status(response.status).json({ 
         success: false, 
-        error: data.message || 'Failed to dispatch email through Brevo.' 
+        message: data.message || 'Failed to dispatch email through Brevo.' 
       });
     }
 
-    console.log('Email successfully sent via Brevo API:', data);
-    return res.json({ success: true, message: 'OTP sent successfully to email', data });
+    console.log(`Email successfully sent to ${sanitizedEmail}:`, data);
+    return res.json({ success: true, message: 'OTP sent successfully to email.' });
 
   } catch (error) {
     console.error('Server Internal Fetch Error:', error.message);
-    return res.status(500).json({ success: false, error: error.message });
+    return res.status(500).json({ success: false, message: error.message });
   }
 });
 
@@ -98,12 +103,25 @@ app.post('/api/verify-otp', (req, res) => {
     return res.status(400).json({ success: false, message: 'Email and OTP are required.' });
   }
 
-  // Check if the OTP matches what was stored for this email
-  if (otpStorage[email] && otpStorage[email] === otp.trim()) {
-    delete otpStorage[email]; // Clear OTP after successful use
+  const sanitizedEmail = email.trim().toLowerCase();
+  const record = otpStorage[sanitizedEmail];
+
+  if (!record) {
+    return res.status(400).json({ success: false, message: 'Invalid or expired OTP code.' });
+  }
+
+  // Check expiration
+  if (Date.now() > record.expiresAt) {
+    delete otpStorage[sanitizedEmail];
+    return res.status(400).json({ success: false, message: 'OTP code has expired.' });
+  }
+
+  // Validate OTP
+  if (record.otp === otp.toString().trim()) {
+    delete otpStorage[sanitizedEmail]; // Clear OTP after successful use
     return res.json({ success: true, message: 'OTP verified successfully.' });
   } else {
-    return res.status(400).json({ success: false, message: 'Invalid or expired OTP code.' });
+    return res.status(400).json({ success: false, message: 'Invalid OTP code.' });
   }
 });
 
