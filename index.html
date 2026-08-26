@@ -7,17 +7,35 @@
   <link rel="icon" type="image/png" href="./Company%20Logo.png">
   <style>
     :root {
+      --bg-color: #0a0a0f;
       --bg-overlay: rgba(0, 0, 0, 0.45);
-      --card-bg: rgba(248, 249, 250, 0.9);
+      --card-bg: rgba(17, 24, 39, 0.85);
       --sidebar-bg: rgba(17, 24, 39, 0.85);
       --text-main: #ffffff;
       --text-muted: #9ca3af;
-      --widget-bg: rgba(31, 41, 55, 0.75);
+      --widget-bg: rgba(17, 24, 39, 0.85);
       --input-bg: rgba(255, 255, 255, 1);
       --input-text: #1a202c;
       --table-header-bg: rgba(31, 41, 55, 0.9);
+      --table-row-border: rgba(255, 255, 255, 0.05);
       --active-item-bg: rgba(37, 99, 235, 0.25);
       --active-item-color: #60a5fa;
+    }
+
+    [data-theme="light"] {
+      --bg-color: #f1f5f9;
+      --bg-overlay: rgba(255, 255, 255, 0.45);
+      --card-bg: rgba(255, 255, 255, 0.9);
+      --sidebar-bg: rgba(255, 255, 255, 0.9);
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --widget-bg: rgba(255, 255, 255, 0.9);
+      --input-bg: #f8fafc;
+      --input-text: #0f172a;
+      --table-header-bg: rgba(226, 232, 240, 0.9);
+      --table-row-border: rgba(0, 0, 0, 0.08);
+      --active-item-bg: rgba(37, 99, 235, 0.15);
+      --active-item-color: #2563eb;
     }
 
     * {
@@ -29,7 +47,7 @@
     }
 
     body {
-      background-color: #0a0a0f; 
+      background-color: var(--bg-color); 
       background-image: linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)), url('./Background.jpg');
       background-position: center center;
       background-repeat: no-repeat;
@@ -42,13 +60,11 @@
       overflow-x: hidden;
     }
 
-    /* PREVENT INVISIBLE CONTAINERS FROM BLOCKING CLICKS */
     .hidden {
       display: none !important;
       pointer-events: none !important;
     }
 
-    /* KEYFRAME ANIMATIONS */
     @keyframes fadeInSlideUp {
       from {
         opacity: 0;
@@ -65,7 +81,6 @@
       to { opacity: 1; }
     }
 
-    /* ANIMATION CLASSES */
     .animated-card {
       animation: fadeInSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
@@ -227,7 +242,6 @@
       transform: translateY(-1px);
     }
 
-    /* SOCIAL BUTTONS */
     .social-buttons {
       display: flex;
       justify-content: space-between;
@@ -357,7 +371,7 @@
     }
 
     .navbar {
-      background: rgba(17, 24, 39, 0.85);
+      background: var(--widget-bg);
       backdrop-filter: blur(15px);
       padding: 12px 24px;
       border-radius: 40px;
@@ -403,7 +417,7 @@
       border-radius: 50%;
       background: rgba(55, 65, 81, 0.8);
       border: 1px solid rgba(255, 255, 255, 0.2);
-      color: var(--text-main);
+      color: #ffffff;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -464,18 +478,18 @@
     .header-title h1 {
       font-size: 34px;
       font-weight: 800;
-      color: #ffffff;
+      color: var(--text-main);
       margin-bottom: 4px;
       text-shadow: 0 2px 10px rgba(0,0,0,0.5);
     }
 
     .header-title p {
-      color: #d1d5db;
+      color: var(--text-muted);
       font-size: 14px;
     }
 
     .widget-box {
-      background: rgba(17, 24, 39, 0.85);
+      background: var(--widget-bg);
       backdrop-filter: blur(10px);
       padding: 24px;
       border-radius: 20px;
@@ -510,7 +524,7 @@
       border-radius: 12px;
       border: 1px solid rgba(255, 255, 255, 0.1);
       background: rgba(55, 65, 81, 0.8);
-      color: var(--text-main);
+      color: #ffffff;
       font-weight: 600;
       cursor: pointer;
     }
@@ -571,12 +585,12 @@
       border: 1px solid rgba(255, 255, 255, 0.2);
       border-radius: 8px;
       font-size: 14px;
-      color: var(--text-main);
+      color: #ffffff;
       outline: none;
     }
 
     .table-card {
-      background: rgba(17, 24, 39, 0.85);
+      background: var(--widget-bg);
       border-radius: 10px;
       overflow: hidden;
       max-height: 250px;
@@ -600,7 +614,7 @@
 
     th, td {
       padding: 10px 14px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      border-bottom: 1px solid var(--table-row-border);
     }
 
     .calendar-picker {
@@ -608,7 +622,7 @@
       border-radius: 10px;
       border: 1px solid rgba(255, 255, 255, 0.2);
       background: rgba(55, 65, 81, 0.8);
-      color: var(--text-main);
+      color: #ffffff;
       font-weight: 600;
       outline: none;
       cursor: pointer;
@@ -901,6 +915,8 @@
 
     let tempUserData = { mode: '', name: '', email: '', pass: '' };
     let currentUser = null;
+    let currentSalesType = 'Income';
+    let currentSalesCategory = 'Rooms';
 
     // Navigation Switcher
     const navItems = document.querySelectorAll('.sidebar-nav .nav-item');
@@ -932,11 +948,48 @@
 
         if (targetPanel) {
           targetPanel.classList.remove('hidden');
-          // Re-trigger CSS animation on panel switch
           targetPanel.style.animation = 'none';
-          targetPanel.offsetHeight; /* trigger reflow */
+          targetPanel.offsetHeight;
           targetPanel.style.animation = null;
         }
+      });
+    });
+
+    // Theme Toggle Handler
+    const themeBtn = document.getElementById('theme-toggle');
+    themeBtn?.addEventListener('click', () => {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      if (currentTheme === 'light') {
+        document.documentElement.removeAttribute('data-theme');
+        themeBtn.innerText = '☀️';
+      } else {
+        document.documentElement.setAttribute('data-theme', 'light');
+        themeBtn.innerText = '🌙';
+      }
+    });
+
+    // Income / Cost Toggle
+    const incomeBtn = document.getElementById('tab-sales-income');
+    const costBtn = document.getElementById('tab-sales-cost');
+    incomeBtn?.addEventListener('click', () => {
+      incomeBtn.classList.add('active');
+      costBtn.classList.remove('active');
+      currentSalesType = 'Income';
+    });
+    costBtn?.addEventListener('click', () => {
+      costBtn.classList.add('active');
+      incomeBtn.classList.remove('active');
+      currentSalesType = 'Cost';
+    });
+
+    // Sub-Category Selection Handlers
+    const subTabs = document.querySelectorAll('.sub-tab');
+    subTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        subTabs.forEach(st => st.classList.remove('active'));
+        tab.classList.add('active');
+        currentSalesCategory = tab.getAttribute('data-sub');
+        document.getElementById('sales-form-title').innerText = `Add ${currentSalesCategory} Bill`;
       });
     });
 
@@ -960,9 +1013,9 @@
       tr.innerHTML = `
         <td>${code}</td>
         <td>${name}</td>
-        <td>${price}</td>
-        <td>Rooms</td>
-        <td>Income</td>
+        <td>${parseFloat(price).toFixed(2)}</td>
+        <td>${currentSalesCategory}</td>
+        <td>${currentSalesType}</td>
         <td><button style="color:#ef4444; background:none; border:none; cursor:pointer;" class="btn-delete-row">Delete</button></td>
       `;
       
@@ -1000,9 +1053,8 @@
       const currentView = views[viewName];
       currentView.classList.remove('hidden');
 
-      // Re-trigger animation
       currentView.style.animation = 'none';
-      currentView.offsetHeight; /* trigger reflow */
+      currentView.offsetHeight;
       currentView.style.animation = null;
 
       const navbar = document.getElementById('main-top-navbar');
@@ -1017,18 +1069,18 @@
       }
     }
 
-    document.getElementById('btn-to-signup').addEventListener('click', () => showView('signup'));
-    document.getElementById('btn-to-signin').addEventListener('click', () => showView('signin'));
+    document.getElementById('btn-to-signup')?.addEventListener('click', () => showView('signup'));
+    document.getElementById('btn-to-signin')?.addEventListener('click', () => showView('signin'));
     document.getElementById('top-nav-signup')?.addEventListener('click', () => showView('signup'));
     document.getElementById('top-nav-register')?.addEventListener('click', () => showView('signup'));
-    document.getElementById('btn-forgot-to-signin').addEventListener('click', () => showView('signin'));
+    document.getElementById('btn-forgot-to-signin')?.addEventListener('click', () => showView('signin'));
     
     document.getElementById('btn-power')?.addEventListener('click', () => {
       location.reload();
     });
 
     // SIGN UP FLOW & OTP DISPATCH
-    document.getElementById('signup-form').addEventListener('submit', async (e) => {
+    document.getElementById('signup-form')?.addEventListener('submit', async (e) => {
       e.preventDefault();
       const name = document.getElementById('signup-name').value;
       const email = document.getElementById('signup-email').value;
@@ -1056,7 +1108,7 @@
     });
 
     // VERIFY OTP & CREATE USER
-    document.getElementById('otp-form').addEventListener('submit', async (e) => {
+    document.getElementById('otp-form')?.addEventListener('submit', async (e) => {
       e.preventDefault();
       const enteredOtp = document.getElementById('otp-input').value;
 
@@ -1084,7 +1136,7 @@
     });
 
     // SIGN IN
-    document.getElementById('signin-form').addEventListener('submit', async (e) => {
+    document.getElementById('signin-form')?.addEventListener('submit', async (e) => {
       e.preventDefault();
       const email = document.getElementById('signin-email').value;
       const pass = document.getElementById('signin-pass').value;
@@ -1097,7 +1149,7 @@
     });
 
     // FORGOT PASSWORD
-    document.getElementById('forgot-form').addEventListener('submit', async (e) => {
+    document.getElementById('forgot-form')?.addEventListener('submit', async (e) => {
       e.preventDefault();
       const email = document.getElementById('forgot-email').value;
       try {
@@ -1110,7 +1162,7 @@
     });
 
     // LOGOUT
-    document.getElementById('btn-logout').addEventListener('click', () => {
+    document.getElementById('btn-logout')?.addEventListener('click', () => {
       signOut(auth);
     });
 
