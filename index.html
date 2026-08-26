@@ -42,8 +42,10 @@
       overflow-x: hidden;
     }
 
+    /* PREVENT INVISIBLE CONTAINERS FROM BLOCKING CLICKS */
     .hidden {
       display: none !important;
+      pointer-events: none !important;
     }
 
     /* KEYFRAME ANIMATIONS */
@@ -275,6 +277,8 @@
       align-items: stretch;
       margin: 20px auto;
       padding: 0 20px;
+      position: relative;
+      z-index: 5;
     }
 
     .sidebar {
@@ -934,6 +938,52 @@
           targetPanel.style.animation = null;
         }
       });
+    });
+
+    // Action Button Listeners
+    document.getElementById('btn-add-bill')?.addEventListener('click', () => {
+      const codeInput = document.getElementById('bill-code');
+      const nameInput = document.getElementById('bill-name');
+      const priceInput = document.getElementById('bill-price');
+
+      const code = codeInput.value.trim() || 'AUTO-' + Math.floor(Math.random() * 1000);
+      const name = nameInput.value.trim();
+      const price = priceInput.value.trim();
+
+      if (!name || !price) {
+        alert('Please enter Name and Price.');
+        return;
+      }
+
+      const tbody = document.getElementById('sales-table-body');
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${code}</td>
+        <td>${name}</td>
+        <td>${price}</td>
+        <td>Rooms</td>
+        <td>Income</td>
+        <td><button style="color:#ef4444; background:none; border:none; cursor:pointer;" class="btn-delete-row">Delete</button></td>
+      `;
+      
+      tr.querySelector('.btn-delete-row').addEventListener('click', () => tr.remove());
+      tbody.appendChild(tr);
+
+      codeInput.value = '';
+      nameInput.value = '';
+      priceInput.value = '';
+    });
+
+    document.getElementById('btn-open-sales-report')?.addEventListener('click', () => {
+      alert('Opening Sales Report...');
+    });
+
+    document.getElementById('btn-open-stock-modal')?.addEventListener('click', () => {
+      alert('Opening Add Stock Form...');
+    });
+
+    document.getElementById('btn-open-stock-report')?.addEventListener('click', () => {
+      alert('Opening Stock Report...');
     });
 
     // Auth Views Navigation
