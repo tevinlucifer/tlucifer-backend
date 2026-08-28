@@ -1,131 +1,191 @@
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
-const path = require('path');
+// ==========================================
+    // REPORT MODAL CONTROLLERS & DATA CALCULATIONS
+    // ==========================================
 
-const app = express();
-app.use(cors());
-app.use(express.json());
+    // DOM Elements - Modals & Buttons
+    const salesReportModal = document.getElementById('sales-report-modal');
+    const stockReportModal = document.getElementById('stock-report-modal');
+    const metricDetailsModal = document.getElementById('metric-details-modal');
 
-app.use(express.static(__dirname));
+    const btnOpenSalesReport = document.getElementById('btn-open-sales-report');
+    const btnCloseSalesReport = document.getElementById('btn-close-sales-report');
+    const btnOpenStockReport = document.getElementById('btn-open-stock-report');
+    const btnCloseStockReport = document.getElementById('btn-close-stock-report');
+    const btnCloseMetricDetails = document.getElementById('btn-close-metric-details');
 
-// In-memory store for OTPs (email -> { otp, expiresAt })
-const otpStorage = {};
+    // Filter Controls
+    const salesCalendarFilter = document.getElementById('sales-calendar-filter');
+    const stockCalendarFilter = document.getElementById('stock-calendar-filter');
 
-app.get('/', (req, res) => {
-  const filePath = path.join(__dirname, 'index.html');
-  res.sendFile(filePath, (err) => {
-    if (err) {
-      console.error("ERROR SERVING FILE:", err);
-      res.status(500).send("Server running, but index.html was not found in this folder.");
-    }
-  });
-});
-
-// Endpoint to send OTP via Brevo REST API
-app.post('/api/send-otp', async (req, res) => {
-  let { email, otp } = req.body;
-
-  if (!email) {
-    return res.status(400).json({ success: false, message: 'Email address is required.' });
-  }
-
-  const sanitizedEmail = email.trim().toLowerCase();
-
-  // Generate 6-digit OTP if not provided
-  if (!otp) {
-    otp = Math.floor(100000 + Math.random() * 900000).toString();
-  }
-
-  // Save OTP in memory with a 5-minute expiration time
-  otpStorage[sanitizedEmail] = {
-    otp: otp.toString().trim(),
-    expiresAt: Date.now() + 5 * 60 * 1000 // 5 minutes
-  };
-
-  const apiKey = process.env.BREVO_API_KEY ? process.env.BREVO_API_KEY.trim() : null;
-
-  if (!apiKey) {
-    console.error("CRITICAL: BREVO_API_KEY environment variable is missing.");
-    return res.status(500).json({ 
-      success: false, 
-      message: 'Server Misconfiguration: BREVO_API_KEY missing in environment variables.' 
-    });
-  }
-
-  try {
-    const response = await fetch('https://api.brevo.com/v3/smtp/email', {
-      method: 'POST',
-      headers: {
-        'accept': 'application/json',
-        'api-key': apiKey,
-        'content-type': 'application/json'
-      },
-      body: JSON.stringify({
-        sender: { name: "TLucifer Security", email: "tevingampalage29@gmail.com" },
-        to: [{ email: sanitizedEmail }],
-        subject: "TLucifer Verification Code",
-        htmlContent: `
-          <div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
-            <h2>TLucifer Security Code</h2>
-            <p>Your verification code is:</p>
-            <h1 style="color: #2563eb; letter-spacing: 4px;">${otp}</h1>
-            <p>This code will expire in 5 minutes. Do not share it with anyone.</p>
-          </div>
-        `
-      })
+    // Modal Visibility Handlers
+    btnOpenSalesReport?.addEventListener('click', () => {
+      salesReportModal?.classList.remove('hidden');
+      updateSalesReport();
     });
 
-    const data = await response.json();
+    btnCloseSalesReport?.addEventListener('click', () => {
+      salesReportModal?.classList.add('hidden');
+    });
 
-    if (!response.ok) {
-      console.error('Brevo API Error Response:', data);
-      return res.status(response.status).json({ 
-        success: false, 
-        message: data.message || 'Failed to dispatch email through Brevo.' 
+    btnOpenStockReport?.addEventListener('click', () => {
+      stockReportModal?.classList.remove('hidden');
+      updateStockReport();
+    });
+
+    btnCloseStockReport?.addEventListener('click', () => {
+      stockReportModal?.classList.add('hidden');
+    });
+
+    btnCloseMetricDetails?.addEventListener('click', () => {
+      metricDetailsModal?.classList.add('hidden');
+    });
+
+    // Date/Tab Change Listeners for Sales Report
+    salesCalendarFilter?.addEventListener('change', ()updateSalesReport);
+    document.querySelectorAll('.sales-report-tab').forEach(tab => {
+      tab.addEventListener('click', (e) => {
+        document.querySelectorAll('.sales-report-tab').forEach(t => t.classList.remove('active'));
+        e.target.classList.add('active');
+        activeSalesPeriod = e.target.getAttribute('data-period');
+        updateSalesReport();
       });
+    });
+
+    // Date/Tab Change Listeners for Stock Report
+    stockCalendarFilter?.addEventListener('change', updateStockReport);
+    document.querySelectorAll('.stock-report-tab').forEach(tab => {
+      tab.addEventListener('click', (e) => {
+        document.querySelectorAll('.stock-report-tab').forEach(t => t.classList.remove('active'));
+        e.target.classList.add('active');
+        activeStockPeriod = e.target.getAttribute('data-period');
+        updateStockReport();
+      });
+    });
+
+    // Date Filter Logic (Daily, Monthly, Yearly)
+    function matchesPeriodFilter(itemDateStr, targetDateStr, period) {
+      if (!itemDateStr || !targetDateStr) return true;
+      const itemDate = new Date(itemDateStr);
+      const targetDate = new Date(targetDateStr);
+
+      if (period === 'daily') {
+        return itemDate.toISOString().split('T')[0] === targetDateStr;
+      } else if (period === 'monthly') {
+        return itemDate.getFullYear() === targetDate.getFullYear() &&
+               itemDate.getMonth() === targetDate.getMonth();
+      } else if (period === 'yearly') {
+        return itemDate.getFullYear() === targetDate.getFullYear();
+      }
+      return true;
     }
 
-    console.log(`Email successfully sent to ${sanitizedEmail}:`, data);
-    return res.json({ success: true, message: 'OTP sent successfully to email.' });
+    // Update Sales Report UI Logic
+    function updateSalesReport() {
+      const selectedDate = salesCalendarFilter.value;
+      const filteredSales = salesData.filter(item => 
+        matchesPeriodFilter(item.timestamp || item.date, selectedDate, activeSalesPeriod)
+      );
 
-  } catch (error) {
-    console.error('Server Internal Fetch Error:', error.message);
-    return res.status(500).json({ success: false, message: error.message });
-  }
-});
+      let totalIncome = 0;
+      let totalCost = 0;
+      let roomsTotal = 0;
+      let foodTotal = 0;
+      let functionTotal = 0;
+      let stockCostTotal = 0;
 
-// Endpoint to verify the submitted OTP code
-app.post('/api/verify-otp', (req, res) => {
-  const { email, otp } = req.body;
+      filteredSales.forEach(item => {
+        const price = parseFloat(item.price) || 0;
+        if (item.type === 'Income') {
+          totalIncome += price;
+          if (item.category === 'Rooms') roomsTotal += price;
+          if (item.category === 'Food') foodTotal += price;
+          if (item.category === 'Function') functionTotal += price;
+        } else if (item.type === 'Cost') {
+          totalCost += price;
+          if (item.category === 'Stock') stockCostTotal += price;
+        }
+      });
 
-  if (!email || !otp) {
-    return res.status(400).json({ success: false, message: 'Email and OTP are required.' });
-  }
+      const netProfit = totalIncome - totalCost;
+      const netLoss = netProfit < 0 ? Math.abs(netProfit) : 0;
 
-  const sanitizedEmail = email.trim().toLowerCase();
-  const record = otpStorage[sanitizedEmail];
+      // Update Dashboard & Modal Elements
+      document.getElementById('sr-total-revenue').innerText = `Rs. ${totalIncome.toFixed(2)}`;
+      document.getElementById('sr-total-cost').innerText = `Rs. ${totalCost.toFixed(2)}`;
+      document.getElementById('sr-net-profit').innerText = `Rs. ${Math.max(0, netProfit).toFixed(2)}`;
+      document.getElementById('sr-net-loss').innerText = `Rs. ${netLoss.toFixed(2)}`;
 
-  if (!record) {
-    return res.status(400).json({ success: false, message: 'Invalid or expired OTP code.' });
-  }
+      document.getElementById('sr-cat-rooms').innerText = `Rs. ${roomsTotal.toFixed(2)}`;
+      document.getElementById('sr-cat-food').innerText = `Rs. ${foodTotal.toFixed(2)}`;
+      document.getElementById('sr-cat-function').innerText = `Rs. ${functionTotal.toFixed(2)}`;
+      document.getElementById('sr-cat-stock').innerText = `Rs. ${stockCostTotal.toFixed(2)}`;
 
-  // Check expiration
-  if (Date.now() > record.expiresAt) {
-    delete otpStorage[sanitizedEmail];
-    return res.status(400).json({ success: false, message: 'OTP code has expired.' });
-  }
+      // Update Summary Cards on main sales panel
+      document.getElementById('report-total-income').innerText = `Rs. ${totalIncome.toFixed(2)}`;
+      document.getElementById('report-total-cost').innerText = `Rs. ${totalCost.toFixed(2)}`;
+      document.getElementById('report-net-profit').innerText = `Rs. ${Math.max(0, netProfit).toFixed(2)}`;
+      document.getElementById('report-net-loss').innerText = `Rs. ${netLoss.toFixed(2)}`;
+    }
 
-  // Validate OTP
-  if (record.otp === otp.toString().trim()) {
-    delete otpStorage[sanitizedEmail]; // Clear OTP after successful use
-    return res.json({ success: true, message: 'OTP verified successfully.' });
-  } else {
-    return res.status(400).json({ success: false, message: 'Invalid OTP code.' });
-  }
-});
+    // Update Stock Report UI Logic
+    function updateStockReport() {
+      const selectedDate = stockCalendarFilter.value;
+      const filteredStock = stockData.filter(item => 
+        matchesPeriodFilter(item.timestamp || item.date, selectedDate, activeStockPeriod)
+      );
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+      let totalVal = 0;
+      const tbody = document.getElementById('stock-report-table-body');
+      tbody.innerHTML = '';
+
+      filteredStock.forEach(item => {
+        const price = parseFloat(item.price) || 0;
+        totalVal += price;
+
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${item.code || '-'}</td>
+          <td>${item.name || '-'}</td>
+          <td>Rs. ${price.toFixed(2)}</td>
+        `;
+        tbody.appendChild(row);
+      });
+
+      const count = filteredStock.length;
+      const avgPrice = count > 0 ? (totalVal / count) : 0;
+
+      document.getElementById('st-total-val').innerText = `Rs. ${totalVal.toFixed(2)}`;
+      document.getElementById('st-table-total-val').innerText = `Rs. ${totalVal.toFixed(2)}`;
+      document.getElementById('st-total-count').innerText = count;
+      document.getElementById('st-avg-price').innerText = `Rs. ${avgPrice.toFixed(2)}`;
+    }
+
+    // Metric Details Drilldown Handler
+    function openMetricDetails(title, categoryFilter) {
+      const modal = document.getElementById('metric-details-modal');
+      const titleEl = document.getElementById('metric-details-title');
+      const tbody = document.getElementById('metric-details-tbody');
+      const totalEl = document.getElementById('metric-details-total');
+
+      titleEl.innerText = `${title} Details`;
+      tbody.innerHTML = '';
+      let sum = 0;
+
+      const filtered = salesData.filter(item => item.category === categoryFilter);
+      filtered.forEach(item => {
+        const price = parseFloat(item.price) || 0;
+        sum += price;
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${item.code || '-'}</td>
+          <td>${item.name || '-'}</td>
+          <td>${item.category || '-'}</td>
+          <td>${item.type || '-'}</td>
+          <td>Rs. ${price.toFixed(2)}</td>
+        `;
+        tbody.appendChild(row);
+      });
+
+      totalEl.innerText = `Rs. ${sum.toFixed(2)}`;
+      modal?.classList.remove('hidden');
+    }

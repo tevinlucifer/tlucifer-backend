@@ -566,6 +566,22 @@
       background-color: #059669;
     }
 
+    .btn-danger {
+      padding: 10px 18px;
+      background-color: #ef4444;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+    }
+
+    .btn-danger:hover {
+      background-color: #dc2626;
+    }
+
     .form-row {
       display: flex;
       gap: 12px;
@@ -626,6 +642,65 @@
       font-weight: 600;
       outline: none;
       cursor: pointer;
+    }
+
+    /* MODAL OVERLAYS & CARDS */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(8px);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-card {
+      background: var(--widget-bg);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 20px;
+      padding: 24px;
+      width: 100%;
+      max-width: 800px;
+      max-height: 85vh;
+      overflow-y: auto;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 12px;
+    }
+
+    .modal-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .stat-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    .stat-card .label {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .stat-card .value {
+      font-size: 20px;
+      font-weight: 700;
     }
   </style>
 </head>
@@ -806,6 +881,25 @@
           <button class="tab-btn sub-tab" data-sub="Stock">📦 Stock</button>
         </div>
 
+        <div class="modal-grid" style="margin-bottom: 20px;">
+          <div class="stat-card">
+            <div class="label">Total Income</div>
+            <div class="value" id="report-total-income" style="color: #10b981;">Rs. 0.00</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Total Cost</div>
+            <div class="value" id="report-total-cost" style="color: #ef4444;">Rs. 0.00</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Net Profit</div>
+            <div class="value" id="report-net-profit" style="color: #60a5fa;">Rs. 0.00</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Net Loss</div>
+            <div class="value" id="report-net-loss" style="color: #f59e0b;">Rs. 0.00</div>
+          </div>
+        </div>
+
         <div class="widget-box">
           <div class="widget-header-row">
             <div class="widget-box-title" id="sales-form-title">Add Rooms Bill</div>
@@ -887,6 +981,150 @@
     </main>
   </div>
 
+  <!-- SALES REPORT MODAL -->
+  <div id="sales-report-modal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>Sales & Profit Analysis Report</h2>
+        <button class="btn-danger" id="btn-close-sales-report">Close</button>
+      </div>
+
+      <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 20px;">
+        <div class="tab-group" style="margin-bottom: 0;">
+          <button class="tab-btn active sales-report-tab" data-period="daily">Daily</button>
+          <button class="tab-btn sales-report-tab" data-period="monthly">Monthly</button>
+          <button class="tab-btn sales-report-tab" data-period="yearly">Yearly</button>
+        </div>
+        <input type="date" id="sales-calendar-filter" class="calendar-picker" style="margin-left: auto;">
+      </div>
+
+      <div class="modal-grid">
+        <div class="stat-card">
+          <div class="label">Total Revenue</div>
+          <div class="value" id="sr-total-revenue" style="color: #10b981;">Rs. 0.00</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Total Cost</div>
+          <div class="value" id="sr-total-cost" style="color: #ef4444;">Rs. 0.00</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Net Profit</div>
+          <div class="value" id="sr-net-profit" style="color: #60a5fa;">Rs. 0.00</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Net Loss</div>
+          <div class="value" id="sr-net-loss" style="color: #f59e0b;">Rs. 0.00</div>
+        </div>
+      </div>
+
+      <h3 style="margin-bottom: 12px;">Category Totals</h3>
+      <div class="modal-grid">
+        <div class="stat-card" style="cursor: pointer;" onclick="openMetricDetails('Rooms', 'Rooms')">
+          <div class="label">🏨 Rooms Income</div>
+          <div class="value" id="sr-cat-rooms">Rs. 0.00</div>
+        </div>
+        <div class="stat-card" style="cursor: pointer;" onclick="openMetricDetails('Food', 'Food')">
+          <div class="label">🍔 Food Income</div>
+          <div class="value" id="sr-cat-food">Rs. 0.00</div>
+        </div>
+        <div class="stat-card" style="cursor: pointer;" onclick="openMetricDetails('Function', 'Function')">
+          <div class="label">🎉 Function Income</div>
+          <div class="value" id="sr-cat-function">Rs. 0.00</div>
+        </div>
+        <div class="stat-card" style="cursor: pointer;" onclick="openMetricDetails('Stock', 'Stock')">
+          <div class="label">📦 Stock Expenses</div>
+          <div class="value" id="sr-cat-stock">Rs. 0.00</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STOCK REPORT MODAL -->
+  <div id="stock-report-modal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>Stock Valuation Report</h2>
+        <button class="btn-danger" id="btn-close-stock-report">Close</button>
+      </div>
+
+      <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 20px;">
+        <div class="tab-group" style="margin-bottom: 0;">
+          <button class="tab-btn active stock-report-tab" data-period="daily">Daily</button>
+          <button class="tab-btn stock-report-tab" data-period="monthly">Monthly</button>
+          <button class="tab-btn stock-report-tab" data-period="yearly">Yearly</button>
+        </div>
+        <input type="date" id="stock-calendar-filter" class="calendar-picker" style="margin-left: auto;">
+      </div>
+
+      <div class="modal-grid">
+        <div class="stat-card">
+          <div class="label">Total Stock Value</div>
+          <div class="value" id="st-total-val" style="color: #10b981;">Rs. 0.00</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Total Items Count</div>
+          <div class="value" id="st-total-count">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Average Unit Price</div>
+          <div class="value" id="st-avg-price">Rs. 0.00</div>
+        </div>
+      </div>
+
+      <div class="table-card">
+        <table>
+          <thead>
+            <tr>
+              <th>Stock Code</th>
+              <th>Product Name</th>
+              <th>Price (Rs.)</th>
+            </tr>
+          </thead>
+          <tbody id="stock-report-table-body">
+          </tbody>
+          <tfoot>
+            <tr>
+              <th colspan="2">Total Value</th>
+              <th id="st-table-total-val">Rs. 0.00</th>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- METRIC DETAILS DRILLDOWN MODAL -->
+  <div id="metric-details-modal" class="modal-overlay hidden">
+    <div class="modal-card" style="max-width: 600px;">
+      <div class="modal-header">
+        <h2 id="metric-details-title">Metric Details</h2>
+        <button class="btn-danger" id="btn-close-metric-details">Close</button>
+      </div>
+
+      <div class="table-card">
+        <table>
+          <thead>
+            <tr>
+              <th>Code</th>
+              <th>Name</th>
+              <th>Category</th>
+              <th>Type</th>
+              <th>Price (Rs.)</th>
+            </tr>
+          </thead>
+          <tbody id="metric-details-tbody">
+          </tbody>
+          <tfoot>
+            <tr>
+              <th colspan="4">Sum</th>
+              <th id="metric-details-total">Rs. 0.00</th>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { 
@@ -917,6 +1155,19 @@
     let currentUser = null;
     let currentSalesType = 'Income';
     let currentSalesCategory = 'Rooms';
+
+    // Application Data & Reporting Filters
+    let salesData = [];
+    let stockData = [];
+    let activeSalesPeriod = 'daily';
+    let activeStockPeriod = 'daily';
+
+    // Set Initial Filter Values
+    const todayStr = new Date().toISOString().split('T')[0];
+    const sCal = document.getElementById('sales-calendar-filter');
+    const stCal = document.getElementById('stock-calendar-filter');
+    if (sCal) sCal.value = todayStr;
+    if (stCal) stCal.value = todayStr;
 
     // Navigation Switcher
     const navItems = document.querySelectorAll('.sidebar-nav .nav-item');
@@ -1008,36 +1259,269 @@
         return;
       }
 
+      const newItem = {
+        code,
+        name,
+        price: parseFloat(price),
+        category: currentSalesCategory,
+        type: currentSalesType,
+        timestamp: new Date().toISOString()
+      };
+
+      salesData.push(newItem);
+
       const tbody = document.getElementById('sales-table-body');
       const tr = document.createElement('tr');
       tr.innerHTML = `
-        <td>${code}</td>
-        <td>${name}</td>
-        <td>${parseFloat(price).toFixed(2)}</td>
-        <td>${currentSalesCategory}</td>
-        <td>${currentSalesType}</td>
+        <td>${newItem.code}</td>
+        <td>${newItem.name}</td>
+        <td>${newItem.price.toFixed(2)}</td>
+        <td>${newItem.category}</td>
+        <td>${newItem.type}</td>
         <td><button style="color:#ef4444; background:none; border:none; cursor:pointer;" class="btn-delete-row">Delete</button></td>
       `;
       
-      tr.querySelector('.btn-delete-row').addEventListener('click', () => tr.remove());
+      tr.querySelector('.btn-delete-row').addEventListener('click', () => {
+        const idx = salesData.indexOf(newItem);
+        if (idx > -1) salesData.splice(idx, 1);
+        tr.remove();
+        updateSalesReport();
+      });
+
       tbody.appendChild(tr);
 
       codeInput.value = '';
       nameInput.value = '';
       priceInput.value = '';
-    });
 
-    document.getElementById('btn-open-sales-report')?.addEventListener('click', () => {
-      alert('Opening Sales Report...');
+      updateSalesReport();
     });
 
     document.getElementById('btn-open-stock-modal')?.addEventListener('click', () => {
-      alert('Opening Add Stock Form...');
+      const name = prompt("Enter Product Name:");
+      const priceStr = prompt("Enter Price (Rs.):");
+      if (!name || !priceStr) return;
+
+      const newItem = {
+        code: 'STK-' + Math.floor(Math.random() * 1000),
+        name,
+        price: parseFloat(priceStr),
+        timestamp: new Date().toISOString()
+      };
+
+      stockData.push(newItem);
+
+      const tbody = document.getElementById('stock-table-body');
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${newItem.code}</td>
+        <td>${newItem.name}</td>
+        <td>Rs. ${newItem.price.toFixed(2)}</td>
+        <td><button style="color:#ef4444; background:none; border:none; cursor:pointer;" class="btn-delete-row">Delete</button></td>
+      `;
+
+      tr.querySelector('.btn-delete-row').addEventListener('click', () => {
+        const idx = stockData.indexOf(newItem);
+        if (idx > -1) stockData.splice(idx, 1);
+        tr.remove();
+        updateStockReport();
+      });
+
+      tbody.appendChild(tr);
+      updateStockReport();
     });
 
-    document.getElementById('btn-open-stock-report')?.addEventListener('click', () => {
-      alert('Opening Stock Report...');
+    // ==========================================
+    // REPORT MODAL CONTROLLERS & DATA CALCULATIONS
+    // ==========================================
+
+    // DOM Elements - Modals & Buttons
+    const salesReportModal = document.getElementById('sales-report-modal');
+    const stockReportModal = document.getElementById('stock-report-modal');
+    const metricDetailsModal = document.getElementById('metric-details-modal');
+
+    const btnOpenSalesReport = document.getElementById('btn-open-sales-report');
+    const btnCloseSalesReport = document.getElementById('btn-close-sales-report');
+    const btnOpenStockReport = document.getElementById('btn-open-stock-report');
+    const btnCloseStockReport = document.getElementById('btn-close-stock-report');
+    const btnCloseMetricDetails = document.getElementById('btn-close-metric-details');
+
+    // Filter Controls
+    const salesCalendarFilter = document.getElementById('sales-calendar-filter');
+    const stockCalendarFilter = document.getElementById('stock-calendar-filter');
+
+    // Modal Visibility Handlers
+    btnOpenSalesReport?.addEventListener('click', () => {
+      salesReportModal?.classList.remove('hidden');
+      updateSalesReport();
     });
+
+    btnCloseSalesReport?.addEventListener('click', () => {
+      salesReportModal?.classList.add('hidden');
+    });
+
+    btnOpenStockReport?.addEventListener('click', () => {
+      stockReportModal?.classList.remove('hidden');
+      updateStockReport();
+    });
+
+    btnCloseStockReport?.addEventListener('click', () => {
+      stockReportModal?.classList.add('hidden');
+    });
+
+    btnCloseMetricDetails?.addEventListener('click', () => {
+      metricDetailsModal?.classList.add('hidden');
+    });
+
+    // Date/Tab Change Listeners for Sales Report
+    salesCalendarFilter?.addEventListener('change', updateSalesReport);
+    document.querySelectorAll('.sales-report-tab').forEach(tab => {
+      tab.addEventListener('click', (e) => {
+        document.querySelectorAll('.sales-report-tab').forEach(t => t.classList.remove('active'));
+        e.target.classList.add('active');
+        activeSalesPeriod = e.target.getAttribute('data-period');
+        updateSalesReport();
+      });
+    });
+
+    // Date/Tab Change Listeners for Stock Report
+    stockCalendarFilter?.addEventListener('change', updateStockReport);
+    document.querySelectorAll('.stock-report-tab').forEach(tab => {
+      tab.addEventListener('click', (e) => {
+        document.querySelectorAll('.stock-report-tab').forEach(t => t.classList.remove('active'));
+        e.target.classList.add('active');
+        activeStockPeriod = e.target.getAttribute('data-period');
+        updateStockReport();
+      });
+    });
+
+    // Date Filter Logic (Daily, Monthly, Yearly)
+    function matchesPeriodFilter(itemDateStr, targetDateStr, period) {
+      if (!itemDateStr || !targetDateStr) return true;
+      const itemDate = new Date(itemDateStr);
+      const targetDate = new Date(targetDateStr);
+
+      if (period === 'daily') {
+        return itemDate.toISOString().split('T')[0] === targetDateStr;
+      } else if (period === 'monthly') {
+        return itemDate.getFullYear() === targetDate.getFullYear() &&
+               itemDate.getMonth() === targetDate.getMonth();
+      } else if (period === 'yearly') {
+        return itemDate.getFullYear() === targetDate.getFullYear();
+      }
+      return true;
+    }
+
+    // Update Sales Report UI Logic
+    function updateSalesReport() {
+      const selectedDate = salesCalendarFilter.value;
+      const filteredSales = salesData.filter(item => 
+        matchesPeriodFilter(item.timestamp || item.date, selectedDate, activeSalesPeriod)
+      );
+
+      let totalIncome = 0;
+      let totalCost = 0;
+      let roomsTotal = 0;
+      let foodTotal = 0;
+      let functionTotal = 0;
+      let stockCostTotal = 0;
+
+      filteredSales.forEach(item => {
+        const price = parseFloat(item.price) || 0;
+        if (item.type === 'Income') {
+          totalIncome += price;
+          if (item.category === 'Rooms') roomsTotal += price;
+          if (item.category === 'Food') foodTotal += price;
+          if (item.category === 'Function') functionTotal += price;
+        } else if (item.type === 'Cost') {
+          totalCost += price;
+          if (item.category === 'Stock') stockCostTotal += price;
+        }
+      });
+
+      const netProfit = totalIncome - totalCost;
+      const netLoss = netProfit < 0 ? Math.abs(netProfit) : 0;
+
+      // Update Dashboard & Modal Elements
+      document.getElementById('sr-total-revenue').innerText = `Rs. ${totalIncome.toFixed(2)}`;
+      document.getElementById('sr-total-cost').innerText = `Rs. ${totalCost.toFixed(2)}`;
+      document.getElementById('sr-net-profit').innerText = `Rs. ${Math.max(0, netProfit).toFixed(2)}`;
+      document.getElementById('sr-net-loss').innerText = `Rs. ${netLoss.toFixed(2)}`;
+
+      document.getElementById('sr-cat-rooms').innerText = `Rs. ${roomsTotal.toFixed(2)}`;
+      document.getElementById('sr-cat-food').innerText = `Rs. ${foodTotal.toFixed(2)}`;
+      document.getElementById('sr-cat-function').innerText = `Rs. ${functionTotal.toFixed(2)}`;
+      document.getElementById('sr-cat-stock').innerText = `Rs. ${stockCostTotal.toFixed(2)}`;
+
+      // Update Summary Cards on main sales panel
+      document.getElementById('report-total-income').innerText = `Rs. ${totalIncome.toFixed(2)}`;
+      document.getElementById('report-total-cost').innerText = `Rs. ${totalCost.toFixed(2)}`;
+      document.getElementById('report-net-profit').innerText = `Rs. ${Math.max(0, netProfit).toFixed(2)}`;
+      document.getElementById('report-net-loss').innerText = `Rs. ${netLoss.toFixed(2)}`;
+    }
+
+    // Update Stock Report UI Logic
+    function updateStockReport() {
+      const selectedDate = stockCalendarFilter.value;
+      const filteredStock = stockData.filter(item => 
+        matchesPeriodFilter(item.timestamp || item.date, selectedDate, activeStockPeriod)
+      );
+
+      let totalVal = 0;
+      const tbody = document.getElementById('stock-report-table-body');
+      tbody.innerHTML = '';
+
+      filteredStock.forEach(item => {
+        const price = parseFloat(item.price) || 0;
+        totalVal += price;
+
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${item.code || '-'}</td>
+          <td>${item.name || '-'}</td>
+          <td>Rs. ${price.toFixed(2)}</td>
+        `;
+        tbody.appendChild(row);
+      });
+
+      const count = filteredStock.length;
+      const avgPrice = count > 0 ? (totalVal / count) : 0;
+
+      document.getElementById('st-total-val').innerText = `Rs. ${totalVal.toFixed(2)}`;
+      document.getElementById('st-table-total-val').innerText = `Rs. ${totalVal.toFixed(2)}`;
+      document.getElementById('st-total-count').innerText = count;
+      document.getElementById('st-avg-price').innerText = `Rs. ${avgPrice.toFixed(2)}`;
+    }
+
+    // Metric Details Drilldown Handler
+    window.openMetricDetails = function(title, categoryFilter) {
+      const modal = document.getElementById('metric-details-modal');
+      const titleEl = document.getElementById('metric-details-title');
+      const tbody = document.getElementById('metric-details-tbody');
+      const totalEl = document.getElementById('metric-details-total');
+
+      titleEl.innerText = `${title} Details`;
+      tbody.innerHTML = '';
+      let sum = 0;
+
+      const filtered = salesData.filter(item => item.category === categoryFilter);
+      filtered.forEach(item => {
+        const price = parseFloat(item.price) || 0;
+        sum += price;
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${item.code || '-'}</td>
+          <td>${item.name || '-'}</td>
+          <td>${item.category || '-'}</td>
+          <td>${item.type || '-'}</td>
+          <td>Rs. ${price.toFixed(2)}</td>
+        `;
+        tbody.appendChild(row);
+      });
+
+      totalEl.innerText = `Rs. ${sum.toFixed(2)}`;
+      modal?.classList.remove('hidden');
+    };
 
     // Auth Views Navigation
     const views = {
