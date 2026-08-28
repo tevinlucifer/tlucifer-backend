@@ -41,8 +41,7 @@
     });
 
     // Date/Tab Change Listeners for Sales Report
-    salesCalendarFilter?.addEventListener('change', ()updateSalesReport);
-    document.querySelectorAll('.sales-report-tab').forEach(tab => {
+salesCalendarFilter?.addEventListener('change', () => updateSalesReport());    document.querySelectorAll('.sales-report-tab').forEach(tab => {
       tab.addEventListener('click', (e) => {
         document.querySelectorAll('.sales-report-tab').forEach(t => t.classList.remove('active'));
         e.target.classList.add('active');
