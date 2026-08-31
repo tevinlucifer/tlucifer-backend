@@ -102,12 +102,12 @@ const incomeBtn = document.getElementById('tab-sales-income');
 const costBtn = document.getElementById('tab-sales-cost');
 incomeBtn?.addEventListener('click', () => {
   incomeBtn.classList.add('active');
-  costBtn.classList.remove('active');
+  costBtn?.classList.remove('active');
   currentSalesType = 'Income';
 });
 costBtn?.addEventListener('click', () => {
   costBtn.classList.add('active');
-  incomeBtn.classList.remove('active');
+  incomeBtn?.classList.remove('active');
   currentSalesType = 'Cost';
 });
 
@@ -117,7 +117,7 @@ subTabs.forEach(tab => {
   tab.addEventListener('click', () => {
     subTabs.forEach(st => st.classList.remove('active'));
     tab.classList.add('active');
-    currentSalesCategory = tab.getAttribute('data-sub');
+    currentSalesCategory = tab.getAttribute('data-sub') || 'Rooms';
     setElementText('sales-form-title', `Add ${currentSalesCategory} Bill`);
   });
 });
