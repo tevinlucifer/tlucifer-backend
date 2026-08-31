@@ -1,14 +1,223 @@
-// ==========================================
-// REPORT MODAL CONTROLLERS & DATA CALCULATIONS
-// ==========================================
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { 
+  getAuth, 
+  createUserWithEmailAndPassword, 
+  signInWithEmailAndPassword, 
+  sendPasswordResetEmail, 
+  updateProfile, 
+  signOut, 
+  onAuthStateChanged 
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-// Initial State Variables
+const firebaseConfig = {
+  apiKey: "AIzaSyAHaToGc7F2vlQt6bDXRMMHjnqRf4OANfc",
+  authDomain: "tlucifer-auth.firebaseapp.com",
+  databaseURL: "https://tlucifer-auth-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "tlucifer-auth",
+  storageBucket: "tlucifer-auth.firebasestorage.app",
+  messagingSenderId: "249663219994",
+  appId: "1:249663219994:web:69a395dee4ad4331e864a3"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const BACKEND_URL = "https://tlucifer-backend.onrender.com";
+
+// State Management
+let tempUserData = { mode: '', name: '', email: '', pass: '' };
+let currentUser = null;
+let currentSalesType = 'Income';
+let currentSalesCategory = 'Rooms';
+
 let activeSalesPeriod = 'daily';
 let activeStockPeriod = 'daily';
 let salesData = [];
 let stockData = [];
 
-// DOM Elements - Modals & Buttons
+// Helper function to safely update text content without throwing null errors
+const setElementText = (id, text) => {
+  const el = document.getElementById(id);
+  if (el) el.innerText = text;
+};
+
+// Initial Calendar Values
+const todayStr = new Date().toISOString().split('T')[0];
+const sCal = document.getElementById('sales-calendar-filter');
+const stCal = document.getElementById('stock-calendar-filter');
+if (sCal) sCal.value = todayStr;
+if (stCal) stCal.value = todayStr;
+
+// Navigation Switcher
+const navItems = document.querySelectorAll('.sidebar-nav .nav-item');
+const panels = document.querySelectorAll('.panel-content');
+navItems.forEach(item => {
+  item.addEventListener('click', () => {
+    navItems.forEach(nav => nav.classList.remove('active'));
+    item.classList.add('active');
+
+    const panelKey = item.getAttribute('data-panel');
+    const panelName = item.innerText.trim();
+
+    setElementText('page-title', panelName);
+    setElementText('page-subtitle', `Manage ${panelName} operations`);
+
+    panels.forEach(p => p.classList.add('hidden'));
+
+    let targetPanel;
+    if (panelKey === 'overview') {
+      targetPanel = document.getElementById('panel-overview');
+    } else if (panelKey === 'sales') {
+      targetPanel = document.getElementById('panel-sales');
+    } else if (panelKey === 'stock') {
+      targetPanel = document.getElementById('panel-stock');
+    } else {
+      setElementText('generic-title', panelName);
+      targetPanel = document.getElementById('panel-generic');
+    }
+
+    if (targetPanel) {
+      targetPanel.classList.remove('hidden');
+      targetPanel.style.animation = 'none';
+      targetPanel.offsetHeight;
+      targetPanel.style.animation = null;
+    }
+  });
+});
+
+// Theme Toggle Handler
+const themeBtn = document.getElementById('theme-toggle');
+themeBtn?.addEventListener('click', () => {
+  const currentTheme = document.documentElement.getAttribute('data-theme');
+  if (currentTheme === 'light') {
+    document.documentElement.removeAttribute('data-theme');
+    themeBtn.innerText = '☀️';
+  } else {
+    document.documentElement.setAttribute('data-theme', 'light');
+    themeBtn.innerText = '🌙';
+  }
+});
+
+// Income / Cost Toggle
+const incomeBtn = document.getElementById('tab-sales-income');
+const costBtn = document.getElementById('tab-sales-cost');
+incomeBtn?.addEventListener('click', () => {
+  incomeBtn.classList.add('active');
+  costBtn.classList.remove('active');
+  currentSalesType = 'Income';
+});
+costBtn?.addEventListener('click', () => {
+  costBtn.classList.add('active');
+  incomeBtn.classList.remove('active');
+  currentSalesType = 'Cost';
+});
+
+// Sub-Category Selection Handlers
+const subTabs = document.querySelectorAll('.sub-tab');
+subTabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    subTabs.forEach(st => st.classList.remove('active'));
+    tab.classList.add('active');
+    currentSalesCategory = tab.getAttribute('data-sub');
+    setElementText('sales-form-title', `Add ${currentSalesCategory} Bill`);
+  });
+});
+
+// Add Sales Bill Handler
+document.getElementById('btn-add-bill')?.addEventListener('click', () => {
+  const codeInput = document.getElementById('bill-code');
+  const nameInput = document.getElementById('bill-name');
+  const priceInput = document.getElementById('bill-price');
+
+  const code = codeInput?.value.trim() || 'AUTO-' + Math.floor(Math.random() * 1000);
+  const name = nameInput?.value.trim();
+  const price = priceInput?.value.trim();
+
+  if (!name || !price) {
+    alert('Please enter Name and Price.');
+    return;
+  }
+
+  const newItem = {
+    code,
+    name,
+    price: parseFloat(price),
+    category: currentSalesCategory,
+    type: currentSalesType,
+    timestamp: new Date().toISOString()
+  };
+
+  salesData.push(newItem);
+
+  const tbody = document.getElementById('sales-table-body');
+  if (tbody) {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${newItem.code}</td>
+      <td>${newItem.name}</td>
+      <td>${newItem.price.toFixed(2)}</td>
+      <td>${newItem.category}</td>
+      <td>${newItem.type}</td>
+      <td><button style="color:#ef4444; background:none; border:none; cursor:pointer;" class="btn-delete-row">Delete</button></td>
+    `;
+    
+    tr.querySelector('.btn-delete-row')?.addEventListener('click', () => {
+      const idx = salesData.indexOf(newItem);
+      if (idx > -1) salesData.splice(idx, 1);
+      tr.remove();
+      updateSalesReport();
+    });
+
+    tbody.appendChild(tr);
+  }
+
+  if (codeInput) codeInput.value = '';
+  if (nameInput) nameInput.value = '';
+  if (priceInput) priceInput.value = '';
+
+  updateSalesReport();
+});
+
+// Add Stock Handler
+document.getElementById('btn-open-stock-modal')?.addEventListener('click', () => {
+  const name = prompt("Enter Product Name:");
+  const priceStr = prompt("Enter Price (Rs.):");
+  if (!name || !priceStr) return;
+
+  const newItem = {
+    code: 'STK-' + Math.floor(Math.random() * 1000),
+    name,
+    price: parseFloat(priceStr),
+    timestamp: new Date().toISOString()
+  };
+
+  stockData.push(newItem);
+
+  const tbody = document.getElementById('stock-table-body');
+  if (tbody) {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${newItem.code}</td>
+      <td>${newItem.name}</td>
+      <td>Rs. ${newItem.price.toFixed(2)}</td>
+      <td><button style="color:#ef4444; background:none; border:none; cursor:pointer;" class="btn-delete-row">Delete</button></td>
+    `;
+
+    tr.querySelector('.btn-delete-row')?.addEventListener('click', () => {
+      const idx = stockData.indexOf(newItem);
+      if (idx > -1) stockData.splice(idx, 1);
+      tr.remove();
+      updateStockReport();
+    });
+
+    tbody.appendChild(tr);
+  }
+  updateStockReport();
+});
+
+// ==========================================
+// REPORT MODAL CONTROLLERS & DATA CALCULATIONS
+// ==========================================
+
 const salesReportModal = document.getElementById('sales-report-modal');
 const stockReportModal = document.getElementById('stock-report-modal');
 const metricDetailsModal = document.getElementById('metric-details-modal');
@@ -19,17 +228,9 @@ const btnOpenStockReport = document.getElementById('btn-open-stock-report');
 const btnCloseStockReport = document.getElementById('btn-close-stock-report');
 const btnCloseMetricDetails = document.getElementById('btn-close-metric-details');
 
-// Filter Controls
 const salesCalendarFilter = document.getElementById('sales-calendar-filter');
 const stockCalendarFilter = document.getElementById('stock-calendar-filter');
 
-// Helper function to safely update text content without throwing null errors
-const setElementText = (id, text) => {
-  const el = document.getElementById(id);
-  if (el) el.innerText = text;
-};
-
-// Modal Visibility Handlers
 btnOpenSalesReport?.addEventListener('click', () => {
   salesReportModal?.classList.remove('hidden');
   updateSalesReport();
@@ -52,7 +253,6 @@ btnCloseMetricDetails?.addEventListener('click', () => {
   metricDetailsModal?.classList.add('hidden');
 });
 
-// Date/Tab Change Listeners for Sales Report
 salesCalendarFilter?.addEventListener('change', () => updateSalesReport());
 
 document.querySelectorAll('.sales-report-tab').forEach(tab => {
@@ -64,7 +264,6 @@ document.querySelectorAll('.sales-report-tab').forEach(tab => {
   });
 });
 
-// Date/Tab Change Listeners for Stock Report
 stockCalendarFilter?.addEventListener('change', () => updateStockReport());
 
 document.querySelectorAll('.stock-report-tab').forEach(tab => {
@@ -76,7 +275,6 @@ document.querySelectorAll('.stock-report-tab').forEach(tab => {
   });
 });
 
-// Date Filter Logic (Daily, Monthly, Yearly)
 function matchesPeriodFilter(itemDateStr, targetDateStr, period) {
   if (!itemDateStr || !targetDateStr) return true;
   const itemDate = new Date(itemDateStr);
@@ -95,7 +293,6 @@ function matchesPeriodFilter(itemDateStr, targetDateStr, period) {
   return true;
 }
 
-// Update Sales Report UI Logic
 function updateSalesReport() {
   const selectedDate = salesCalendarFilter?.value;
   const filteredSales = salesData.filter(item =>
@@ -125,7 +322,6 @@ function updateSalesReport() {
   const netProfit = totalIncome - totalCost;
   const netLoss = netProfit < 0 ? Math.abs(netProfit) : 0;
 
-  // Update Dashboard & Modal Elements safely
   setElementText('sr-total-revenue', `Rs. ${totalIncome.toFixed(2)}`);
   setElementText('sr-total-cost', `Rs. ${totalCost.toFixed(2)}`);
   setElementText('sr-net-profit', `Rs. ${Math.max(0, netProfit).toFixed(2)}`);
@@ -136,14 +332,12 @@ function updateSalesReport() {
   setElementText('sr-cat-function', `Rs. ${functionTotal.toFixed(2)}`);
   setElementText('sr-cat-stock', `Rs. ${stockCostTotal.toFixed(2)}`);
 
-  // Update Summary Cards on main sales panel
   setElementText('report-total-income', `Rs. ${totalIncome.toFixed(2)}`);
   setElementText('report-total-cost', `Rs. ${totalCost.toFixed(2)}`);
   setElementText('report-net-profit', `Rs. ${Math.max(0, netProfit).toFixed(2)}`);
   setElementText('report-net-loss', `Rs. ${netLoss.toFixed(2)}`);
 }
 
-// Update Stock Report UI Logic
 function updateStockReport() {
   const selectedDate = stockCalendarFilter?.value;
   const filteredStock = stockData.filter(item =>
@@ -178,8 +372,8 @@ function updateStockReport() {
   setElementText('st-avg-price', `Rs. ${avgPrice.toFixed(2)}`);
 }
 
-// Metric Details Drilldown Handler
-function openMetricDetails(title, categoryFilter) {
+// Global scope binding for inline onclick attributes in HTML
+window.openMetricDetails = function(title, categoryFilter) {
   const modal = document.getElementById('metric-details-modal');
   const tbody = document.getElementById('metric-details-tbody');
 
@@ -208,4 +402,144 @@ function openMetricDetails(title, categoryFilter) {
 
   setElementText('metric-details-total', `Rs. ${sum.toFixed(2)}`);
   modal?.classList.remove('hidden');
+};
+
+// Authentication Views Navigation
+const views = {
+  signin: document.getElementById('signin-view'),
+  signup: document.getElementById('signup-view'),
+  otp: document.getElementById('otp-view'),
+  forgot: document.getElementById('forgot-view'),
+  dashboard: document.getElementById('dashboard-view')
+};
+
+function showView(viewName) {
+  Object.keys(views).forEach(key => views[key]?.classList.add('hidden'));
+  const currentView = views[viewName];
+  if (currentView) {
+    currentView.classList.remove('hidden');
+    currentView.style.animation = 'none';
+    currentView.offsetHeight;
+    currentView.style.animation = null;
+  }
+
+  const navbar = document.getElementById('main-top-navbar');
+  const authContainer = document.getElementById('auth-main-container');
+
+  if (viewName === 'dashboard') {
+    navbar?.classList.add('hidden');
+    authContainer?.classList.add('hidden');
+  } else {
+    navbar?.classList.remove('hidden');
+    authContainer?.classList.remove('hidden');
+  }
 }
+
+document.getElementById('btn-to-signup')?.addEventListener('click', () => showView('signup'));
+document.getElementById('btn-to-signin')?.addEventListener('click', () => showView('signin'));
+document.getElementById('top-nav-signup')?.addEventListener('click', () => showView('signup'));
+document.getElementById('top-nav-register')?.addEventListener('click', () => showView('signup'));
+document.getElementById('btn-forgot-to-signin')?.addEventListener('click', () => showView('signin'));
+
+document.getElementById('btn-power')?.addEventListener('click', () => {
+  location.reload();
+});
+
+// Sign Up Flow
+document.getElementById('signup-form')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const name = document.getElementById('signup-name')?.value;
+  const email = document.getElementById('signup-email')?.value;
+  const pass = document.getElementById('signup-pass')?.value;
+
+  tempUserData = { mode: 'signup', name, email, pass };
+
+  try {
+    const res = await fetch(`${BACKEND_URL}/api/send-otp`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+
+    if (!res.ok) {
+      const errData = await res.json();
+      throw new Error(errData.message || 'Failed to send OTP email.');
+    }
+
+    alert(`Verification OTP sent to ${email}. Please check your inbox.`);
+    showView('otp');
+  } catch (err) {
+    alert("Error: " + err.message);
+  }
+});
+
+// Verify OTP
+document.getElementById('otp-form')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const enteredOtp = document.getElementById('otp-input')?.value;
+
+  try {
+    const res = await fetch(`${BACKEND_URL}/api/verify-otp`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: tempUserData.email, otp: enteredOtp })
+    });
+
+    const data = await res.json();
+
+    if (res.ok && data.success) {
+      if (tempUserData.mode === 'signup') {
+        const userCred = await createUserWithEmailAndPassword(auth, tempUserData.email, tempUserData.pass);
+        await updateProfile(userCred.user, { displayName: tempUserData.name });
+        alert("Account created and verified successfully!");
+      }
+    } else {
+      alert(data.message || "Invalid OTP code.");
+    }
+  } catch (err) {
+    alert("Verification error: " + err.message);
+  }
+});
+
+// Sign In
+document.getElementById('signin-form')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('signin-email')?.value;
+  const pass = document.getElementById('signin-pass')?.value;
+
+  try {
+    await signInWithEmailAndPassword(auth, email, pass);
+  } catch (err) {
+    alert("Authentication failed: " + err.message);
+  }
+});
+
+// Forgot Password
+document.getElementById('forgot-form')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('forgot-email')?.value;
+  try {
+    await sendPasswordResetEmail(auth, email);
+    alert("Password reset email sent! Check your inbox.");
+    showView('signin');
+  } catch (err) {
+    alert("Error sending reset email: " + err.message);
+  }
+});
+
+// Logout
+document.getElementById('btn-logout')?.addEventListener('click', () => {
+  signOut(auth);
+});
+
+// Firebase Auth State Observer
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    currentUser = user;
+    setElementText('user-display-name', user.displayName || user.email.split('@')[0]);
+    showView('dashboard');
+  } else {
+    currentUser = null;
+    showView('signin');
+  }
+});
