@@ -2,7 +2,7 @@
 // REPORT MODAL CONTROLLERS & DATA CALCULATIONS
 // ==========================================
 
-// Initial State Variables (Ensure these exist)
+// Initial State Variables
 let activeSalesPeriod = 'daily';
 let activeStockPeriod = 'daily';
 let salesData = [];
