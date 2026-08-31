@@ -650,6 +650,7 @@
       inset: 0;
       background: rgba(0, 0, 0, 0.7);
       backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
       z-index: 100;
       display: flex;
       align-items: center;
@@ -701,6 +702,46 @@
     .stat-card .value {
       font-size: 20px;
       font-weight: 700;
+    }
+
+    /* CUSTOM STOCK MODAL SPECIFIC STYLING */
+    .modal-card-small {
+      max-width: 420px;
+    }
+
+    .modal-form-group {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 16px;
+    }
+
+    .modal-form-group label {
+      font-size: 13px;
+      margin-bottom: 6px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .modal-form-group input {
+      width: 100%;
+      padding: 12px 14px;
+      background: rgba(55, 65, 81, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      font-size: 14px;
+      color: #ffffff;
+      outline: none;
+    }
+
+    .modal-form-group input:focus {
+      border-color: #2563eb;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 24px;
     }
   </style>
 </head>
@@ -979,6 +1020,27 @@
       </div>
 
     </main>
+  </div>
+
+  <!-- CUSTOM ADD STOCK MODAL -->
+  <div id="add-stock-modal" class="modal-overlay hidden">
+    <div class="modal-card modal-card-small">
+      <div class="modal-header">
+        <h2>Add New Stock Item</h2>
+      </div>
+      <div class="modal-form-group">
+        <label for="modal-stock-name">Product Name</label>
+        <input type="text" id="modal-stock-name" placeholder="e.g. Deluxe Suite Bed Sheet" />
+      </div>
+      <div class="modal-form-group">
+        <label for="modal-stock-price">Price (Rs.)</label>
+        <input type="number" id="modal-stock-price" placeholder="e.g. 2500" step="0.01" />
+      </div>
+      <div class="modal-actions">
+        <button id="btn-cancel-stock-modal" class="btn-danger">Cancel</button>
+        <button id="btn-save-stock-modal" class="btn-primary">Add Item</button>
+      </div>
+    </div>
   </div>
 
   <!-- SALES REPORT MODAL -->
@@ -1297,10 +1359,29 @@
       updateSalesReport();
     });
 
+    // CUSTOM ADD STOCK MODAL LOGIC
+    const addStockModal = document.getElementById('add-stock-modal');
+    const stockNameInput = document.getElementById('modal-stock-name');
+    const stockPriceInput = document.getElementById('modal-stock-price');
+
     document.getElementById('btn-open-stock-modal')?.addEventListener('click', () => {
-      const name = prompt("Enter Product Name:");
-      const priceStr = prompt("Enter Price (Rs.):");
-      if (!name || !priceStr) return;
+      if (stockNameInput) stockNameInput.value = '';
+      if (stockPriceInput) stockPriceInput.value = '';
+      addStockModal?.classList.remove('hidden');
+    });
+
+    document.getElementById('btn-cancel-stock-modal')?.addEventListener('click', () => {
+      addStockModal?.classList.add('hidden');
+    });
+
+    document.getElementById('btn-save-stock-modal')?.addEventListener('click', () => {
+      const name = stockNameInput?.value.trim();
+      const priceStr = stockPriceInput?.value.trim();
+
+      if (!name || !priceStr) {
+        alert("Please enter both Product Name and Price.");
+        return;
+      }
 
       const newItem = {
         code: 'STK-' + Math.floor(Math.random() * 1000),
@@ -1312,23 +1393,27 @@
       stockData.push(newItem);
 
       const tbody = document.getElementById('stock-table-body');
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${newItem.code}</td>
-        <td>${newItem.name}</td>
-        <td>Rs. ${newItem.price.toFixed(2)}</td>
-        <td><button style="color:#ef4444; background:none; border:none; cursor:pointer;" class="btn-delete-row">Delete</button></td>
-      `;
+      if (tbody) {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${newItem.code}</td>
+          <td>${newItem.name}</td>
+          <td>Rs. ${newItem.price.toFixed(2)}</td>
+          <td><button style="color:#ef4444; background:none; border:none; cursor:pointer;" class="btn-delete-row">Delete</button></td>
+        `;
 
-      tr.querySelector('.btn-delete-row').addEventListener('click', () => {
-        const idx = stockData.indexOf(newItem);
-        if (idx > -1) stockData.splice(idx, 1);
-        tr.remove();
-        updateStockReport();
-      });
+        tr.querySelector('.btn-delete-row')?.addEventListener('click', () => {
+          const idx = stockData.indexOf(newItem);
+          if (idx > -1) stockData.splice(idx, 1);
+          tr.remove();
+          updateStockReport();
+        });
 
-      tbody.appendChild(tr);
+        tbody.appendChild(tr);
+      }
+
       updateStockReport();
+      addStockModal?.classList.add('hidden');
     });
 
     // DOM Elements - Modals & Buttons
