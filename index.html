@@ -38,6 +38,12 @@
       --active-item-color: #2563eb;
     }
 
+    /* Fix header title contrast in Light Mode */
+    [data-theme="light"] .header-title h1 {
+      color: #ffffff !important;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+    }
+
     * {
       box-sizing: border-box;
       margin: 0;
@@ -435,6 +441,34 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    /* Dynamic Search Container Controls */
+    .search-container {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .search-input {
+      width: 0;
+      opacity: 0;
+      padding: 0;
+      border: 1px solid transparent;
+      border-radius: 20px;
+      background: var(--input-bg);
+      color: var(--input-text);
+      outline: none;
+      transition: width 0.3s ease, opacity 0.3s ease, padding 0.3s ease;
+    }
+
+    .search-container.active .search-input {
+      width: 180px;
+      opacity: 1;
+      padding: 8px 14px;
+      border-color: rgba(255, 255, 255, 0.2);
     }
 
     .user-info {
@@ -886,7 +920,13 @@
         </div>
         <div class="user-profile">
           <button id="theme-toggle" class="theme-toggle-btn" title="Toggle Theme">☀️</button>
-          <div class="icon-circle">🔍</div>
+
+          <!-- Interactive Search Bar -->
+          <div class="search-container" id="search-container">
+            <input type="text" id="global-search-input" class="search-input" placeholder="Search feature..." />
+            <div class="icon-circle" id="btn-search-toggle" title="Search">🔍</div>
+          </div>
+
           <div class="user-info">
             <span>Hello!</span>
             <strong id="user-display-name">User</strong>
@@ -1280,6 +1320,44 @@
         themeBtn.innerText = '🌙';
       }
     });
+
+    // Dynamic Search Toggle & Filter
+    const searchContainer = document.getElementById('search-container');
+    const searchToggleBtn = document.getElementById('btn-search-toggle');
+    const searchInput = document.getElementById('global-search-input');
+
+    searchToggleBtn?.addEventListener('click', () => {
+      searchContainer.classList.toggle('active');
+      if (searchContainer.classList.contains('active')) {
+        searchInput.focus();
+      } else {
+        searchInput.value = '';
+        filterSidebar('');
+      }
+    });
+
+    searchInput?.addEventListener('input', (e) => {
+      const query = e.target.value.toLowerCase().trim();
+      filterSidebar(query);
+    });
+
+    function filterSidebar(query) {
+      navItems.forEach(item => {
+        const text = item.innerText.toLowerCase();
+        if (text.includes(query)) {
+          item.style.display = 'flex';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+
+      if (query) {
+        const visibleItems = Array.from(navItems).filter(item => item.style.display !== 'none');
+        if (visibleItems.length === 1) {
+          visibleItems[0].click();
+        }
+      }
+    }
 
     // Income / Cost Toggle
     const incomeBtn = document.getElementById('tab-sales-income');
