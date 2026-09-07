@@ -7,41 +7,42 @@
   <link rel="icon" type="image/png" href="./Company%20Logo.png">
   <style>
     :root {
-      --bg-color: #0a0a0f;
+      /* Theme palette matching the last image (Horizon / Warm Amber theme) */
+      --bg-color: #fcfbfa;
+      --bg-overlay: rgba(255, 255, 255, 0.6);
+      --card-bg: #ffffff;
+      --sidebar-bg: #ffffff;
+      --text-main: #1f2937;
+      --text-muted: #6b7280;
+      --widget-bg: #ffffff;
+      --input-bg: #f5f2ee;
+      --input-text: #111827;
+      --table-header-bg: #fbf9f6;
+      --table-row-border: #f0eae1;
+      --primary-brand: #d9531e;
+      --primary-hover: #be4315;
+      --active-item-bg: #fdf3ed;
+      --active-item-color: #d9531e;
+      --border-subtle: #f0eae1;
+    }
+
+    [data-theme="dark"] {
+      --bg-color: #0f1015;
       --bg-overlay: rgba(0, 0, 0, 0.45);
-      --card-bg: rgba(17, 24, 39, 0.85);
-      --sidebar-bg: rgba(17, 24, 39, 0.85);
-      --text-main: #ffffff;
+      --card-bg: #181920;
+      --sidebar-bg: #181920;
+      --text-main: #f9fafb;
       --text-muted: #9ca3af;
-      --widget-bg: rgba(17, 24, 39, 0.85);
-      --input-bg: rgba(255, 255, 255, 1);
-      --input-text: #1a202c;
-      --table-header-bg: rgba(31, 41, 55, 0.9);
-      --table-row-border: rgba(255, 255, 255, 0.05);
-      --active-item-bg: rgba(37, 99, 235, 0.25);
-      --active-item-color: #60a5fa;
-    }
-
-    [data-theme="light"] {
-      --bg-color: #f1f5f9;
-      --bg-overlay: rgba(255, 255, 255, 0.45);
-      --card-bg: rgba(255, 255, 255, 0.9);
-      --sidebar-bg: rgba(255, 255, 255, 0.9);
-      --text-main: #0f172a;
-      --text-muted: #475569;
-      --widget-bg: rgba(255, 255, 255, 0.9);
-      --input-bg: #f8fafc;
-      --input-text: #0f172a;
-      --table-header-bg: rgba(226, 232, 240, 0.9);
-      --table-row-border: rgba(0, 0, 0, 0.08);
-      --active-item-bg: rgba(37, 99, 235, 0.15);
-      --active-item-color: #2563eb;
-    }
-
-    /* Fix header title contrast in Light Mode */
-    [data-theme="light"] .header-title h1 {
-      color: #ffffff !important;
-      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+      --widget-bg: #181920;
+      --input-bg: #22242e;
+      --input-text: #f9fafb;
+      --table-header-bg: #22242e;
+      --table-row-border: rgba(255, 255, 255, 0.08);
+      --primary-brand: #e65c00;
+      --primary-hover: #cc5200;
+      --active-item-bg: rgba(230, 92, 0, 0.15);
+      --active-item-color: #ff7733;
+      --border-subtle: rgba(255, 255, 255, 0.1);
     }
 
     * {
@@ -208,19 +209,19 @@
     .auth-card-right input {
       width: 100%;
       padding: 14px 20px;
-      background: var(--input-bg);
+      background: #ffffff;
       border: 1px solid transparent;
       border-radius: 8px;
       font-size: 14px;
-      color: var(--input-text);
+      color: #111827;
       outline: none;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
       transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
 
     .auth-card-right input:focus {
-      border-color: #2563eb;
-      box-shadow: 0 4px 16px rgba(37, 99, 235, 0.3);
+      border-color: var(--primary-brand);
+      box-shadow: 0 4px 16px rgba(217, 83, 30, 0.3);
     }
 
     .auth-card-right input::placeholder {
@@ -288,7 +289,7 @@
       cursor: pointer;
     }
 
-    /* DASHBOARD LAYOUT */
+    /* DASHBOARD LAYOUT (POST LOG-IN RE-THEMED TO MATCH LAST IMAGE) */
     .app-container {
       display: flex;
       width: 100%;
@@ -304,11 +305,10 @@
     .sidebar {
       width: 260px;
       background: var(--sidebar-bg);
-      backdrop-filter: blur(15px);
-      border-radius: 24px;
+      border-radius: 20px;
       padding: 24px 16px;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      border: 1px solid var(--border-subtle);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
       display: flex;
       flex-direction: column;
       flex-shrink: 0;
@@ -318,11 +318,11 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      font-size: 20px;
+      font-size: 22px;
       font-weight: 800;
       color: var(--text-main);
       padding: 0 12px 24px 12px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      border-bottom: 1px solid var(--border-subtle);
       margin-bottom: 16px;
     }
 
@@ -344,25 +344,25 @@
       align-items: center;
       gap: 12px;
       padding: 12px 16px;
-      border-radius: 14px;
+      border-radius: 12px;
       color: var(--text-muted);
       text-decoration: none;
       font-size: 14px;
       font-weight: 600;
       cursor: pointer;
-      transition: background-color 0.2s ease, transform 0.1s ease;
+      transition: background-color 0.2s ease, color 0.2s ease, transform 0.1s ease;
     }
 
     .nav-item:hover {
-      background: rgba(255, 255, 255, 0.1);
-      color: var(--text-main);
+      background: var(--active-item-bg);
+      color: var(--primary-brand);
       transform: translateX(4px);
     }
 
     .nav-item.active {
       background: var(--active-item-bg);
       color: var(--active-item-color);
-      border: 1px solid rgba(37, 99, 235, 0.2);
+      font-weight: 700;
     }
 
     .nav-item-icon {
@@ -371,22 +371,57 @@
       text-align: center;
     }
 
+    /* Sidebar Footer User Info */
+    .sidebar-footer {
+      margin-top: auto;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .user-avatar-img {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .sidebar-user-details {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar-user-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .sidebar-user-email {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
     .dashboard-wrapper {
       flex: 1;
       width: 100%;
+      background: var(--widget-bg);
+      border-radius: 20px;
+      padding: 24px;
+      border: 1px solid var(--border-subtle);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
     }
 
     .navbar {
-      background: var(--widget-bg);
-      backdrop-filter: blur(15px);
-      padding: 12px 24px;
-      border-radius: 40px;
+      background: transparent;
+      padding: 0 0 20px 0;
+      border-bottom: 1px solid var(--border-subtle);
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 24px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .nav-links {
@@ -396,8 +431,8 @@
     }
 
     .nav-btn {
-      padding: 8px 20px;
-      border-radius: 20px;
+      padding: 8px 18px;
+      border-radius: 8px;
       border: none;
       background: transparent;
       font-size: 14px;
@@ -407,8 +442,8 @@
     }
 
     .nav-btn.active {
-      background: #2563eb;
-      color: white;
+      background: var(--active-item-bg);
+      color: var(--primary-brand);
     }
 
     .user-profile {
@@ -421,9 +456,9 @@
       width: 38px;
       height: 38px;
       border-radius: 50%;
-      background: rgba(55, 65, 81, 0.8);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: #ffffff;
+      background: var(--input-bg);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -435,7 +470,7 @@
       width: 36px;
       height: 36px;
       border-radius: 50%;
-      background: #2563eb;
+      background: var(--primary-brand);
       color: white;
       display: flex;
       align-items: center;
@@ -468,7 +503,7 @@
       width: 180px;
       opacity: 1;
       padding: 8px 14px;
-      border-color: rgba(255, 255, 255, 0.2);
+      border-color: var(--border-subtle);
     }
 
     .user-info {
@@ -487,19 +522,18 @@
     }
 
     .btn-logout {
-      padding: 6px 14px;
-      border-radius: 16px;
+      padding: 8px 16px;
+      border-radius: 8px;
       border: none;
-      background: rgba(239, 68, 68, 0.15);
-      color: #ef4444;
-      font-size: 12px;
+      background: var(--primary-brand);
+      color: #ffffff;
+      font-size: 13px;
       font-weight: 600;
       cursor: pointer;
     }
 
     .btn-logout:hover {
-      background: #ef4444;
-      color: white;
+      background: var(--primary-hover);
     }
 
     .dashboard-header {
@@ -510,11 +544,10 @@
     }
 
     .header-title h1 {
-      font-size: 34px;
+      font-size: 28px;
       font-weight: 800;
       color: var(--text-main);
       margin-bottom: 4px;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.5);
     }
 
     .header-title p {
@@ -524,11 +557,9 @@
 
     .widget-box {
       background: var(--widget-bg);
-      backdrop-filter: blur(10px);
-      padding: 24px;
-      border-radius: 20px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      border-radius: 12px;
+      border: 1px solid var(--border-subtle);
       margin-bottom: 20px;
     }
 
@@ -554,50 +585,50 @@
     }
 
     .tab-btn {
-      padding: 10px 20px;
-      border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      background: rgba(55, 65, 81, 0.8);
-      color: #ffffff;
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--border-subtle);
+      background: var(--input-bg);
+      color: var(--text-main);
       font-weight: 600;
       cursor: pointer;
     }
 
     .tab-btn.active {
-      background: #2563eb;
+      background: var(--primary-brand);
       color: white;
+      border-color: var(--primary-brand);
     }
 
     .btn-primary {
-      padding: 12px 20px;
-      background-color: #2563eb;
+      padding: 10px 20px;
+      background-color: var(--primary-brand);
       color: white;
       border: none;
       border-radius: 8px;
       font-weight: 600;
       font-size: 14px;
       cursor: pointer;
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+      box-shadow: 0 4px 12px rgba(217, 83, 30, 0.2);
     }
 
     .btn-primary:hover {
-      background-color: #1d4ed8;
+      background-color: var(--primary-hover);
     }
 
     .btn-secondary {
       padding: 10px 18px;
-      background-color: #10b981;
-      color: white;
-      border: none;
+      background-color: var(--input-bg);
+      color: var(--text-main);
+      border: 1px solid var(--border-subtle);
       border-radius: 8px;
       font-weight: 600;
       font-size: 14px;
       cursor: pointer;
-      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
     }
 
     .btn-secondary:hover {
-      background-color: #059669;
+      background-color: var(--border-subtle);
     }
 
     .btn-danger {
@@ -609,7 +640,6 @@
       font-weight: 600;
       font-size: 14px;
       cursor: pointer;
-      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
     }
 
     .btn-danger:hover {
@@ -631,21 +661,21 @@
     .form-row input {
       width: 100%;
       padding: 10px 14px;
-      background: rgba(55, 65, 81, 0.8);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: var(--input-bg);
+      border: 1px solid var(--border-subtle);
       border-radius: 8px;
       font-size: 14px;
-      color: #ffffff;
+      color: var(--input-text);
       outline: none;
     }
 
     .table-card {
       background: var(--widget-bg);
-      border-radius: 10px;
+      border-radius: 8px;
       overflow: hidden;
       max-height: 250px;
       overflow-y: auto;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--border-subtle);
     }
 
     table {
@@ -669,10 +699,10 @@
 
     .calendar-picker {
       padding: 8px 12px;
-      border-radius: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      background: rgba(55, 65, 81, 0.8);
-      color: #ffffff;
+      border-radius: 8px;
+      border: 1px solid var(--border-subtle);
+      background: var(--input-bg);
+      color: var(--text-main);
       font-weight: 600;
       outline: none;
       cursor: pointer;
@@ -682,9 +712,9 @@
     .modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
       z-index: 100;
       display: flex;
       align-items: center;
@@ -694,14 +724,14 @@
 
     .modal-card {
       background: var(--widget-bg);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 20px;
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
       padding: 24px;
       width: 100%;
       max-width: 800px;
       max-height: 85vh;
       overflow-y: auto;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
     }
 
     .modal-header {
@@ -709,7 +739,7 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 20px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      border-bottom: 1px solid var(--border-subtle);
       padding-bottom: 12px;
     }
 
@@ -721,8 +751,8 @@
     }
 
     .stat-card {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: var(--input-bg);
+      border: 1px solid var(--border-subtle);
       border-radius: 12px;
       padding: 16px;
     }
@@ -759,16 +789,16 @@
     .modal-form-group input {
       width: 100%;
       padding: 12px 14px;
-      background: rgba(55, 65, 81, 0.8);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: var(--input-bg);
+      border: 1px solid var(--border-subtle);
       border-radius: 8px;
       font-size: 14px;
-      color: #ffffff;
+      color: var(--input-text);
       outline: none;
     }
 
     .modal-form-group input:focus {
-      border-color: #2563eb;
+      border-color: var(--primary-brand);
     }
 
     .modal-actions {
@@ -895,109 +925,97 @@
   <div id="dashboard-view" class="app-container hidden animated-view">
     <aside class="sidebar">
       <div class="sidebar-brand">
-        <img src="Company%20Logo.png" alt="Company Logo" class="sidebar-brand-img" onerror="this.src='logo.png'">
-        TD System
+        <span style="color: var(--primary-brand); font-size:24px;">⊞</span> Horizon
       </div>
       <nav class="sidebar-nav">
-        <a class="nav-item active" data-panel="overview"><span class="nav-item-icon">📊</span> Overview</a>
-        <a class="nav-item" data-panel="sales"><span class="nav-item-icon">💼</span> Sales</a>
-        <a class="nav-item" data-panel="accounting"><span class="nav-item-icon">💳</span> Accounting</a>
-        <a class="nav-item" data-panel="stock"><span class="nav-item-icon">📦</span> Stock Management</a>
-        <a class="nav-item" data-panel="production"><span class="nav-item-icon">⚙️</span> Production</a>
-        <a class="nav-item" data-panel="workforce"><span class="nav-item-icon">👥</span> Workforce</a>
-        <a class="nav-item" data-panel="metrics"><span class="nav-item-icon">📈</span> Performance Metrics</a>
-        <a class="nav-item" data-panel="documentation"><span class="nav-item-icon">📄</span> Documentation</a>
-        <a class="nav-item" data-panel="access"><span class="nav-item-icon">🛡️</span> Access Control</a>
-        <a class="nav-item" data-panel="settings"><span class="nav-item-icon">⚙️</span> Settings</a>
+        <a class="nav-item" data-panel="overview"><span class="nav-item-icon">🏠</span> Home</a>
+        <a class="nav-item" data-panel="stock"><span class="nav-item-icon">📦</span> Inventory</a>
+        <a class="nav-item active" data-panel="sales"><span class="nav-item-icon">📊</span> Sales</a>
+        <a class="nav-item" data-panel="accounting"><span class="nav-item-icon">💲</span> Finance</a>
+        <a class="nav-item" data-panel="workforce"><span class="nav-item-icon">👤</span> HR</a>
+        <a class="nav-item" data-panel="settings"><span class="nav-item-icon">⚙️</span> Admin</a>
       </nav>
+
+      <div style="margin-top:20px; margin-bottom: 20px;">
+        <button class="btn-primary" style="width:100%;">+ Add an expense</button>
+      </div>
+
+      <div class="sidebar-footer">
+        <img src="./Company%20Logo.png" alt="Profile" class="user-avatar-img" onerror="this.src='logo.png'">
+        <div class="sidebar-user-details">
+          <span class="sidebar-user-name" id="user-sidebar-name">Tevin Gampalage</span>
+          <span class="sidebar-user-email" id="user-sidebar-email">tevingampalage29@...</span>
+        </div>
+      </div>
     </aside>
 
     <main class="dashboard-wrapper">
       <header class="navbar">
-        <div class="nav-links">
-          <button class="nav-btn active">Dashboard</button>
-          <button class="nav-btn">Analytics</button>
-        </div>
-        <div class="user-profile">
-          <button id="theme-toggle" class="theme-toggle-btn" title="Toggle Theme">☀️</button>
-
-          <!-- Interactive Search Bar -->
-          <div class="search-container" id="search-container">
-            <input type="text" id="global-search-input" class="search-input" placeholder="Search feature..." />
-            <div class="icon-circle" id="btn-search-toggle" title="Search">🔍</div>
+        <div class="user-profile" style="width:100%; justify-content:space-between;">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <button id="theme-toggle" class="theme-toggle-btn" title="Toggle Theme">☀️</button>
+            <!-- Interactive Search Bar -->
+            <div class="search-container" id="search-container">
+              <input type="text" id="global-search-input" class="search-input" placeholder="Search feature..." />
+              <div class="icon-circle" id="btn-search-toggle" title="Search">🔍</div>
+            </div>
           </div>
 
-          <div class="user-info">
-            <span>Hello!</span>
-            <strong id="user-display-name">User</strong>
+          <div style="display:flex; align-items:center; gap:16px;">
+            <div class="user-info">
+              <span>Hello!</span>
+              <strong id="user-display-name">Tevin Gampalage</strong>
+            </div>
+            <button class="btn-logout" id="btn-logout">Logout</button>
           </div>
-          <button class="btn-logout" id="btn-logout">Logout</button>
         </div>
       </header>
 
       <section class="dashboard-header">
         <div class="header-title">
-          <h1 id="page-title">Overview</h1>
-          <p id="page-subtitle">Monitor system operations</p>
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+            <span style="font-size:20px;">📊</span>
+            <h1 id="page-title" style="font-size:24px;">Sales management</h1>
+          </div>
+          <div class="tab-group" style="margin-bottom:0; margin-top:12px;">
+            <button class="tab-btn active" style="padding:6px 14px; font-size:13px;">📦 Products</button>
+            <button class="tab-btn" style="padding:6px 14px; font-size:13px;">📊 Dashboard</button>
+          </div>
         </div>
       </section>
 
-      <div id="panel-overview" class="panel-content animated-view">
+      <div id="panel-overview" class="panel-content hidden animated-view">
         <div class="widget-box">
           <div class="widget-box-title">System Overview</div>
-          <p>Welcome to TD System. Select an action module from the left menu to manage business records.</p>
+          <p>Welcome to Horizon. Select an action module from the left menu to manage business records.</p>
         </div>
       </div>
 
-      <div id="panel-sales" class="panel-content hidden animated-view">
-        <div class="tab-group">
-          <button class="tab-btn active" id="tab-sales-income">📈 Income</button>
-          <button class="tab-btn" id="tab-sales-cost">📉 Cost</button>
-        </div>
-
-        <div class="tab-group" id="sales-subcategory-group">
-          <button class="tab-btn active sub-tab" data-sub="Rooms">🏨 Rooms</button>
-          <button class="tab-btn sub-tab" data-sub="Food">🍔 Food</button>
-          <button class="tab-btn sub-tab" data-sub="Function">🎉 Function</button>
-          <button class="tab-btn sub-tab" data-sub="Stock">📦 Stock</button>
-        </div>
-
-        <div class="modal-grid" style="margin-bottom: 20px;">
-          <div class="stat-card">
-            <div class="label">Total Income</div>
-            <div class="value" id="report-total-income" style="color: #10b981;">Rs. 0.00</div>
-          </div>
-          <div class="stat-card">
-            <div class="label">Total Cost</div>
-            <div class="value" id="report-total-cost" style="color: #ef4444;">Rs. 0.00</div>
-          </div>
-          <div class="stat-card">
-            <div class="label">Net Profit</div>
-            <div class="value" id="report-net-profit" style="color: #60a5fa;">Rs. 0.00</div>
-          </div>
-          <div class="stat-card">
-            <div class="label">Net Loss</div>
-            <div class="value" id="report-net-loss" style="color: #f59e0b;">Rs. 0.00</div>
-          </div>
+      <div id="panel-sales" class="panel-content animated-view">
+        <div style="display:flex; gap:12px; margin-bottom:16px;">
+          <input type="text" placeholder="🔍 Search products" style="flex:1; padding:10px 14px; background:var(--input-bg); border:1px solid var(--border-subtle); border-radius:8px; outline:none;" />
+          <select style="padding:10px 14px; background:var(--input-bg); border:1px solid var(--border-subtle); border-radius:8px; outline:none; font-weight:600;">
+            <option>Product category</option>
+          </select>
         </div>
 
         <div class="widget-box">
           <div class="widget-header-row">
-            <div class="widget-box-title" id="sales-form-title">Add Rooms Bill</div>
+            <div class="widget-box-title" id="sales-form-title">Sales & Transactions</div>
             <button class="btn-secondary" id="btn-open-sales-report">📄 View Sales Reports</button>
           </div>
           
           <div class="form-row">
             <div class="input-group">
-              <label style="display:block; font-size:12px; margin-bottom:4px;">Bill Code</label>
-              <input type="text" id="bill-code" placeholder="Auto-Generated Code">
+              <label style="display:block; font-size:12px; margin-bottom:4px; color:var(--text-muted);">Bill Code</label>
+              <input type="text" id="bill-code" placeholder="AUTO-101">
             </div>
             <div class="input-group">
-              <label style="display:block; font-size:12px; margin-bottom:4px;">Name / Customer</label>
+              <label style="display:block; font-size:12px; margin-bottom:4px; color:var(--text-muted);">Customer Name</label>
               <input type="text" id="bill-name" placeholder="Enter Name">
             </div>
             <div class="input-group">
-              <label style="display:block; font-size:12px; margin-bottom:4px;">Price (Rs.)</label>
+              <label style="display:block; font-size:12px; margin-bottom:4px; color:var(--text-muted);">Price ($)</label>
               <input type="number" id="bill-price" placeholder="0.00" step="0.01">
             </div>
             <button class="btn-primary" id="btn-add-bill">Add Bill</button>
@@ -1009,9 +1027,8 @@
                 <tr>
                   <th>Code</th>
                   <th>Name</th>
-                  <th>Price (Rs.)</th>
+                  <th>Price ($)</th>
                   <th>Category</th>
-                  <th>Type</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -1041,7 +1058,7 @@
                 <tr>
                   <th>Stock Code</th>
                   <th>Product Name</th>
-                  <th>Price (Rs.)</th>
+                  <th>Price ($)</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -1073,7 +1090,7 @@
         <input type="text" id="modal-stock-name" placeholder="e.g. Deluxe Suite Bed Sheet" />
       </div>
       <div class="modal-form-group">
-        <label for="modal-stock-price">Price (Rs.)</label>
+        <label for="modal-stock-price">Price ($)</label>
         <input type="number" id="modal-stock-price" placeholder="e.g. 2500" step="0.01" />
       </div>
       <div class="modal-actions">
@@ -1103,19 +1120,19 @@
       <div class="modal-grid">
         <div class="stat-card">
           <div class="label">Total Revenue</div>
-          <div class="value" id="sr-total-revenue" style="color: #10b981;">Rs. 0.00</div>
+          <div class="value" id="sr-total-revenue" style="color: #10b981;">$ 0.00</div>
         </div>
         <div class="stat-card">
           <div class="label">Total Cost</div>
-          <div class="value" id="sr-total-cost" style="color: #ef4444;">Rs. 0.00</div>
+          <div class="value" id="sr-total-cost" style="color: #ef4444;">$ 0.00</div>
         </div>
         <div class="stat-card">
           <div class="label">Net Profit</div>
-          <div class="value" id="sr-net-profit" style="color: #60a5fa;">Rs. 0.00</div>
+          <div class="value" id="sr-net-profit" style="color: var(--primary-brand);">$ 0.00</div>
         </div>
         <div class="stat-card">
           <div class="label">Net Loss</div>
-          <div class="value" id="sr-net-loss" style="color: #f59e0b;">Rs. 0.00</div>
+          <div class="value" id="sr-net-loss" style="color: #f59e0b;">$ 0.00</div>
         </div>
       </div>
 
@@ -1123,19 +1140,19 @@
       <div class="modal-grid">
         <div class="stat-card" style="cursor: pointer;" onclick="openMetricDetails('Rooms', 'Rooms')">
           <div class="label">🏨 Rooms Income</div>
-          <div class="value" id="sr-cat-rooms">Rs. 0.00</div>
+          <div class="value" id="sr-cat-rooms">$ 0.00</div>
         </div>
         <div class="stat-card" style="cursor: pointer;" onclick="openMetricDetails('Food', 'Food')">
           <div class="label">🍔 Food Income</div>
-          <div class="value" id="sr-cat-food">Rs. 0.00</div>
+          <div class="value" id="sr-cat-food">$ 0.00</div>
         </div>
         <div class="stat-card" style="cursor: pointer;" onclick="openMetricDetails('Function', 'Function')">
           <div class="label">🎉 Function Income</div>
-          <div class="value" id="sr-cat-function">Rs. 0.00</div>
+          <div class="value" id="sr-cat-function">$ 0.00</div>
         </div>
         <div class="stat-card" style="cursor: pointer;" onclick="openMetricDetails('Stock', 'Stock')">
           <div class="label">📦 Stock Expenses</div>
-          <div class="value" id="sr-cat-stock">Rs. 0.00</div>
+          <div class="value" id="sr-cat-stock">$ 0.00</div>
         </div>
       </div>
     </div>
@@ -1161,7 +1178,7 @@
       <div class="modal-grid">
         <div class="stat-card">
           <div class="label">Total Stock Value</div>
-          <div class="value" id="st-total-val" style="color: #10b981;">Rs. 0.00</div>
+          <div class="value" id="st-total-val" style="color: #10b981;">$ 0.00</div>
         </div>
         <div class="stat-card">
           <div class="label">Total Items Count</div>
@@ -1169,7 +1186,7 @@
         </div>
         <div class="stat-card">
           <div class="label">Average Unit Price</div>
-          <div class="value" id="st-avg-price">Rs. 0.00</div>
+          <div class="value" id="st-avg-price">$ 0.00</div>
         </div>
       </div>
 
@@ -1179,7 +1196,7 @@
             <tr>
               <th>Stock Code</th>
               <th>Product Name</th>
-              <th>Price (Rs.)</th>
+              <th>Price ($)</th>
             </tr>
           </thead>
           <tbody id="stock-report-table-body">
@@ -1187,7 +1204,7 @@
           <tfoot>
             <tr>
               <th colspan="2">Total Value</th>
-              <th id="st-table-total-val">Rs. 0.00</th>
+              <th id="st-table-total-val">$ 0.00</th>
             </tr>
           </tfoot>
         </table>
@@ -1211,7 +1228,7 @@
               <th>Name</th>
               <th>Category</th>
               <th>Type</th>
-              <th>Price (Rs.)</th>
+              <th>Price ($)</th>
             </tr>
           </thead>
           <tbody id="metric-details-tbody">
@@ -1219,7 +1236,7 @@
           <tfoot>
             <tr>
               <th colspan="4">Sum</th>
-              <th id="metric-details-total">Rs. 0.00</th>
+              <th id="metric-details-total">$ 0.00</th>
             </tr>
           </tfoot>
         </table>
@@ -1256,7 +1273,7 @@
     let tempUserData = { mode: '', name: '', email: '', pass: '' };
     let currentUser = null;
     let currentSalesType = 'Income';
-    let currentSalesCategory = 'Rooms';
+    let currentSalesCategory = 'General';
 
     // Application Data & Reporting Filters
     let salesData = [];
@@ -1282,8 +1299,7 @@
         const panelKey = item.getAttribute('data-panel');
         const panelName = item.innerText.trim();
 
-        document.getElementById('page-title').innerText = panelName;
-        document.getElementById('page-subtitle').innerText = `Manage ${panelName} operations`;
+        document.getElementById('page-title').innerText = `${panelName} management`;
 
         panels.forEach(p => p.classList.add('hidden'));
 
@@ -1312,11 +1328,11 @@
     const themeBtn = document.getElementById('theme-toggle');
     themeBtn?.addEventListener('click', () => {
       const currentTheme = document.documentElement.getAttribute('data-theme');
-      if (currentTheme === 'light') {
+      if (currentTheme === 'dark') {
         document.documentElement.removeAttribute('data-theme');
         themeBtn.innerText = '☀️';
       } else {
-        document.documentElement.setAttribute('data-theme', 'light');
+        document.documentElement.setAttribute('data-theme', 'dark');
         themeBtn.innerText = '🌙';
       }
     });
@@ -1359,31 +1375,6 @@
       }
     }
 
-    // Income / Cost Toggle
-    const incomeBtn = document.getElementById('tab-sales-income');
-    const costBtn = document.getElementById('tab-sales-cost');
-    incomeBtn?.addEventListener('click', () => {
-      incomeBtn.classList.add('active');
-      costBtn.classList.remove('active');
-      currentSalesType = 'Income';
-    });
-    costBtn?.addEventListener('click', () => {
-      costBtn.classList.add('active');
-      incomeBtn.classList.remove('active');
-      currentSalesType = 'Cost';
-    });
-
-    // Sub-Category Selection Handlers
-    const subTabs = document.querySelectorAll('.sub-tab');
-    subTabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        subTabs.forEach(st => st.classList.remove('active'));
-        tab.classList.add('active');
-        currentSalesCategory = tab.getAttribute('data-sub');
-        document.getElementById('sales-form-title').innerText = `Add ${currentSalesCategory} Bill`;
-      });
-    });
-
     // Action Button Listeners
     document.getElementById('btn-add-bill')?.addEventListener('click', () => {
       const codeInput = document.getElementById('bill-code');
@@ -1415,9 +1406,8 @@
       tr.innerHTML = `
         <td>${newItem.code}</td>
         <td>${newItem.name}</td>
-        <td>${newItem.price.toFixed(2)}</td>
+        <td>$ ${newItem.price.toFixed(2)}</td>
         <td>${newItem.category}</td>
-        <td>${newItem.type}</td>
         <td><button style="color:#ef4444; background:none; border:none; cursor:pointer;" class="btn-delete-row">Delete</button></td>
       `;
       
@@ -1476,7 +1466,7 @@
         tr.innerHTML = `
           <td>${newItem.code}</td>
           <td>${newItem.name}</td>
-          <td>Rs. ${newItem.price.toFixed(2)}</td>
+          <td>$ ${newItem.price.toFixed(2)}</td>
           <td><button style="color:#ef4444; background:none; border:none; cursor:pointer;" class="btn-delete-row">Delete</button></td>
         `;
 
@@ -1602,21 +1592,15 @@
       const netLoss = netProfit < 0 ? Math.abs(netProfit) : 0;
 
       // Update Dashboard & Modal Elements
-      document.getElementById('sr-total-revenue').innerText = `Rs. ${totalIncome.toFixed(2)}`;
-      document.getElementById('sr-total-cost').innerText = `Rs. ${totalCost.toFixed(2)}`;
-      document.getElementById('sr-net-profit').innerText = `Rs. ${Math.max(0, netProfit).toFixed(2)}`;
-      document.getElementById('sr-net-loss').innerText = `Rs. ${netLoss.toFixed(2)}`;
+      document.getElementById('sr-total-revenue').innerText = `$ ${totalIncome.toFixed(2)}`;
+      document.getElementById('sr-total-cost').innerText = `$ ${totalCost.toFixed(2)}`;
+      document.getElementById('sr-net-profit').innerText = `$ ${Math.max(0, netProfit).toFixed(2)}`;
+      document.getElementById('sr-net-loss').innerText = `$ ${netLoss.toFixed(2)}`;
 
-      document.getElementById('sr-cat-rooms').innerText = `Rs. ${roomsTotal.toFixed(2)}`;
-      document.getElementById('sr-cat-food').innerText = `Rs. ${foodTotal.toFixed(2)}`;
-      document.getElementById('sr-cat-function').innerText = `Rs. ${functionTotal.toFixed(2)}`;
-      document.getElementById('sr-cat-stock').innerText = `Rs. ${stockCostTotal.toFixed(2)}`;
-
-      // Update Summary Cards on main sales panel
-      document.getElementById('report-total-income').innerText = `Rs. ${totalIncome.toFixed(2)}`;
-      document.getElementById('report-total-cost').innerText = `Rs. ${totalCost.toFixed(2)}`;
-      document.getElementById('report-net-profit').innerText = `Rs. ${Math.max(0, netProfit).toFixed(2)}`;
-      document.getElementById('report-net-loss').innerText = `Rs. ${netLoss.toFixed(2)}`;
+      document.getElementById('sr-cat-rooms').innerText = `$ ${roomsTotal.toFixed(2)}`;
+      document.getElementById('sr-cat-food').innerText = `$ ${foodTotal.toFixed(2)}`;
+      document.getElementById('sr-cat-function').innerText = `$ ${functionTotal.toFixed(2)}`;
+      document.getElementById('sr-cat-stock').innerText = `$ ${stockCostTotal.toFixed(2)}`;
     }
 
     // Update Stock Report UI Logic
@@ -1638,7 +1622,7 @@
         row.innerHTML = `
           <td>${item.code || '-'}</td>
           <td>${item.name || '-'}</td>
-          <td>Rs. ${price.toFixed(2)}</td>
+          <td>$ ${price.toFixed(2)}</td>
         `;
         tbody.appendChild(row);
       });
@@ -1646,10 +1630,10 @@
       const count = filteredStock.length;
       const avgPrice = count > 0 ? (totalVal / count) : 0;
 
-      document.getElementById('st-total-val').innerText = `Rs. ${totalVal.toFixed(2)}`;
-      document.getElementById('st-table-total-val').innerText = `Rs. ${totalVal.toFixed(2)}`;
+      document.getElementById('st-total-val').innerText = `$ ${totalVal.toFixed(2)}`;
+      document.getElementById('st-table-total-val').innerText = `$ ${totalVal.toFixed(2)}`;
       document.getElementById('st-total-count').innerText = count;
-      document.getElementById('st-avg-price').innerText = `Rs. ${avgPrice.toFixed(2)}`;
+      document.getElementById('st-avg-price').innerText = `$ ${avgPrice.toFixed(2)}`;
     }
 
     // Metric Details Drilldown Handler
@@ -1673,12 +1657,12 @@
           <td>${item.name || '-'}</td>
           <td>${item.category || '-'}</td>
           <td>${item.type || '-'}</td>
-          <td>Rs. ${price.toFixed(2)}</td>
+          <td>$ ${price.toFixed(2)}</td>
         `;
         tbody.appendChild(row);
       });
 
-      totalEl.innerText = `Rs. ${sum.toFixed(2)}`;
+      totalEl.innerText = `$ ${sum.toFixed(2)}`;
       modal?.classList.remove('hidden');
     };
 
@@ -1813,7 +1797,10 @@
     onAuthStateChanged(auth, (user) => {
       if (user) {
         currentUser = user;
-        document.getElementById('user-display-name').innerText = user.displayName || user.email.split('@')[0];
+        const nameVal = user.displayName || user.email.split('@')[0];
+        document.getElementById('user-display-name').innerText = nameVal;
+        document.getElementById('user-sidebar-name').innerText = nameVal;
+        document.getElementById('user-sidebar-email').innerText = user.email;
         showView('dashboard');
       } else {
         currentUser = null;
