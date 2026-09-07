@@ -3,62 +3,57 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TD - Management System</title>
+  <title>Horizon - Inventory Management System</title>
   <link rel="icon" type="image/png" href="./Company%20Logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
   <style>
     :root {
-      --bg-color: #0a0a0f;
-      --bg-overlay: rgba(0, 0, 0, 0.45);
-      --card-bg: rgba(17, 24, 39, 0.85);
-      --sidebar-bg: rgba(17, 24, 39, 0.85);
-      --text-main: #ffffff;
-      --text-muted: #9ca3af;
-      --widget-bg: rgba(17, 24, 39, 0.85);
-      --input-bg: rgba(255, 255, 255, 1);
-      --input-text: #1a202c;
-      --table-header-bg: rgba(31, 41, 55, 0.9);
-      --table-row-border: rgba(255, 255, 255, 0.05);
-      --active-item-bg: rgba(37, 99, 235, 0.25);
-      --active-item-color: #60a5fa;
+      --bg-color: #f7f5f0;
+      --card-bg: #ffffff;
+      --sidebar-bg: #fdfbf7;
+      --text-main: #181d27;
+      --text-muted: #667085;
+      --text-light: #858d9d;
+      --border-color: #e9e2d8;
+      --primary: #e05d06;
+      --primary-hover: #c85000;
+      --primary-soft: #fbf0e8;
+      --active-item-bg: #f8ebe2;
+      --active-item-color: #d05300;
+      --table-header-bg: #faf8f5;
+      --input-bg: #f4efe9;
     }
 
-    [data-theme="light"] {
-      --bg-color: #f1f5f9;
-      --bg-overlay: rgba(255, 255, 255, 0.45);
-      --card-bg: rgba(255, 255, 255, 0.9);
-      --sidebar-bg: rgba(255, 255, 255, 0.9);
-      --text-main: #0f172a;
-      --text-muted: #475569;
-      --widget-bg: rgba(255, 255, 255, 0.9);
-      --input-bg: #f8fafc;
-      --input-text: #0f172a;
-      --table-header-bg: rgba(226, 232, 240, 0.9);
-      --table-row-border: rgba(0, 0, 0, 0.08);
-      --active-item-bg: rgba(37, 99, 235, 0.15);
-      --active-item-color: #2563eb;
-    }
-
-    /* Fix header title contrast in Light Mode */
-    [data-theme="light"] .header-title h1 {
-      color: #ffffff !important;
-      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+    [data-theme="dark"] {
+      --bg-color: #121316;
+      --card-bg: #1c1e24;
+      --sidebar-bg: #181a1f;
+      --text-main: #f0f2f5;
+      --text-muted: #9da4b0;
+      --text-light: #6c7381;
+      --border-color: #2e323b;
+      --primary: #f06a18;
+      --primary-hover: #e05d06;
+      --primary-soft: #2d2118;
+      --active-item-bg: #36251b;
+      --active-item-color: #ff8c42;
+      --table-header-bg: #22252c;
+      --input-bg: #262a33;
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
     }
 
     body {
       background-color: var(--bg-color); 
-      background-image: linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)), url('./Background.jpg');
-      background-position: center center;
-      background-repeat: no-repeat;
-      background-attachment: fixed;
-      background-size: cover;
       color: var(--text-main);
       min-height: 100vh;
       display: flex;
@@ -71,121 +66,96 @@
       pointer-events: none !important;
     }
 
-    @keyframes fadeInSlideUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px) scale(0.98);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
-    }
-
     @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    .animated-card {
-      animation: fadeInSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    .animated-card, .animated-view {
+      animation: fadeIn 0.3s ease-out forwards;
     }
 
-    .animated-view {
-      animation: fadeIn 0.4s ease-out forwards;
-    }
-
-    /* TOP NAVBAR */
+    /* TOP NAVBAR (AUTH VIEW) */
     .top-navbar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 24px 60px;
+      padding: 20px 40px;
       width: 100%;
       z-index: 10;
       position: relative;
     }
 
-    .nav-left {
+    .nav-left, .nav-right {
       display: flex;
       align-items: center;
-      gap: 25px;
+      gap: 20px;
     }
 
     .power-btn {
       background: transparent;
       border: none;
-      color: #ffffff;
+      color: var(--text-main);
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 4px;
-      transition: transform 0.2s ease, color 0.2s ease;
+      transition: transform 0.2s ease;
     }
 
     .power-btn:hover {
-      color: #ef4444;
+      color: var(--primary);
       transform: rotate(90deg);
     }
 
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 25px;
-    }
-
     .top-link {
-      color: #fff;
+      color: var(--text-muted);
       text-decoration: none;
-      font-size: 15px;
-      font-weight: 500;
+      font-size: 14px;
+      font-weight: 600;
       cursor: pointer;
-      opacity: 0.9;
-      transition: opacity 0.2s ease;
     }
 
     .top-link:hover {
-      opacity: 1;
-      text-decoration: underline;
+      color: var(--primary);
     }
 
     .btn-register-top {
-      background: #ffffff;
-      color: #000000;
+      background: var(--primary);
+      color: #ffffff;
       border: none;
-      padding: 10px 28px;
-      border-radius: 25px;
+      padding: 8px 20px;
+      border-radius: 8px;
       font-weight: 600;
       font-size: 14px;
       cursor: pointer;
-      text-decoration: none;
-      transition: transform 0.2s ease, background-color 0.2s ease;
     }
 
     .btn-register-top:hover {
-      background: #e2e8f0;
-      transform: translateY(-1px);
+      background: var(--primary-hover);
     }
 
-    /* AUTH PAGE LAYOUT */
+    /* AUTH PAGE CONTAINER */
     .auth-page-container {
       display: flex;
       flex: 1;
       width: 100%;
-      padding-right: 8%;
       align-items: center;
-      justify-content: flex-end;
+      justify-content: center;
+      padding: 40px 20px;
       position: relative;
       z-index: 2;
     }
 
     .auth-card-right {
-      width: 380px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      text-align: center;
+      width: 100%;
+      max-width: 400px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
     }
 
     .auth-header {
@@ -194,11 +164,10 @@
     }
 
     .auth-header h1 {
-      font-size: 34px;
+      font-size: 28px;
       font-weight: 800;
-      color: #ffffff;
+      color: var(--text-main);
       line-height: 1.2;
-      text-shadow: 0 4px 12px rgba(0,0,0,0.7);
     }
 
     .auth-card-right .input-group {
@@ -207,84 +176,66 @@
 
     .auth-card-right input {
       width: 100%;
-      padding: 14px 20px;
+      padding: 12px 16px;
       background: var(--input-bg);
       border: 1px solid transparent;
       border-radius: 8px;
       font-size: 14px;
-      color: var(--input-text);
+      color: var(--text-main);
       outline: none;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
 
     .auth-card-right input:focus {
-      border-color: #2563eb;
-      box-shadow: 0 4px 16px rgba(37, 99, 235, 0.3);
-    }
-
-    .auth-card-right input::placeholder {
-      color: #888888;
+      border-color: var(--primary);
     }
 
     .btn-signin-full {
       width: 100%;
-      padding: 14px;
-      background: #ffffff;
-      color: #000000;
+      padding: 12px;
+      background: var(--primary);
+      color: #ffffff;
       border: none;
       border-radius: 8px;
       font-weight: 700;
-      font-size: 15px;
+      font-size: 14px;
       cursor: pointer;
       margin-top: 8px;
-      margin-bottom: 24px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-      transition: transform 0.2s ease, background-color 0.2s ease;
+      margin-bottom: 20px;
     }
 
     .btn-signin-full:hover {
-      background: #e2e8f0;
-      transform: translateY(-1px);
+      background: var(--primary-hover);
     }
 
     .social-buttons {
       display: flex;
       justify-content: space-between;
-      gap: 15px;
-      margin-bottom: 24px;
+      gap: 12px;
+      margin-bottom: 20px;
     }
 
     .btn-social {
       flex: 1;
       padding: 10px;
-      background: #ffffff;
-      border: none;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
       border-radius: 8px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-      transition: transform 0.2s ease, background-color 0.2s ease;
-    }
-
-    .btn-social:hover {
-      background: #f1f5f9;
-      transform: translateY(-2px);
     }
 
     .auth-toggle-text {
-      font-size: 14px;
-      color: #ffffff;
-      font-weight: 400;
-      text-shadow: 0 2px 6px rgba(0,0,0,0.8);
+      font-size: 13px;
+      color: var(--text-muted);
+      text-align: center;
     }
 
     .auth-toggle-text a {
-      color: #ffffff;
+      color: var(--primary);
       font-weight: 700;
-      text-decoration: underline;
+      text-decoration: none;
       cursor: pointer;
     }
 
@@ -292,251 +243,271 @@
     .app-container {
       display: flex;
       width: 100%;
-      max-width: 1440px;
-      gap: 20px;
-      align-items: stretch;
-      margin: 20px auto;
-      padding: 0 20px;
-      position: relative;
-      z-index: 5;
+      min-height: 100vh;
+      background-color: var(--bg-color);
     }
 
     .sidebar {
-      width: 260px;
+      width: 240px;
       background: var(--sidebar-bg);
-      backdrop-filter: blur(15px);
-      border-radius: 24px;
+      border-right: 1px solid var(--border-color);
       padding: 24px 16px;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
       display: flex;
       flex-direction: column;
       flex-shrink: 0;
+      justify-content: space-between;
+    }
+
+    .sidebar-top {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
     }
 
     .sidebar-brand {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       font-size: 20px;
       font-weight: 800;
       color: var(--text-main);
-      padding: 0 12px 24px 12px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      margin-bottom: 16px;
+      padding: 0 8px;
     }
 
-    .sidebar-brand-img {
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
-      object-fit: cover;
+    .brand-icon {
+      width: 28px;
+      height: 22px;
+      background: linear-gradient(135deg, #f97316 0%, #d97706 100%);
+      border-radius: 4px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 3px;
+    }
+
+    .brand-icon span {
+      height: 3px;
+      background: #fff;
+      border-radius: 2px;
     }
 
     .sidebar-nav {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 4px;
     }
 
     .nav-item {
       display: flex;
       align-items: center;
       gap: 12px;
-      padding: 12px 16px;
-      border-radius: 14px;
+      padding: 10px 12px;
+      border-radius: 8px;
       color: var(--text-muted);
       text-decoration: none;
       font-size: 14px;
       font-weight: 600;
       cursor: pointer;
-      transition: background-color 0.2s ease, transform 0.1s ease;
     }
 
     .nav-item:hover {
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(0, 0, 0, 0.03);
       color: var(--text-main);
-      transform: translateX(4px);
     }
 
     .nav-item.active {
       background: var(--active-item-bg);
       color: var(--active-item-color);
-      border: 1px solid rgba(37, 99, 235, 0.2);
     }
 
     .nav-item-icon {
       font-size: 16px;
       width: 20px;
-      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    .dashboard-wrapper {
-      flex: 1;
+    .sidebar-bottom {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .btn-add-expense {
       width: 100%;
-    }
-
-    .navbar {
-      background: var(--widget-bg);
-      backdrop-filter: blur(15px);
-      padding: 12px 24px;
-      border-radius: 40px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 24px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .nav-btn {
-      padding: 8px 20px;
-      border-radius: 20px;
-      border: none;
-      background: transparent;
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text-muted);
-      cursor: pointer;
-    }
-
-    .nav-btn.active {
-      background: #2563eb;
-      color: white;
-    }
-
-    .user-profile {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .theme-toggle-btn {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      background: rgba(55, 65, 81, 0.8);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: var(--primary);
       color: #ffffff;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
-      font-size: 16px;
-    }
-
-    .icon-circle {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: #2563eb;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      flex-shrink: 0;
-    }
-
-    /* Dynamic Search Container Controls */
-    .search-container {
-      position: relative;
-      display: flex;
-      align-items: center;
       gap: 8px;
     }
 
-    .search-input {
-      width: 0;
-      opacity: 0;
-      padding: 0;
-      border: 1px solid transparent;
-      border-radius: 20px;
-      background: var(--input-bg);
-      color: var(--input-text);
-      outline: none;
-      transition: width 0.3s ease, opacity 0.3s ease, padding 0.3s ease;
+    .btn-add-expense:hover {
+      background: var(--primary-hover);
     }
 
-    .search-container.active .search-input {
-      width: 180px;
-      opacity: 1;
-      padding: 8px 14px;
-      border-color: rgba(255, 255, 255, 0.2);
-    }
-
-    .user-info {
-      font-size: 13px;
-      line-height: 1.2;
-    }
-
-    .user-info span {
-      display: block;
-      color: var(--text-muted);
-      font-size: 11px;
-    }
-
-    .user-info strong {
-      color: var(--text-main);
-    }
-
-    .btn-logout {
-      padding: 6px 14px;
-      border-radius: 16px;
-      border: none;
-      background: rgba(239, 68, 68, 0.15);
-      color: #ef4444;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .btn-logout:hover {
-      background: #ef4444;
-      color: white;
-    }
-
-    .dashboard-header {
+    .user-profile-card {
       display: flex;
+      align-items: center;
       justify-content: space-between;
-      align-items: flex-end;
+      padding: 8px;
+      border-radius: 8px;
+    }
+
+    .user-profile-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      overflow: hidden;
+    }
+
+    .user-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #e2e8f0;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .user-details {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .user-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-main);
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+
+    .user-email {
+      font-size: 11px;
+      color: var(--text-light);
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+
+    /* MAIN CONTENT AREA */
+    .dashboard-wrapper {
+      flex: 1;
+      padding: 32px 40px;
+      overflow-y: auto;
+      background: var(--card-bg);
+    }
+
+    .main-header {
       margin-bottom: 24px;
     }
 
-    .header-title h1 {
-      font-size: 34px;
+    .main-title {
+      font-size: 26px;
       font-weight: 800;
       color: var(--text-main);
-      margin-bottom: 4px;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+      margin-bottom: 16px;
     }
 
-    .header-title p {
+    /* TABS NAV */
+    .view-tabs {
+      display: flex;
+      gap: 24px;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 24px;
+    }
+
+    .tab-link {
+      padding-bottom: 12px;
+      font-size: 15px;
+      font-weight: 600;
       color: var(--text-muted);
+      cursor: pointer;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+    }
+
+    .tab-link.active {
+      color: var(--text-main);
+      border-bottom-color: var(--primary);
+    }
+
+    /* CONTROLS ROW */
+    .controls-row {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 24px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .search-box {
+      flex: 1;
+      min-width: 240px;
+      position: relative;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 10px 16px 10px 38px;
+      background: var(--input-bg);
+      border: 1px solid transparent;
+      border-radius: 8px;
+      font-size: 14px;
+      color: var(--text-main);
+      outline: none;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-light);
       font-size: 14px;
     }
 
+    .dropdown-select {
+      padding: 10px 16px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 14px;
+      color: var(--text-main);
+      outline: none;
+      cursor: pointer;
+      min-width: 160px;
+    }
+
+    /* DATA CARDS & TABLES */
     .widget-box {
-      background: var(--widget-bg);
-      backdrop-filter: blur(10px);
+      background: var(--card-bg);
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
       padding: 24px;
-      border-radius: 20px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      margin-bottom: 20px;
+      margin-bottom: 24px;
     }
 
     .widget-header-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 16px;
+      margin-bottom: 20px;
     }
 
     .widget-box-title {
@@ -545,146 +516,154 @@
       color: var(--text-main);
     }
 
-    .tab-group {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 16px;
-      align-items: center;
-      flex-wrap: wrap;
+    .stat-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
     }
 
-    .tab-btn {
-      padding: 10px 20px;
+    .stat-card {
+      background: var(--bg-color);
+      border: 1px solid var(--border-color);
       border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      background: rgba(55, 65, 81, 0.8);
-      color: #ffffff;
+      padding: 20px;
+    }
+
+    .stat-card .label {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
       font-weight: 600;
-      cursor: pointer;
     }
 
-    .tab-btn.active {
-      background: #2563eb;
-      color: white;
+    .stat-card .value {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--text-main);
     }
 
-    .btn-primary {
-      padding: 12px 20px;
-      background-color: #2563eb;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 14px;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
-    }
-
-    .btn-primary:hover {
-      background-color: #1d4ed8;
-    }
-
-    .btn-secondary {
-      padding: 10px 18px;
-      background-color: #10b981;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 14px;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-    }
-
-    .btn-secondary:hover {
-      background-color: #059669;
-    }
-
-    .btn-danger {
-      padding: 10px 18px;
-      background-color: #ef4444;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 14px;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
-    }
-
-    .btn-danger:hover {
-      background-color: #dc2626;
-    }
-
-    .form-row {
-      display: flex;
-      gap: 12px;
-      align-items: flex-end;
-      margin-bottom: 16px;
-    }
-
-    .form-row .input-group {
-      flex: 1;
-      margin-bottom: 0;
-    }
-
-    .form-row input {
+    /* TABLE DESIGN */
+    .table-container {
       width: 100%;
-      padding: 10px 14px;
-      background: rgba(55, 65, 81, 0.8);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
       border-radius: 8px;
-      font-size: 14px;
-      color: #ffffff;
-      outline: none;
-    }
-
-    .table-card {
-      background: var(--widget-bg);
-      border-radius: 10px;
-      overflow: hidden;
-      max-height: 250px;
-      overflow-y: auto;
-      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
       text-align: left;
-      font-size: 13px;
-      color: var(--text-main);
+      font-size: 14px;
     }
 
     th {
       background: var(--table-header-bg);
       color: var(--text-muted);
       font-weight: 600;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border-color);
     }
 
-    th, td {
-      padding: 10px 14px;
-      border-bottom: 1px solid var(--table-row-border);
+    td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-main);
     }
 
-    .calendar-picker {
-      padding: 8px 12px;
-      border-radius: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      background: rgba(55, 65, 81, 0.8);
-      color: #ffffff;
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 12px;
       font-weight: 600;
-      outline: none;
+      background: var(--input-bg);
+      color: var(--text-muted);
+    }
+
+    /* BUTTONS */
+    .btn-primary {
+      padding: 10px 18px;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
       cursor: pointer;
     }
 
-    /* MODAL OVERLAYS & CARDS */
+    .btn-primary:hover {
+      background-color: var(--primary-hover);
+    }
+
+    .btn-secondary {
+      padding: 10px 18px;
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--bg-color);
+    }
+
+    .btn-danger {
+      padding: 8px 14px;
+      background-color: #ef4444;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 12px;
+      align-items: flex-end;
+      margin-bottom: 20px;
+    }
+
+    .form-row .input-group {
+      flex: 1;
+    }
+
+    .form-row label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .form-row input {
+      width: 100%;
+      padding: 10px 14px;
+      background: var(--input-bg);
+      border: 1px solid transparent;
+      border-radius: 8px;
+      font-size: 14px;
+      color: var(--text-main);
+      outline: none;
+    }
+
+    /* MODALS */
     .modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(4px);
       z-index: 100;
       display: flex;
       align-items: center;
@@ -693,15 +672,15 @@
     }
 
     .modal-card {
-      background: var(--widget-bg);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 20px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
       padding: 24px;
       width: 100%;
-      max-width: 800px;
+      max-width: 640px;
       max-height: 85vh;
       overflow-y: auto;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
     }
 
     .modal-header {
@@ -709,38 +688,8 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 20px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      border-bottom: 1px solid var(--border-color);
       padding-bottom: 12px;
-    }
-
-    .modal-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 16px;
-      margin-bottom: 20px;
-    }
-
-    .stat-card {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 12px;
-      padding: 16px;
-    }
-
-    .stat-card .label {
-      font-size: 12px;
-      color: var(--text-muted);
-      margin-bottom: 4px;
-    }
-
-    .stat-card .value {
-      font-size: 20px;
-      font-weight: 700;
-    }
-
-    /* CUSTOM STOCK MODAL SPECIFIC STYLING */
-    .modal-card-small {
-      max-width: 420px;
     }
 
     .modal-form-group {
@@ -758,17 +707,13 @@
 
     .modal-form-group input {
       width: 100%;
-      padding: 12px 14px;
-      background: rgba(55, 65, 81, 0.8);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 10px 14px;
+      background: var(--input-bg);
+      border: 1px solid transparent;
       border-radius: 8px;
       font-size: 14px;
-      color: #ffffff;
+      color: var(--text-main);
       outline: none;
-    }
-
-    .modal-form-group input:focus {
-      border-color: #2563eb;
     }
 
     .modal-actions {
@@ -777,15 +722,33 @@
       gap: 10px;
       margin-top: 24px;
     }
+
+    .calendar-picker {
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      background: var(--card-bg);
+      color: var(--text-main);
+      font-size: 13px;
+      outline: none;
+    }
+
+    .theme-toggle-btn {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      padding: 4px;
+    }
   </style>
 </head>
 <body>
 
-  <!-- TOP NAVBAR -->
+  <!-- TOP NAVBAR (AUTH VIEW) -->
   <header class="top-navbar" id="main-top-navbar">
     <div class="nav-left">
       <button class="power-btn" title="Power / Reset" id="btn-power">
-        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
           <line x1="12" y1="2" x2="12" y2="12"></line>
         </svg>
@@ -794,21 +757,19 @@
       <a href="#" class="top-link">About</a>
       <a href="#" class="top-link">Service</a>
       <a href="#" class="top-link">Contact</a>
-      <a href="#" class="top-link">Feedback</a>
     </div>
     <div class="nav-right">
-      <a href="#" class="top-link">English</a>
+      <button id="theme-toggle" class="theme-toggle-btn" title="Toggle Theme">☀️</button>
       <a href="#" id="top-nav-signup" class="top-link">Sign up</a>
       <button id="top-nav-register" class="btn-register-top">Register</button>
     </div>
   </header>
 
   <div class="auth-page-container" id="auth-main-container">
-
     <!-- SIGN IN VIEW -->
     <div id="signin-view" class="auth-card-right animated-card">
       <div class="auth-header">
-        <h1>Hello !<br>Welcome Back</h1>
+        <h1>Welcome Back</h1>
       </div>
       <form id="signin-form" autocomplete="off">
         <div class="input-group">
@@ -820,16 +781,9 @@
         <button type="submit" id="btn-signin-submit" class="btn-signin-full">Sign in</button>
       </form>
 
-      <!-- SOCIAL LOGINS -->
       <div class="social-buttons">
         <button class="btn-social" type="button" aria-label="Sign in with Google">
           <svg viewBox="0 0 24 24" width="18" height="18"><path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.6l3.1-3.1C17.3 1.7 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.3 9 5 12 5z"/><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.8z"/><path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.3s.2-1.6.4-2.3L1.9 7.3C.7 9.7 0 10.8 0 12s.7 2.3 1.9 4.7l3.7-1.9z"/><path fill="#34A853" d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2.3-6.4-5.2L1.9 16C3.7 19.7 7.5 23 12 23z"/></svg>
-        </button>
-        <button class="btn-social" type="button" aria-label="Sign in with Apple">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="#000"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.34c.66-.8 1.11-1.92.99-3.04-.96.04-2.12.64-2.8 1.44-.61.71-1.14 1.86-1 2.96 1.08.08 2.16-.56 2.81-1.36z"/></svg>
-        </button>
-        <button class="btn-social" type="button" aria-label="Sign in with Facebook">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
         </button>
       </div>
 
@@ -853,7 +807,7 @@
         <div class="input-group">
           <input type="password" id="signup-pass" placeholder="Password" required>
         </div>
-        <button type="submit" id="btn-signup-submit" class="btn-signin-full">Continue to Verification</button>
+        <button type="submit" id="btn-signup-submit" class="btn-signin-full">Continue</button>
       </form>
       <div class="auth-toggle-text">
         Already have an account ? <a id="btn-to-signin">Sign In</a>
@@ -888,196 +842,202 @@
         <a id="btn-forgot-to-signin">Back to Sign In</a>
       </div>
     </div>
-
   </div>
 
   <!-- DASHBOARD VIEW -->
   <div id="dashboard-view" class="app-container hidden animated-view">
     <aside class="sidebar">
-      <div class="sidebar-brand">
-        <img src="Company%20Logo.png" alt="Company Logo" class="sidebar-brand-img" onerror="this.src='logo.png'">
-        TD System
+      <div class="sidebar-top">
+        <div class="sidebar-brand">
+          <div class="brand-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          Horizon
+        </div>
+        <nav class="sidebar-nav">
+          <a class="nav-item" data-panel="overview"><span class="nav-item-icon">🏠</span> Home</a>
+          <a class="nav-item active" data-panel="stock"><span class="nav-item-icon">📦</span> Inventory</a>
+          <a class="nav-item" data-panel="sales"><span class="nav-item-icon">📊</span> Sales</a>
+          <a class="nav-item" data-panel="accounting"><span class="nav-item-icon">💲</span> Finance</a>
+          <a class="nav-item" data-panel="workforce"><span class="nav-item-icon">👤</span> HR</a>
+          <a class="nav-item" data-panel="settings"><span class="nav-item-icon">⚙️</span> Admin</a>
+        </nav>
       </div>
-      <nav class="sidebar-nav">
-        <a class="nav-item active" data-panel="overview"><span class="nav-item-icon">📊</span> Overview</a>
-        <a class="nav-item" data-panel="sales"><span class="nav-item-icon">💼</span> Sales</a>
-        <a class="nav-item" data-panel="accounting"><span class="nav-item-icon">💳</span> Accounting</a>
-        <a class="nav-item" data-panel="stock"><span class="nav-item-icon">📦</span> Stock Management</a>
-        <a class="nav-item" data-panel="production"><span class="nav-item-icon">⚙️</span> Production</a>
-        <a class="nav-item" data-panel="workforce"><span class="nav-item-icon">👥</span> Workforce</a>
-        <a class="nav-item" data-panel="metrics"><span class="nav-item-icon">📈</span> Performance Metrics</a>
-        <a class="nav-item" data-panel="documentation"><span class="nav-item-icon">📄</span> Documentation</a>
-        <a class="nav-item" data-panel="access"><span class="nav-item-icon">🛡️</span> Access Control</a>
-        <a class="nav-item" data-panel="settings"><span class="nav-item-icon">⚙️</span> Settings</a>
-      </nav>
+
+      <div class="sidebar-bottom">
+        <button class="btn-add-expense" id="btn-open-stock-modal">
+          <span>+</span> Add an expense
+        </button>
+        <div class="user-profile-card">
+          <div class="user-profile-info">
+            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop&q=80" alt="User" class="user-avatar">
+            <div class="user-details">
+              <span class="user-name" id="user-display-name">Olivia</span>
+              <span class="user-email" id="user-display-email">olivia@example.com</span>
+            </div>
+          </div>
+          <button class="power-btn" id="btn-logout" title="Logout">🚪</button>
+        </div>
+      </div>
     </aside>
 
     <main class="dashboard-wrapper">
-      <header class="navbar">
-        <div class="nav-links">
-          <button class="nav-btn active">Dashboard</button>
-          <button class="nav-btn">Analytics</button>
-        </div>
-        <div class="user-profile">
-          <button id="theme-toggle" class="theme-toggle-btn" title="Toggle Theme">☀️</button>
-
-          <!-- Interactive Search Bar -->
-          <div class="search-container" id="search-container">
-            <input type="text" id="global-search-input" class="search-input" placeholder="Search feature..." />
-            <div class="icon-circle" id="btn-search-toggle" title="Search">🔍</div>
-          </div>
-
-          <div class="user-info">
-            <span>Hello!</span>
-            <strong id="user-display-name">User</strong>
-          </div>
-          <button class="btn-logout" id="btn-logout">Logout</button>
+      <header class="main-header">
+        <h1 class="main-title" id="page-title">Inventory management</h1>
+        <div class="view-tabs">
+          <a href="#" class="tab-link active" id="tab-products-view">📦 Products</a>
+          <a href="#" class="tab-link" id="tab-dashboard-view">📊 Dashboard</a>
         </div>
       </header>
 
-      <section class="dashboard-header">
-        <div class="header-title">
-          <h1 id="page-title">Overview</h1>
-          <p id="page-subtitle">Monitor system operations</p>
+      <!-- CONTROLS & FILTER BAR -->
+      <div class="controls-row">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="global-search-input" placeholder="Search products" />
         </div>
-      </section>
+        <select class="dropdown-select" id="category-select">
+          <option value="">Product category</option>
+          <option value="TV & audio">TV & audio</option>
+          <option value="Large appliances">Large appliances</option>
+          <option value="Small appliances">Small appliances</option>
+          <option value="Mobile devices">Mobile devices</option>
+        </select>
+      </div>
 
-      <div id="panel-overview" class="panel-content animated-view">
-        <div class="widget-box">
-          <div class="widget-box-title">System Overview</div>
-          <p>Welcome to TD System. Select an action module from the left menu to manage business records.</p>
+      <!-- OVERVIEW/SUMMARY CARDS (Shown on Dashboard tab) -->
+      <div id="dashboard-summary-cards" class="stat-cards-grid hidden">
+        <div class="stat-card">
+          <div class="label">Number of products</div>
+          <div class="value" id="st-total-count">16</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Items in stock</div>
+          <div class="value" id="st-items-stock">5,525</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Total stock value</div>
+          <div class="value" id="st-total-val" style="color: var(--primary);">$2,701,850</div>
         </div>
       </div>
 
+      <!-- MAIN TABLE CONTAINER -->
+      <div id="panel-stock" class="panel-content animated-view">
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Product name ↑</th>
+                <th>Description</th>
+                <th>Product category</th>
+                <th>Price</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="stock-table-body">
+              <tr>
+                <td>4KSmart TV</td>
+                <td>55-inch 4K smart TV</td>
+                <td><span class="badge">TV & audio</span></td>
+                <td>$799.00</td>
+                <td><button style="color:#ef4444; background:none; border:none; cursor:pointer;" class="btn-delete-row">Delete</button></td>
+              </tr>
+              <tr>
+                <td>BakeRight Oven</td>
+                <td>Convection oven</td>
+                <td><span class="badge">Large appliances</span></td>
+                <td>$450.00</td>
+                <td><button style="color:#ef4444; background:none; border:none; cursor:pointer;" class="btn-delete-row">Delete</button></td>
+              </tr>
+              <tr>
+                <td>BlendJet Blender</td>
+                <td>High-speed blender</td>
+                <td><span class="badge">Small appliances</span></td>
+                <td>$89.00</td>
+                <td><button style="color:#ef4444; background:none; border:none; cursor:pointer;" class="btn-delete-row">Delete</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- GENERIC / SALES PANELS -->
       <div id="panel-sales" class="panel-content hidden animated-view">
-        <div class="tab-group">
-          <button class="tab-btn active" id="tab-sales-income">📈 Income</button>
-          <button class="tab-btn" id="tab-sales-cost">📉 Cost</button>
-        </div>
-
-        <div class="tab-group" id="sales-subcategory-group">
-          <button class="tab-btn active sub-tab" data-sub="Rooms">🏨 Rooms</button>
-          <button class="tab-btn sub-tab" data-sub="Food">🍔 Food</button>
-          <button class="tab-btn sub-tab" data-sub="Function">🎉 Function</button>
-          <button class="tab-btn sub-tab" data-sub="Stock">📦 Stock</button>
-        </div>
-
-        <div class="modal-grid" style="margin-bottom: 20px;">
-          <div class="stat-card">
-            <div class="label">Total Income</div>
-            <div class="value" id="report-total-income" style="color: #10b981;">Rs. 0.00</div>
-          </div>
-          <div class="stat-card">
-            <div class="label">Total Cost</div>
-            <div class="value" id="report-total-cost" style="color: #ef4444;">Rs. 0.00</div>
-          </div>
-          <div class="stat-card">
-            <div class="label">Net Profit</div>
-            <div class="value" id="report-net-profit" style="color: #60a5fa;">Rs. 0.00</div>
-          </div>
-          <div class="stat-card">
-            <div class="label">Net Loss</div>
-            <div class="value" id="report-net-loss" style="color: #f59e0b;">Rs. 0.00</div>
-          </div>
-        </div>
-
         <div class="widget-box">
           <div class="widget-header-row">
-            <div class="widget-box-title" id="sales-form-title">Add Rooms Bill</div>
+            <div class="widget-box-title">Sales & Transactions</div>
             <button class="btn-secondary" id="btn-open-sales-report">📄 View Sales Reports</button>
           </div>
-          
           <div class="form-row">
             <div class="input-group">
-              <label style="display:block; font-size:12px; margin-bottom:4px;">Bill Code</label>
-              <input type="text" id="bill-code" placeholder="Auto-Generated Code">
+              <label>Bill Code</label>
+              <input type="text" id="bill-code" placeholder="AUTO-101">
             </div>
             <div class="input-group">
-              <label style="display:block; font-size:12px; margin-bottom:4px;">Name / Customer</label>
+              <label>Customer Name</label>
               <input type="text" id="bill-name" placeholder="Enter Name">
             </div>
             <div class="input-group">
-              <label style="display:block; font-size:12px; margin-bottom:4px;">Price (Rs.)</label>
+              <label>Price ($)</label>
               <input type="number" id="bill-price" placeholder="0.00" step="0.01">
             </div>
             <button class="btn-primary" id="btn-add-bill">Add Bill</button>
           </div>
-
-          <div class="table-card">
+          <div class="table-container">
             <table>
               <thead>
                 <tr>
                   <th>Code</th>
                   <th>Name</th>
-                  <th>Price (Rs.)</th>
+                  <th>Price ($)</th>
                   <th>Category</th>
-                  <th>Type</th>
                   <th>Action</th>
                 </tr>
               </thead>
-              <tbody id="sales-table-body">
-              </tbody>
+              <tbody id="sales-table-body"></tbody>
             </table>
           </div>
         </div>
       </div>
 
-      <div id="panel-stock" class="panel-content hidden animated-view">
+      <div id="panel-overview" class="panel-content hidden animated-view">
         <div class="widget-box">
-          <div class="widget-header-row">
-            <div class="widget-box-title">Stock Management</div>
-            <button class="btn-secondary" id="btn-open-stock-report">📄 View Stock Reports</button>
-          </div>
-          
-          <div style="display: flex; gap: 16px; align-items: center; margin-bottom: 16px;">
-            <button class="btn-primary" id="btn-open-stock-modal">+ Add Stock</button>
-            <span style="font-size: 13px; font-weight: bold; color: var(--text-muted); margin-left: auto;">Filter By Calendar Date:</span>
-            <input type="date" id="stock-panel-calendar-filter" class="calendar-picker">
-          </div>
-          
-          <div class="table-card">
-            <table>
-              <thead>
-                <tr>
-                  <th>Stock Code</th>
-                  <th>Product Name</th>
-                  <th>Price (Rs.)</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody id="stock-table-body">
-              </tbody>
-            </table>
-          </div>
+          <div class="widget-box-title">System Overview</div>
+          <p style="color: var(--text-muted); margin-top: 8px;">Welcome to Horizon System. Select a module from the sidebar to manage your records.</p>
         </div>
       </div>
 
       <div id="panel-generic" class="panel-content hidden animated-view">
         <div class="widget-box">
-          <h2 id="generic-title" style="margin-bottom: 10px;">Panel</h2>
-          <p>This module is currently loaded.</p>
+          <h2 id="generic-title">Panel</h2>
+          <p style="color: var(--text-muted); margin-top: 8px;">This module is active.</p>
         </div>
       </div>
-
     </main>
   </div>
 
-  <!-- CUSTOM ADD STOCK MODAL -->
+  <!-- ADD STOCK MODAL -->
   <div id="add-stock-modal" class="modal-overlay hidden">
-    <div class="modal-card modal-card-small">
+    <div class="modal-card">
       <div class="modal-header">
-        <h2>Add New Stock Item</h2>
+        <h2>Add New Product</h2>
       </div>
       <div class="modal-form-group">
         <label for="modal-stock-name">Product Name</label>
-        <input type="text" id="modal-stock-name" placeholder="e.g. Deluxe Suite Bed Sheet" />
+        <input type="text" id="modal-stock-name" placeholder="e.g. 55-inch 4K Smart TV" />
       </div>
       <div class="modal-form-group">
-        <label for="modal-stock-price">Price (Rs.)</label>
-        <input type="number" id="modal-stock-price" placeholder="e.g. 2500" step="0.01" />
+        <label for="modal-stock-category">Category</label>
+        <input type="text" id="modal-stock-category" placeholder="e.g. TV & audio" />
+      </div>
+      <div class="modal-form-group">
+        <label for="modal-stock-price">Price ($)</label>
+        <input type="number" id="modal-stock-price" placeholder="e.g. 799" step="0.01" />
       </div>
       <div class="modal-actions">
-        <button id="btn-cancel-stock-modal" class="btn-danger">Cancel</button>
+        <button id="btn-cancel-stock-modal" class="btn-secondary">Cancel</button>
         <button id="btn-save-stock-modal" class="btn-primary">Add Item</button>
       </div>
     </div>
@@ -1087,142 +1047,18 @@
   <div id="sales-report-modal" class="modal-overlay hidden">
     <div class="modal-card">
       <div class="modal-header">
-        <h2>Sales & Profit Analysis Report</h2>
+        <h2>Sales Analysis Report</h2>
         <button class="btn-danger" id="btn-close-sales-report">Close</button>
       </div>
-
-      <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 20px;">
-        <div class="tab-group" style="margin-bottom: 0;">
-          <button class="tab-btn active sales-report-tab" data-period="daily">Daily</button>
-          <button class="tab-btn sales-report-tab" data-period="monthly">Monthly</button>
-          <button class="tab-btn sales-report-tab" data-period="yearly">Yearly</button>
-        </div>
-        <input type="date" id="sales-calendar-filter" class="calendar-picker" style="margin-left: auto;">
-      </div>
-
-      <div class="modal-grid">
+      <div class="stat-cards-grid">
         <div class="stat-card">
           <div class="label">Total Revenue</div>
-          <div class="value" id="sr-total-revenue" style="color: #10b981;">Rs. 0.00</div>
-        </div>
-        <div class="stat-card">
-          <div class="label">Total Cost</div>
-          <div class="value" id="sr-total-cost" style="color: #ef4444;">Rs. 0.00</div>
+          <div class="value" id="sr-total-revenue">$0.00</div>
         </div>
         <div class="stat-card">
           <div class="label">Net Profit</div>
-          <div class="value" id="sr-net-profit" style="color: #60a5fa;">Rs. 0.00</div>
+          <div class="value" id="sr-net-profit">$0.00</div>
         </div>
-        <div class="stat-card">
-          <div class="label">Net Loss</div>
-          <div class="value" id="sr-net-loss" style="color: #f59e0b;">Rs. 0.00</div>
-        </div>
-      </div>
-
-      <h3 style="margin-bottom: 12px;">Category Totals</h3>
-      <div class="modal-grid">
-        <div class="stat-card" style="cursor: pointer;" onclick="openMetricDetails('Rooms', 'Rooms')">
-          <div class="label">🏨 Rooms Income</div>
-          <div class="value" id="sr-cat-rooms">Rs. 0.00</div>
-        </div>
-        <div class="stat-card" style="cursor: pointer;" onclick="openMetricDetails('Food', 'Food')">
-          <div class="label">🍔 Food Income</div>
-          <div class="value" id="sr-cat-food">Rs. 0.00</div>
-        </div>
-        <div class="stat-card" style="cursor: pointer;" onclick="openMetricDetails('Function', 'Function')">
-          <div class="label">🎉 Function Income</div>
-          <div class="value" id="sr-cat-function">Rs. 0.00</div>
-        </div>
-        <div class="stat-card" style="cursor: pointer;" onclick="openMetricDetails('Stock', 'Stock')">
-          <div class="label">📦 Stock Expenses</div>
-          <div class="value" id="sr-cat-stock">Rs. 0.00</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- STOCK REPORT MODAL -->
-  <div id="stock-report-modal" class="modal-overlay hidden">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h2>Stock Valuation Report</h2>
-        <button class="btn-danger" id="btn-close-stock-report">Close</button>
-      </div>
-
-      <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 20px;">
-        <div class="tab-group" style="margin-bottom: 0;">
-          <button class="tab-btn active stock-report-tab" data-period="daily">Daily</button>
-          <button class="tab-btn stock-report-tab" data-period="monthly">Monthly</button>
-          <button class="tab-btn stock-report-tab" data-period="yearly">Yearly</button>
-        </div>
-        <input type="date" id="stock-calendar-filter" class="calendar-picker" style="margin-left: auto;">
-      </div>
-
-      <div class="modal-grid">
-        <div class="stat-card">
-          <div class="label">Total Stock Value</div>
-          <div class="value" id="st-total-val" style="color: #10b981;">Rs. 0.00</div>
-        </div>
-        <div class="stat-card">
-          <div class="label">Total Items Count</div>
-          <div class="value" id="st-total-count">0</div>
-        </div>
-        <div class="stat-card">
-          <div class="label">Average Unit Price</div>
-          <div class="value" id="st-avg-price">Rs. 0.00</div>
-        </div>
-      </div>
-
-      <div class="table-card">
-        <table>
-          <thead>
-            <tr>
-              <th>Stock Code</th>
-              <th>Product Name</th>
-              <th>Price (Rs.)</th>
-            </tr>
-          </thead>
-          <tbody id="stock-report-table-body">
-          </tbody>
-          <tfoot>
-            <tr>
-              <th colspan="2">Total Value</th>
-              <th id="st-table-total-val">Rs. 0.00</th>
-            </tr>
-          </tfoot>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <!-- METRIC DETAILS DRILLDOWN MODAL -->
-  <div id="metric-details-modal" class="modal-overlay hidden">
-    <div class="modal-card" style="max-width: 600px;">
-      <div class="modal-header">
-        <h2 id="metric-details-title">Metric Details</h2>
-        <button class="btn-danger" id="btn-close-metric-details">Close</button>
-      </div>
-
-      <div class="table-card">
-        <table>
-          <thead>
-            <tr>
-              <th>Code</th>
-              <th>Name</th>
-              <th>Category</th>
-              <th>Type</th>
-              <th>Price (Rs.)</th>
-            </tr>
-          </thead>
-          <tbody id="metric-details-tbody">
-          </tbody>
-          <tfoot>
-            <tr>
-              <th colspan="4">Sum</th>
-              <th id="metric-details-total">Rs. 0.00</th>
-            </tr>
-          </tfoot>
-        </table>
       </div>
     </div>
   </div>
@@ -1255,25 +1091,17 @@
 
     let tempUserData = { mode: '', name: '', email: '', pass: '' };
     let currentUser = null;
-    let currentSalesType = 'Income';
-    let currentSalesCategory = 'Rooms';
-
-    // Application Data & Reporting Filters
     let salesData = [];
-    let stockData = [];
-    let activeSalesPeriod = 'daily';
-    let activeStockPeriod = 'daily';
-
-    // Set Initial Filter Values
-    const todayStr = new Date().toISOString().split('T')[0];
-    const sCal = document.getElementById('sales-calendar-filter');
-    const stCal = document.getElementById('stock-calendar-filter');
-    if (sCal) sCal.value = todayStr;
-    if (stCal) stCal.value = todayStr;
+    let stockData = [
+      { code: 'STK-1', name: '4KSmart TV', category: 'TV & audio', price: 799.00, desc: '55-inch 4K smart TV' },
+      { code: 'STK-2', name: 'BakeRight Oven', category: 'Large appliances', price: 450.00, desc: 'Convection oven' },
+      { code: 'STK-3', name: 'BlendJet Blender', category: 'Small appliances', price: 89.00, desc: 'High-speed blender' }
+    ];
 
     // Navigation Switcher
     const navItems = document.querySelectorAll('.sidebar-nav .nav-item');
     const panels = document.querySelectorAll('.panel-content');
+    
     navItems.forEach(item => {
       item.addEventListener('click', () => {
         navItems.forEach(nav => nav.classList.remove('active'));
@@ -1282,168 +1110,74 @@
         const panelKey = item.getAttribute('data-panel');
         const panelName = item.innerText.trim();
 
-        document.getElementById('page-title').innerText = panelName;
-        document.getElementById('page-subtitle').innerText = `Manage ${panelName} operations`;
-
+        document.getElementById('page-title').innerText = panelName + " management";
         panels.forEach(p => p.classList.add('hidden'));
 
-        let targetPanel;
-        if (panelKey === 'overview') {
-          targetPanel = document.getElementById('panel-overview');
-        } else if (panelKey === 'sales') {
-          targetPanel = document.getElementById('panel-sales');
-        } else if (panelKey === 'stock') {
-          targetPanel = document.getElementById('panel-stock');
-        } else {
+        let targetPanel = document.getElementById(`panel-${panelKey}`);
+        if (!targetPanel) {
           document.getElementById('generic-title').innerText = panelName;
           targetPanel = document.getElementById('panel-generic');
         }
 
         if (targetPanel) {
           targetPanel.classList.remove('hidden');
-          targetPanel.style.animation = 'none';
-          targetPanel.offsetHeight;
-          targetPanel.style.animation = null;
         }
       });
+    });
+
+    // Header Tabs Switcher (Products vs Dashboard)
+    const tabProducts = document.getElementById('tab-products-view');
+    const tabDashboard = document.getElementById('tab-dashboard-view');
+    const summaryCards = document.getElementById('dashboard-summary-cards');
+
+    tabProducts?.addEventListener('click', (e) => {
+      e.preventDefault();
+      tabProducts.classList.add('active');
+      tabDashboard.classList.remove('active');
+      summaryCards.classList.add('hidden');
+    });
+
+    tabDashboard?.addEventListener('click', (e) => {
+      e.preventDefault();
+      tabDashboard.classList.add('active');
+      tabProducts.classList.remove('active');
+      summaryCards.classList.remove('hidden');
+      updateStockReport();
     });
 
     // Theme Toggle Handler
     const themeBtn = document.getElementById('theme-toggle');
     themeBtn?.addEventListener('click', () => {
       const currentTheme = document.documentElement.getAttribute('data-theme');
-      if (currentTheme === 'light') {
+      if (currentTheme === 'dark') {
         document.documentElement.removeAttribute('data-theme');
         themeBtn.innerText = '☀️';
       } else {
-        document.documentElement.setAttribute('data-theme', 'light');
+        document.documentElement.setAttribute('data-theme', 'dark');
         themeBtn.innerText = '🌙';
       }
     });
 
-    // Dynamic Search Toggle & Filter
-    const searchContainer = document.getElementById('search-container');
-    const searchToggleBtn = document.getElementById('btn-search-toggle');
+    // Search Filter
     const searchInput = document.getElementById('global-search-input');
-
-    searchToggleBtn?.addEventListener('click', () => {
-      searchContainer.classList.toggle('active');
-      if (searchContainer.classList.contains('active')) {
-        searchInput.focus();
-      } else {
-        searchInput.value = '';
-        filterSidebar('');
-      }
-    });
-
     searchInput?.addEventListener('input', (e) => {
       const query = e.target.value.toLowerCase().trim();
-      filterSidebar(query);
-    });
-
-    function filterSidebar(query) {
-      navItems.forEach(item => {
-        const text = item.innerText.toLowerCase();
-        if (text.includes(query)) {
-          item.style.display = 'flex';
-        } else {
-          item.style.display = 'none';
-        }
-      });
-
-      if (query) {
-        const visibleItems = Array.from(navItems).filter(item => item.style.display !== 'none');
-        if (visibleItems.length === 1) {
-          visibleItems[0].click();
-        }
-      }
-    }
-
-    // Income / Cost Toggle
-    const incomeBtn = document.getElementById('tab-sales-income');
-    const costBtn = document.getElementById('tab-sales-cost');
-    incomeBtn?.addEventListener('click', () => {
-      incomeBtn.classList.add('active');
-      costBtn.classList.remove('active');
-      currentSalesType = 'Income';
-    });
-    costBtn?.addEventListener('click', () => {
-      costBtn.classList.add('active');
-      incomeBtn.classList.remove('active');
-      currentSalesType = 'Cost';
-    });
-
-    // Sub-Category Selection Handlers
-    const subTabs = document.querySelectorAll('.sub-tab');
-    subTabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        subTabs.forEach(st => st.classList.remove('active'));
-        tab.classList.add('active');
-        currentSalesCategory = tab.getAttribute('data-sub');
-        document.getElementById('sales-form-title').innerText = `Add ${currentSalesCategory} Bill`;
+      const rows = document.querySelectorAll('#stock-table-body tr');
+      rows.forEach(row => {
+        const text = row.innerText.toLowerCase();
+        row.style.display = text.includes(query) ? '' : 'none';
       });
     });
 
-    // Action Button Listeners
-    document.getElementById('btn-add-bill')?.addEventListener('click', () => {
-      const codeInput = document.getElementById('bill-code');
-      const nameInput = document.getElementById('bill-name');
-      const priceInput = document.getElementById('bill-price');
-
-      const code = codeInput.value.trim() || 'AUTO-' + Math.floor(Math.random() * 1000);
-      const name = nameInput.value.trim();
-      const price = priceInput.value.trim();
-
-      if (!name || !price) {
-        alert('Please enter Name and Price.');
-        return;
-      }
-
-      const newItem = {
-        code,
-        name,
-        price: parseFloat(price),
-        category: currentSalesCategory,
-        type: currentSalesType,
-        timestamp: new Date().toISOString()
-      };
-
-      salesData.push(newItem);
-
-      const tbody = document.getElementById('sales-table-body');
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${newItem.code}</td>
-        <td>${newItem.name}</td>
-        <td>${newItem.price.toFixed(2)}</td>
-        <td>${newItem.category}</td>
-        <td>${newItem.type}</td>
-        <td><button style="color:#ef4444; background:none; border:none; cursor:pointer;" class="btn-delete-row">Delete</button></td>
-      `;
-      
-      tr.querySelector('.btn-delete-row').addEventListener('click', () => {
-        const idx = salesData.indexOf(newItem);
-        if (idx > -1) salesData.splice(idx, 1);
-        tr.remove();
-        updateSalesReport();
-      });
-
-      tbody.appendChild(tr);
-
-      codeInput.value = '';
-      nameInput.value = '';
-      priceInput.value = '';
-
-      updateSalesReport();
-    });
-
-    // CUSTOM ADD STOCK MODAL LOGIC
+    // Stock Modal Logic
     const addStockModal = document.getElementById('add-stock-modal');
     const stockNameInput = document.getElementById('modal-stock-name');
+    const stockCatInput = document.getElementById('modal-stock-category');
     const stockPriceInput = document.getElementById('modal-stock-price');
 
     document.getElementById('btn-open-stock-modal')?.addEventListener('click', () => {
       if (stockNameInput) stockNameInput.value = '';
+      if (stockCatInput) stockCatInput.value = '';
       if (stockPriceInput) stockPriceInput.value = '';
       addStockModal?.classList.remove('hidden');
     });
@@ -1454,235 +1188,73 @@
 
     document.getElementById('btn-save-stock-modal')?.addEventListener('click', () => {
       const name = stockNameInput?.value.trim();
+      const category = stockCatInput?.value.trim() || 'General';
       const priceStr = stockPriceInput?.value.trim();
 
       if (!name || !priceStr) {
-        alert("Please enter both Product Name and Price.");
+        alert("Please enter Product Name and Price.");
         return;
       }
 
       const newItem = {
         code: 'STK-' + Math.floor(Math.random() * 1000),
         name,
-        price: parseFloat(priceStr),
-        timestamp: new Date().toISOString()
+        category,
+        desc: 'Standard item',
+        price: parseFloat(priceStr)
       };
 
       stockData.push(newItem);
-
-      const tbody = document.getElementById('stock-table-body');
-      if (tbody) {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${newItem.code}</td>
-          <td>${newItem.name}</td>
-          <td>Rs. ${newItem.price.toFixed(2)}</td>
-          <td><button style="color:#ef4444; background:none; border:none; cursor:pointer;" class="btn-delete-row">Delete</button></td>
-        `;
-
-        tr.querySelector('.btn-delete-row')?.addEventListener('click', () => {
-          const idx = stockData.indexOf(newItem);
-          if (idx > -1) stockData.splice(idx, 1);
-          tr.remove();
-          updateStockReport();
-        });
-
-        tbody.appendChild(tr);
-      }
-
+      renderStockTable();
       updateStockReport();
       addStockModal?.classList.add('hidden');
     });
 
-    // DOM Elements - Modals & Buttons
-    const salesReportModal = document.getElementById('sales-report-modal');
-    const stockReportModal = document.getElementById('stock-report-modal');
-    const metricDetailsModal = document.getElementById('metric-details-modal');
+    function renderStockTable() {
+      const tbody = document.getElementById('stock-table-body');
+      if (!tbody) return;
+      tbody.innerHTML = '';
 
-    const btnOpenSalesReport = document.getElementById('btn-open-sales-report');
-    const btnCloseSalesReport = document.getElementById('btn-close-sales-report');
-    const btnOpenStockReport = document.getElementById('btn-open-stock-report');
-    const btnCloseStockReport = document.getElementById('btn-close-stock-report');
-    const btnCloseMetricDetails = document.getElementById('btn-close-metric-details');
+      stockData.forEach((item, idx) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${item.name}</td>
+          <td>${item.desc || '-'}</td>
+          <td><span class="badge">${item.category}</span></td>
+          <td>$${item.price.toFixed(2)}</td>
+          <td><button style="color:#ef4444; background:none; border:none; cursor:pointer;" class="btn-delete-row">Delete</button></td>
+        `;
 
-    // Filter Controls
-    const salesCalendarFilter = document.getElementById('sales-calendar-filter');
-    const stockCalendarFilter = document.getElementById('stock-calendar-filter');
+        tr.querySelector('.btn-delete-row')?.addEventListener('click', () => {
+          stockData.splice(idx, 1);
+          renderStockTable();
+          updateStockReport();
+        });
+
+        tbody.appendChild(tr);
+      });
+    }
+
+    function updateStockReport() {
+      let totalVal = 0;
+      stockData.forEach(item => totalVal += item.price);
+
+      const countEl = document.getElementById('st-total-count');
+      const valEl = document.getElementById('st-total-val');
+      if (countEl) countEl.innerText = stockData.length;
+      if (valEl) valEl.innerText = `$${totalVal.toFixed(2)}`;
+    }
 
     // Modal Visibility Handlers
-    btnOpenSalesReport?.addEventListener('click', () => {
+    const salesReportModal = document.getElementById('sales-report-modal');
+    document.getElementById('btn-open-sales-report')?.addEventListener('click', () => {
       salesReportModal?.classList.remove('hidden');
-      updateSalesReport();
     });
-
-    btnCloseSalesReport?.addEventListener('click', () => {
+    document.getElementById('btn-close-sales-report')?.addEventListener('click', () => {
       salesReportModal?.classList.add('hidden');
     });
 
-    btnOpenStockReport?.addEventListener('click', () => {
-      stockReportModal?.classList.remove('hidden');
-      updateStockReport();
-    });
-
-    btnCloseStockReport?.addEventListener('click', () => {
-      stockReportModal?.classList.add('hidden');
-    });
-
-    btnCloseMetricDetails?.addEventListener('click', () => {
-      metricDetailsModal?.classList.add('hidden');
-    });
-
-    // Date/Tab Change Listeners for Sales Report
-    salesCalendarFilter?.addEventListener('change', updateSalesReport);
-    document.querySelectorAll('.sales-report-tab').forEach(tab => {
-      tab.addEventListener('click', (e) => {
-        document.querySelectorAll('.sales-report-tab').forEach(t => t.classList.remove('active'));
-        e.target.classList.add('active');
-        activeSalesPeriod = e.target.getAttribute('data-period');
-        updateSalesReport();
-      });
-    });
-
-    // Date/Tab Change Listeners for Stock Report
-    stockCalendarFilter?.addEventListener('change', updateStockReport);
-    document.querySelectorAll('.stock-report-tab').forEach(tab => {
-      tab.addEventListener('click', (e) => {
-        document.querySelectorAll('.stock-report-tab').forEach(t => t.classList.remove('active'));
-        e.target.classList.add('active');
-        activeStockPeriod = e.target.getAttribute('data-period');
-        updateStockReport();
-      });
-    });
-
-    // Date Filter Logic (Daily, Monthly, Yearly)
-    function matchesPeriodFilter(itemDateStr, targetDateStr, period) {
-      if (!itemDateStr || !targetDateStr) return true;
-      const itemDate = new Date(itemDateStr);
-      const targetDate = new Date(targetDateStr);
-
-      if (period === 'daily') {
-        return itemDate.toISOString().split('T')[0] === targetDateStr;
-      } else if (period === 'monthly') {
-        return itemDate.getFullYear() === targetDate.getFullYear() &&
-               itemDate.getMonth() === targetDate.getMonth();
-      } else if (period === 'yearly') {
-        return itemDate.getFullYear() === targetDate.getFullYear();
-      }
-      return true;
-    }
-
-    // Update Sales Report UI Logic
-    function updateSalesReport() {
-      const selectedDate = salesCalendarFilter.value;
-      const filteredSales = salesData.filter(item => 
-        matchesPeriodFilter(item.timestamp || item.date, selectedDate, activeSalesPeriod)
-      );
-
-      let totalIncome = 0;
-      let totalCost = 0;
-      let roomsTotal = 0;
-      let foodTotal = 0;
-      let functionTotal = 0;
-      let stockCostTotal = 0;
-
-      filteredSales.forEach(item => {
-        const price = parseFloat(item.price) || 0;
-        if (item.type === 'Income') {
-          totalIncome += price;
-          if (item.category === 'Rooms') roomsTotal += price;
-          if (item.category === 'Food') foodTotal += price;
-          if (item.category === 'Function') functionTotal += price;
-        } else if (item.type === 'Cost') {
-          totalCost += price;
-          if (item.category === 'Stock') stockCostTotal += price;
-        }
-      });
-
-      const netProfit = totalIncome - totalCost;
-      const netLoss = netProfit < 0 ? Math.abs(netProfit) : 0;
-
-      // Update Dashboard & Modal Elements
-      document.getElementById('sr-total-revenue').innerText = `Rs. ${totalIncome.toFixed(2)}`;
-      document.getElementById('sr-total-cost').innerText = `Rs. ${totalCost.toFixed(2)}`;
-      document.getElementById('sr-net-profit').innerText = `Rs. ${Math.max(0, netProfit).toFixed(2)}`;
-      document.getElementById('sr-net-loss').innerText = `Rs. ${netLoss.toFixed(2)}`;
-
-      document.getElementById('sr-cat-rooms').innerText = `Rs. ${roomsTotal.toFixed(2)}`;
-      document.getElementById('sr-cat-food').innerText = `Rs. ${foodTotal.toFixed(2)}`;
-      document.getElementById('sr-cat-function').innerText = `Rs. ${functionTotal.toFixed(2)}`;
-      document.getElementById('sr-cat-stock').innerText = `Rs. ${stockCostTotal.toFixed(2)}`;
-
-      // Update Summary Cards on main sales panel
-      document.getElementById('report-total-income').innerText = `Rs. ${totalIncome.toFixed(2)}`;
-      document.getElementById('report-total-cost').innerText = `Rs. ${totalCost.toFixed(2)}`;
-      document.getElementById('report-net-profit').innerText = `Rs. ${Math.max(0, netProfit).toFixed(2)}`;
-      document.getElementById('report-net-loss').innerText = `Rs. ${netLoss.toFixed(2)}`;
-    }
-
-    // Update Stock Report UI Logic
-    function updateStockReport() {
-      const selectedDate = stockCalendarFilter.value;
-      const filteredStock = stockData.filter(item => 
-        matchesPeriodFilter(item.timestamp || item.date, selectedDate, activeStockPeriod)
-      );
-
-      let totalVal = 0;
-      const tbody = document.getElementById('stock-report-table-body');
-      tbody.innerHTML = '';
-
-      filteredStock.forEach(item => {
-        const price = parseFloat(item.price) || 0;
-        totalVal += price;
-
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${item.code || '-'}</td>
-          <td>${item.name || '-'}</td>
-          <td>Rs. ${price.toFixed(2)}</td>
-        `;
-        tbody.appendChild(row);
-      });
-
-      const count = filteredStock.length;
-      const avgPrice = count > 0 ? (totalVal / count) : 0;
-
-      document.getElementById('st-total-val').innerText = `Rs. ${totalVal.toFixed(2)}`;
-      document.getElementById('st-table-total-val').innerText = `Rs. ${totalVal.toFixed(2)}`;
-      document.getElementById('st-total-count').innerText = count;
-      document.getElementById('st-avg-price').innerText = `Rs. ${avgPrice.toFixed(2)}`;
-    }
-
-    // Metric Details Drilldown Handler
-    window.openMetricDetails = function(title, categoryFilter) {
-      const modal = document.getElementById('metric-details-modal');
-      const titleEl = document.getElementById('metric-details-title');
-      const tbody = document.getElementById('metric-details-tbody');
-      const totalEl = document.getElementById('metric-details-total');
-
-      titleEl.innerText = `${title} Details`;
-      tbody.innerHTML = '';
-      let sum = 0;
-
-      const filtered = salesData.filter(item => item.category === categoryFilter);
-      filtered.forEach(item => {
-        const price = parseFloat(item.price) || 0;
-        sum += price;
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${item.code || '-'}</td>
-          <td>${item.name || '-'}</td>
-          <td>${item.category || '-'}</td>
-          <td>${item.type || '-'}</td>
-          <td>Rs. ${price.toFixed(2)}</td>
-        `;
-        tbody.appendChild(row);
-      });
-
-      totalEl.innerText = `Rs. ${sum.toFixed(2)}`;
-      modal?.classList.remove('hidden');
-    };
-
-    // Auth Views Navigation
+    // Auth Views Switching
     const views = {
       signin: document.getElementById('signin-view'),
       signup: document.getElementById('signup-view'),
@@ -1693,12 +1265,7 @@
 
     function showView(viewName) {
       Object.keys(views).forEach(key => views[key].classList.add('hidden'));
-      const currentView = views[viewName];
-      currentView.classList.remove('hidden');
-
-      currentView.style.animation = 'none';
-      currentView.offsetHeight;
-      currentView.style.animation = null;
+      views[viewName].classList.remove('hidden');
 
       const navbar = document.getElementById('main-top-navbar');
       const authContainer = document.getElementById('auth-main-container');
@@ -1717,73 +1284,13 @@
     document.getElementById('top-nav-signup')?.addEventListener('click', () => showView('signup'));
     document.getElementById('top-nav-register')?.addEventListener('click', () => showView('signup'));
     document.getElementById('btn-forgot-to-signin')?.addEventListener('click', () => showView('signin'));
-    
-    document.getElementById('btn-power')?.addEventListener('click', () => {
-      location.reload();
-    });
+    document.getElementById('btn-power')?.addEventListener('click', () => location.reload());
 
-    // SIGN UP FLOW & OTP DISPATCH
-    document.getElementById('signup-form')?.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const name = document.getElementById('signup-name').value;
-      const email = document.getElementById('signup-email').value;
-      const pass = document.getElementById('signup-pass').value;
-
-      tempUserData = { mode: 'signup', name, email, pass };
-
-      try {
-        const res = await fetch(`${BACKEND_URL}/api/send-otp`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email })
-        });
-
-        if (!res.ok) {
-          const errData = await res.json();
-          throw new Error(errData.message || 'Failed to send OTP email.');
-        }
-
-        alert(`Verification OTP sent to ${email}. Please check your inbox.`);
-        showView('otp');
-      } catch (err) {
-        alert("Error: " + err.message);
-      }
-    });
-
-    // VERIFY OTP & CREATE USER
-    document.getElementById('otp-form')?.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const enteredOtp = document.getElementById('otp-input').value;
-
-      try {
-        const res = await fetch(`${BACKEND_URL}/api/verify-otp`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: tempUserData.email, otp: enteredOtp })
-        });
-
-        const data = await res.json();
-
-        if (res.ok && data.success) {
-          if (tempUserData.mode === 'signup') {
-            const userCred = await createUserWithEmailAndPassword(auth, tempUserData.email, tempUserData.pass);
-            await updateProfile(userCred.user, { displayName: tempUserData.name });
-            alert("Account created and verified successfully!");
-          }
-        } else {
-          alert(data.message || "Invalid OTP code.");
-        }
-      } catch (err) {
-        alert("Verification error: " + err.message);
-      }
-    });
-
-    // SIGN IN
+    // Auth Actions
     document.getElementById('signin-form')?.addEventListener('submit', async (e) => {
       e.preventDefault();
       const email = document.getElementById('signin-email').value;
       const pass = document.getElementById('signin-pass').value;
-
       try {
         await signInWithEmailAndPassword(auth, email, pass);
       } catch (err) {
@@ -1791,35 +1298,23 @@
       }
     });
 
-    // FORGOT PASSWORD
-    document.getElementById('forgot-form')?.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const email = document.getElementById('forgot-email').value;
-      try {
-        await sendPasswordResetEmail(auth, email);
-        alert("Password reset email sent! Check your inbox.");
-        showView('signin');
-      } catch (err) {
-        alert("Error sending reset email: " + err.message);
-      }
-    });
+    document.getElementById('btn-logout')?.addEventListener('click', () => signOut(auth));
 
-    // LOGOUT
-    document.getElementById('btn-logout')?.addEventListener('click', () => {
-      signOut(auth);
-    });
-
-    // AUTH STATE LISTENER
     onAuthStateChanged(auth, (user) => {
       if (user) {
         currentUser = user;
-        document.getElementById('user-display-name').innerText = user.displayName || user.email.split('@')[0];
+        const nameDisplay = document.getElementById('user-display-name');
+        const emailDisplay = document.getElementById('user-display-email');
+        if (nameDisplay) nameDisplay.innerText = user.displayName || user.email.split('@')[0];
+        if (emailDisplay) emailDisplay.innerText = user.email;
         showView('dashboard');
       } else {
         currentUser = null;
         showView('signin');
       }
     });
+
+    renderStockTable();
   </script>
 </body>
 </html>
