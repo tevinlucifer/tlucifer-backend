@@ -55,11 +55,6 @@
 
     body {
       background-color: var(--bg-color); 
-      background-image: linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)), url('./Background.jpg');
-      background-position: center center;
-      background-repeat: no-repeat;
-      background-attachment: fixed;
-      background-size: cover;
       color: var(--text-main);
       min-height: 100vh;
       display: flex;
@@ -116,7 +111,7 @@
     .power-btn {
       background: transparent;
       border: none;
-      color: #ffffff;
+      color: var(--text-main);
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -137,7 +132,7 @@
     }
 
     .top-link {
-      color: #fff;
+      color: var(--text-main);
       text-decoration: none;
       font-size: 15px;
       font-weight: 500;
@@ -152,8 +147,8 @@
     }
 
     .btn-register-top {
-      background: #ffffff;
-      color: #000000;
+      background: var(--primary-brand);
+      color: #ffffff;
       border: none;
       padding: 10px 28px;
       border-radius: 25px;
@@ -165,7 +160,7 @@
     }
 
     .btn-register-top:hover {
-      background: #e2e8f0;
+      background: var(--primary-hover);
       transform: translateY(-1px);
     }
 
@@ -197,9 +192,8 @@
     .auth-header h1 {
       font-size: 34px;
       font-weight: 800;
-      color: #ffffff;
+      color: var(--text-main);
       line-height: 1.2;
-      text-shadow: 0 4px 12px rgba(0,0,0,0.7);
     }
 
     .auth-card-right .input-group {
@@ -209,13 +203,12 @@
     .auth-card-right input {
       width: 100%;
       padding: 14px 20px;
-      background: #ffffff;
-      border: 1px solid transparent;
+      background: var(--input-bg);
+      border: 1px solid var(--border-subtle);
       border-radius: 8px;
       font-size: 14px;
-      color: #111827;
+      color: var(--input-text);
       outline: none;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
       transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
 
@@ -231,8 +224,8 @@
     .btn-signin-full {
       width: 100%;
       padding: 14px;
-      background: #ffffff;
-      color: #000000;
+      background: var(--primary-brand);
+      color: #ffffff;
       border: none;
       border-radius: 8px;
       font-weight: 700;
@@ -240,12 +233,12 @@
       cursor: pointer;
       margin-top: 8px;
       margin-bottom: 24px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      box-shadow: 0 4px 12px rgba(217,83,30,0.3);
       transition: transform 0.2s ease, background-color 0.2s ease;
     }
 
     .btn-signin-full:hover {
-      background: #e2e8f0;
+      background: var(--primary-hover);
       transform: translateY(-1px);
     }
 
@@ -259,37 +252,36 @@
     .btn-social {
       flex: 1;
       padding: 10px;
-      background: #ffffff;
-      border: none;
+      background: var(--widget-bg);
+      border: 1px solid var(--border-subtle);
       border-radius: 8px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
       transition: transform 0.2s ease, background-color 0.2s ease;
     }
 
     .btn-social:hover {
-      background: #f1f5f9;
+      background: var(--input-bg);
       transform: translateY(-2px);
     }
 
     .auth-toggle-text {
       font-size: 14px;
-      color: #ffffff;
+      color: var(--text-muted);
       font-weight: 400;
-      text-shadow: 0 2px 6px rgba(0,0,0,0.8);
     }
 
     .auth-toggle-text a {
-      color: #ffffff;
+      color: var(--primary-brand);
       font-weight: 700;
       text-decoration: underline;
       cursor: pointer;
     }
 
-    /* DASHBOARD LAYOUT (POST LOG-IN RE-THEMED TO MATCH LAST IMAGE) */
+    /* DASHBOARD LAYOUT */
     .app-container {
       display: flex;
       width: 100%;
@@ -324,13 +316,6 @@
       padding: 0 12px 24px 12px;
       border-bottom: 1px solid var(--border-subtle);
       margin-bottom: 16px;
-    }
-
-    .sidebar-brand-img {
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
-      object-fit: cover;
     }
 
     .sidebar-nav {
@@ -422,28 +407,6 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 24px;
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .nav-btn {
-      padding: 8px 18px;
-      border-radius: 8px;
-      border: none;
-      background: transparent;
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text-muted);
-      cursor: pointer;
-    }
-
-    .nav-btn.active {
-      background: var(--active-item-bg);
-      color: var(--primary-brand);
     }
 
     .user-profile {
@@ -856,7 +819,7 @@
           <svg viewBox="0 0 24 24" width="18" height="18"><path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.6l3.1-3.1C17.3 1.7 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.3 9 5 12 5z"/><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.8z"/><path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.3s.2-1.6.4-2.3L1.9 7.3C.7 9.7 0 10.8 0 12s.7 2.3 1.9 4.7l3.7-1.9z"/><path fill="#34A853" d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2.3-6.4-5.2L1.9 16C3.7 19.7 7.5 23 12 23z"/></svg>
         </button>
         <button class="btn-social" type="button" aria-label="Sign in with Apple">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="#000"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.34c.66-.8 1.11-1.92.99-3.04-.96.04-2.12.64-2.8 1.44-.61.71-1.14 1.86-1 2.96 1.08.08 2.16-.56 2.81-1.36z"/></svg>
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.34c.66-.8 1.11-1.92.99-3.04-.96.04-2.12.64-2.8 1.44-.61.71-1.14 1.86-1 2.96 1.08.08 2.16-.56 2.81-1.36z"/></svg>
         </button>
         <button class="btn-social" type="button" aria-label="Sign in with Facebook">
           <svg viewBox="0 0 24 24" width="18" height="18" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
@@ -925,12 +888,12 @@
   <div id="dashboard-view" class="app-container hidden animated-view">
     <aside class="sidebar">
       <div class="sidebar-brand">
-        <span style="color: var(--primary-brand); font-size:24px;">⊞</span> Horizon
+        <span style="color: var(--primary-brand); font-size:24px;">⊞</span> TD
       </div>
       <nav class="sidebar-nav">
         <a class="nav-item" data-panel="overview"><span class="nav-item-icon">🏠</span> Home</a>
-        <a class="nav-item" data-panel="stock"><span class="nav-item-icon">📦</span> Inventory</a>
-        <a class="nav-item active" data-panel="sales"><span class="nav-item-icon">📊</span> Sales</a>
+        <a class="nav-item active" data-panel="stock"><span class="nav-item-icon">📦</span> Inventory</a>
+        <a class="nav-item" data-panel="sales"><span class="nav-item-icon">📊</span> Sales</a>
         <a class="nav-item" data-panel="accounting"><span class="nav-item-icon">💲</span> Finance</a>
         <a class="nav-item" data-panel="workforce"><span class="nav-item-icon">👤</span> HR</a>
         <a class="nav-item" data-panel="settings"><span class="nav-item-icon">⚙️</span> Admin</a>
@@ -974,8 +937,8 @@
       <section class="dashboard-header">
         <div class="header-title">
           <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
-            <span style="font-size:20px;">📊</span>
-            <h1 id="page-title" style="font-size:24px;">Sales management</h1>
+            <span style="font-size:20px;">📦</span>
+            <h1 id="page-title" style="font-size:24px;">Stock management</h1>
           </div>
           <div class="tab-group" style="margin-bottom:0; margin-top:12px;">
             <button class="tab-btn active" style="padding:6px 14px; font-size:13px;">📦 Products</button>
@@ -987,11 +950,11 @@
       <div id="panel-overview" class="panel-content hidden animated-view">
         <div class="widget-box">
           <div class="widget-box-title">System Overview</div>
-          <p>Welcome to Horizon. Select an action module from the left menu to manage business records.</p>
+          <p>Welcome to TD Management System. Select an action module from the left menu to manage business records.</p>
         </div>
       </div>
 
-      <div id="panel-sales" class="panel-content animated-view">
+      <div id="panel-sales" class="panel-content hidden animated-view">
         <div style="display:flex; gap:12px; margin-bottom:16px;">
           <input type="text" placeholder="🔍 Search products" style="flex:1; padding:10px 14px; background:var(--input-bg); border:1px solid var(--border-subtle); border-radius:8px; outline:none;" />
           <select style="padding:10px 14px; background:var(--input-bg); border:1px solid var(--border-subtle); border-radius:8px; outline:none; font-weight:600;">
@@ -1039,7 +1002,7 @@
         </div>
       </div>
 
-      <div id="panel-stock" class="panel-content hidden animated-view">
+      <div id="panel-stock" class="panel-content animated-view">
         <div class="widget-box">
           <div class="widget-header-row">
             <div class="widget-box-title">Stock Management</div>
