@@ -7,7 +7,7 @@
   <link rel="icon" type="image/png" href="./Company%20Logo.png">
   <style>
     :root {
-      /* Theme palette matching the last image (Horizon / Warm Amber theme) */
+      /* Theme palette matching the Warm Amber theme */
       --bg-color: #fcfbfa;
       --bg-overlay: rgba(255, 255, 255, 0.6);
       --card-bg: #ffffff;
@@ -60,6 +60,15 @@
       display: flex;
       flex-direction: column;
       overflow-x: hidden;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    }
+
+    /* Restored Background Image class applied during Login/Auth mode */
+    body.auth-mode {
+      background-image: url('./Background.jpg');
     }
 
     .hidden {
@@ -182,6 +191,16 @@
       flex-direction: column;
       justify-content: center;
       text-align: center;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 32px 24px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    [data-theme="dark"] .auth-card-right {
+      background: rgba(24, 25, 32, 0.85);
     }
 
     .auth-header {
@@ -772,7 +791,7 @@
     }
   </style>
 </head>
-<body>
+<body class="auth-mode">
 
   <!-- TOP NAVBAR -->
   <header class="top-navbar" id="main-top-navbar">
@@ -1653,9 +1672,11 @@
       if (viewName === 'dashboard') {
         navbar.classList.add('hidden');
         authContainer.classList.add('hidden');
+        document.body.classList.remove('auth-mode');
       } else {
         navbar.classList.remove('hidden');
         authContainer.classList.remove('hidden');
+        document.body.classList.add('auth-mode');
       }
     }
 
