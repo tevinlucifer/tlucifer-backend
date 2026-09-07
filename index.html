@@ -991,7 +991,7 @@
 
     <main class="dashboard-wrapper">
       <header class="navbar">
-        <div class="user-profile" style="width:100%; justify-content:space-between;">
+        <div class="user-profile" style="width:100%; justify-space-between;">
           <div style="display:flex; align-items:center; gap:12px;">
             <button id="theme-toggle" class="theme-toggle-btn" title="Toggle Theme">☀️</button>
             <!-- Interactive Search Bar -->
@@ -1017,9 +1017,9 @@
             <span style="font-size:20px;">📦</span>
             <h1 id="page-title" style="font-size:24px;">Stock management</h1>
           </div>
-          <div class="tab-group" style="margin-bottom:0; margin-top:12px;">
-            <button class="tab-btn active" style="padding:6px 14px; font-size:13px;">📦 Products</button>
-            <button class="tab-btn" style="padding:6px 14px; font-size:13px;">📊 Dashboard</button>
+          <div class="tab-group" style="margin-bottom:0; margin-top:12px;" id="stock-subtabs">
+            <button class="tab-btn active" id="tab-btn-products" style="padding:6px 14px; font-size:13px;">📦 Products</button>
+            <button class="tab-btn" id="tab-btn-dashboard" style="padding:6px 14px; font-size:13px;">📊 Dashboard</button>
           </div>
         </div>
       </section>
@@ -1080,7 +1080,8 @@
       </div>
 
       <div id="panel-stock" class="panel-content animated-view">
-        <div class="widget-box">
+        <!-- Stock Products View -->
+        <div id="stock-products-subview" class="widget-box">
           <div class="widget-header-row">
             <div class="widget-box-title">Stock Management</div>
             <button class="btn-secondary" id="btn-open-stock-report">📄 View Stock Reports</button>
@@ -1105,6 +1106,27 @@
               <tbody id="stock-table-body">
               </tbody>
             </table>
+          </div>
+        </div>
+
+        <!-- Stock Dashboard View -->
+        <div id="stock-dashboard-subview" class="widget-box hidden animated-view">
+          <div class="widget-header-row">
+            <div class="widget-box-title">Stock Overview & Analytics</div>
+          </div>
+          <div class="modal-grid" style="margin-top: 10px;">
+            <div class="stat-card">
+              <div class="label">Total Stock Valuation</div>
+              <div class="value" id="stock-dash-total-val" style="color: #10b981;">$ 0.00</div>
+            </div>
+            <div class="stat-card">
+              <div class="label">Total Item Types</div>
+              <div class="value" id="stock-dash-total-items">0</div>
+            </div>
+            <div class="stat-card">
+              <div class="label">Average Unit Price</div>
+              <div class="value" id="stock-dash-avg-price">$ 0.00</div>
+            </div>
           </div>
         </div>
       </div>
@@ -1633,6 +1655,8 @@
     // Navigation Switcher
     const navItems = document.querySelectorAll('.sidebar-nav .nav-item');
     const panels = document.querySelectorAll('.panel-content');
+    const stockSubtabs = document.getElementById('stock-subtabs');
+
     navItems.forEach(item => {
       item.addEventListener('click', () => {
         navItems.forEach(nav => nav.classList.remove('active'));
@@ -1642,6 +1666,13 @@
         const panelName = item.innerText.trim();
 
         document.getElementById('page-title').innerText = `${panelName} management`;
+
+        // Toggle sub-tabs visibility based on current panel
+        if (panelKey === 'stock') {
+          stockSubtabs?.classList.remove('hidden');
+        } else {
+          stockSubtabs?.classList.add('hidden');
+        }
 
         panels.forEach(p => p.classList.add('hidden'));
 
@@ -1665,6 +1696,44 @@
         }
       });
     });
+
+    // Sub-tab Navigation (Products vs Dashboard in Stock View)
+    const btnTabProducts = document.getElementById('tab-btn-products');
+    const btnTabDashboard = document.getElementById('tab-btn-dashboard');
+    const stockProductsSubview = document.getElementById('stock-products-subview');
+    const stockDashboardSubview = document.getElementById('stock-dashboard-subview');
+
+    btnTabProducts?.addEventListener('click', () => {
+      btnTabProducts.classList.add('active');
+      btnTabDashboard.classList.remove('active');
+      stockProductsSubview?.classList.remove('hidden');
+      stockDashboardSubview?.classList.add('hidden');
+    });
+
+    btnTabDashboard?.addEventListener('click', () => {
+      btnTabDashboard.classList.add('active');
+      btnTabProducts.classList.remove('active');
+      stockProductsSubview?.classList.add('hidden');
+      stockDashboardSubview?.classList.remove('hidden');
+      updateStockDashboardMetrics();
+    });
+
+    function updateStockDashboardMetrics() {
+      let totalVal = 0;
+      stockData.forEach(item => {
+        totalVal += parseFloat(item.price) || 0;
+      });
+      const count = stockData.length;
+      const avgPrice = count > 0 ? (totalVal / count) : 0;
+
+      const valEl = document.getElementById('stock-dash-total-val');
+      const countEl = document.getElementById('stock-dash-total-items');
+      const avgEl = document.getElementById('stock-dash-avg-price');
+
+      if (valEl) valEl.innerText = `$ ${totalVal.toFixed(2)}`;
+      if (countEl) countEl.innerText = count;
+      if (avgEl) avgEl.innerText = `$ ${avgPrice.toFixed(2)}`;
+    }
 
     // Theme Toggle Handler
     const themeBtn = document.getElementById('theme-toggle');
@@ -1817,12 +1886,14 @@
           if (idx > -1) stockData.splice(idx, 1);
           tr.remove();
           updateStockReport();
+          updateStockDashboardMetrics();
         });
 
         tbody.appendChild(tr);
       }
 
       updateStockReport();
+      updateStockDashboardMetrics();
       addStockModal?.classList.add('hidden');
     });
 
