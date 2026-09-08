@@ -20,12 +20,11 @@ app.use(express.static(__dirname));
 const otpStore = new Map();
 
 // Configure Nodemailer Transporter
-// Use environment variables for production security (e.g. Gmail App Password, SendGrid, etc.)
 const transporter = nodemailer.createTransport({
   service: process.env.EMAIL_SERVICE || 'gmail',
   auth: {
-    user: process.env.EMAIL_USER, // e.g. "your-email@gmail.com"
-    pass: process.env.EMAIL_PASS, // e.g. "your-app-password"
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
   },
 });
 
@@ -37,17 +36,13 @@ app.post('/api/send-otp', async (req, res) => {
       return res.status(400).json({ success: false, message: 'Email address is required.' });
     }
 
-    // Generate a secure 6-digit OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     const expiresAt = Date.now() + 5 * 60 * 1000; // 5 minutes expiration
 
-    // Store OTP in-memory
     otpStore.set(email.toLowerCase(), { otp, expiresAt });
 
-    // Console logging for local debugging
     console.log(`[OTP DEBUG] Sent to ${email}: ${otp}`);
 
-    // Send Mail via Nodemailer (if credentials are set)
     if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
       const mailOptions = {
         from: `"TD System" <${process.env.EMAIL_USER}>`,
@@ -89,15 +84,13 @@ app.post('/api/verify-otp', async (req, res) => {
       return res.status(400).json({ success: false, message: 'No OTP requested or code expired.' });
     }
 
-    // Check expiration
     if (Date.now() > record.expiresAt) {
       otpStore.delete(normalizedEmail);
       return res.status(400).json({ success: false, message: 'OTP code has expired. Please request a new one.' });
     }
 
-    // Validate OTP matching
     if (record.otp === otp.trim()) {
-      otpStore.delete(normalizedEmail); // Clear single-use OTP upon successful verification
+      otpStore.delete(normalizedEmail);
       return res.status(200).json({ success: true, message: 'OTP verified successfully.' });
     }
 
@@ -108,9 +101,9 @@ app.post('/api/verify-otp', async (req, res) => {
   }
 });
 
-// Fallback Route for Single Page Application
+// Fallback Route for Single Page Application updated to index_6.html
 app.get(/(.*)/, (req, res) => {
-  res.sendFile(path.join(__dirname, 'index_5.html'));
+  res.sendFile(path.join(__dirname, 'index_6.html'));
 });
 
 // Start Server
