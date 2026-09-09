@@ -7,7 +7,7 @@
   <link rel="icon" type="image/png" href="./Company%20Logo.png">
   <style>
     :root {
-      /* Theme palette matching the Warm Amber theme */
+      /* Theme palette matching Warm Amber */
       --bg-color: #fcfbfa;
       --bg-overlay: rgba(255, 255, 255, 0.6);
       --card-bg: #ffffff;
@@ -66,7 +66,7 @@
       background-attachment: fixed;
     }
 
-    /* Background Image class applied during Login/Auth mode */
+    /* Auth Background Mode */
     body.auth-mode {
       background-image: url('./Background.jpg');
     }
@@ -140,7 +140,6 @@
       gap: 25px;
     }
 
-    /* Crisp White Navigation Links */
     .top-link {
       color: #ffffff !important;
       text-decoration: none;
@@ -157,7 +156,6 @@
       text-decoration: underline;
     }
 
-    /* Styled Orange Pill Button on Sign Up */
     .btn-signup-top {
       background: var(--primary-brand);
       color: #ffffff !important;
@@ -420,7 +418,6 @@
       text-align: center;
     }
 
-    /* Sidebar Footer User Info */
     .sidebar-footer {
       margin-top: auto;
       padding-top: 16px;
@@ -506,7 +503,6 @@
       flex-shrink: 0;
     }
 
-    /* Dynamic Search Container Controls */
     .search-container {
       position: relative;
       display: flex;
@@ -795,7 +791,6 @@
       font-weight: 700;
     }
 
-    /* CUSTOM STOCK MODAL SPECIFIC STYLING */
     .modal-card-small {
       max-width: 420px;
     }
@@ -854,7 +849,6 @@
       <a href="#" class="top-link" data-i18n="navFeedback">Feedback</a>
     </div>
     <div class="nav-right">
-      <!-- LANGUAGE DROPDOWN TOGGLE -->
       <div class="lang-dropdown-container">
         <a href="#" class="top-link" id="current-lang-btn">English ▾</a>
         <div class="lang-dropdown-menu hidden" id="lang-menu">
@@ -867,8 +861,6 @@
           <div class="lang-option" data-lang="mr">मराठी (Marathi)</div>
         </div>
       </div>
-      
-      <!-- SIGN UP BUTTON WITH ORANGE PILL STYLING -->
       <button id="top-nav-signup" class="btn-signup-top" data-i18n="navSignUp">Sign up</button>
     </div>
   </header>
@@ -890,7 +882,6 @@
         <button type="submit" id="btn-signin-submit" class="btn-signin-full" data-i18n="btnSignIn">Sign in</button>
       </form>
 
-      <!-- SOCIAL LOGINS -->
       <div class="social-buttons">
         <button class="btn-social" type="button" aria-label="Sign in with Google">
           <svg viewBox="0 0 24 24" width="18" height="18"><path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.6l3.1-3.1C17.3 1.7 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.3 9 5 12 5z"/><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.8z"/><path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.3s.2-1.6.4-2.3L1.9 7.3C.7 9.7 0 10.8 0 12s.7 2.3 1.9 4.7l3.7-1.9z"/><path fill="#34A853" d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2.3-6.4-5.2L1.9 16C3.7 19.7 7.5 23 12 23z"/></svg>
@@ -983,18 +974,17 @@
       <div class="sidebar-footer">
         <img src="./Company%20Logo.png" alt="Profile" class="user-avatar-img" onerror="this.src='logo.png'">
         <div class="sidebar-user-details">
-          <span class="sidebar-user-name" id="user-sidebar-name">Tevin Gampalage</span>
-          <span class="sidebar-user-email" id="user-sidebar-email">tevingampalage29@...</span>
+          <span class="sidebar-user-name" id="user-sidebar-name">User</span>
+          <span class="sidebar-user-email" id="user-sidebar-email">user@example.com</span>
         </div>
       </div>
     </aside>
 
     <main class="dashboard-wrapper">
       <header class="navbar">
-        <div class="user-profile" style="width:100%; justify-space-between;">
+        <div class="user-profile" style="width:100%; justify-content: space-between;">
           <div style="display:flex; align-items:center; gap:12px;">
             <button id="theme-toggle" class="theme-toggle-btn" title="Toggle Theme">☀️</button>
-            <!-- Interactive Search Bar -->
             <div class="search-container" id="search-container">
               <input type="text" id="global-search-input" class="search-input" placeholder="Search feature..." data-i18n-placeholder="phSearchFeature" />
               <div class="icon-circle" id="btn-search-toggle" title="Search">🔍</div>
@@ -1004,7 +994,7 @@
           <div style="display:flex; align-items:center; gap:16px;">
             <div class="user-info">
               <span data-i18n="helloGreeting">Hello!</span>
-              <strong id="user-display-name">Tevin Gampalage</strong>
+              <strong id="user-display-name">User</strong>
             </div>
             <button class="btn-logout" id="btn-logout" data-i18n="btnLogout">Logout</button>
           </div>
@@ -1080,7 +1070,6 @@
       </div>
 
       <div id="panel-stock" class="panel-content animated-view">
-        <!-- Stock Products View -->
         <div id="stock-products-subview" class="widget-box">
           <div class="widget-header-row">
             <div class="widget-box-title">Stock Management</div>
@@ -1109,7 +1098,6 @@
           </div>
         </div>
 
-        <!-- Stock Dashboard View -->
         <div id="stock-dashboard-subview" class="widget-box hidden animated-view">
           <div class="widget-header-row">
             <div class="widget-box-title">Stock Overview & Analytics</div>
@@ -1141,7 +1129,7 @@
     </main>
   </div>
 
-  <!-- CUSTOM ADD STOCK MODAL -->
+  <!-- MODALS -->
   <div id="add-stock-modal" class="modal-overlay hidden">
     <div class="modal-card modal-card-small">
       <div class="modal-header">
@@ -1162,7 +1150,6 @@
     </div>
   </div>
 
-  <!-- SALES REPORT MODAL -->
   <div id="sales-report-modal" class="modal-overlay hidden">
     <div class="modal-card">
       <div class="modal-header">
@@ -1220,7 +1207,6 @@
     </div>
   </div>
 
-  <!-- STOCK REPORT MODAL -->
   <div id="stock-report-modal" class="modal-overlay hidden">
     <div class="modal-card">
       <div class="modal-header">
@@ -1274,7 +1260,6 @@
     </div>
   </div>
 
-  <!-- METRIC DETAILS DRILLDOWN MODAL -->
   <div id="metric-details-modal" class="modal-overlay hidden">
     <div class="modal-card" style="max-width: 600px;">
       <div class="modal-header">
@@ -1332,263 +1317,72 @@
     const auth = getAuth(app);
     const BACKEND_URL = "https://tlucifer-backend.onrender.com";
 
-    // INTERNATIONALIZATION (i18n) DICTIONARY
     const translations = {
       en: {
-        navHome: "Home",
-        navAbout: "About",
-        navService: "Service",
-        navContact: "Contact",
-        navFeedback: "Feedback",
-        navSignUp: "Sign up",
-        welcomeBackHeading: "Hello !<br>Welcome Back",
-        createAccountHeading: "Create Account",
-        otpHeading: "Enter OTP",
-        resetPassHeading: "Reset Password",
-        phEnterEmail: "Enter Email",
-        phPassword: "Password",
-        phFullName: "Full Name",
-        phEnterOtp: "Enter OTP",
-        phRegisteredEmail: "Registered Email",
-        btnSignIn: "Sign in",
-        btnContinueVerification: "Continue to Verification",
-        btnVerifyProceed: "Verify & Proceed",
-        btnSendResetLink: "Send Reset Link",
-        noAccountText: "Don't have an account ?",
-        createAccountLink: "Create Account",
-        hasAccountText: "Already have an account ?",
-        signInLink: "Sign In",
-        backToSignIn: "Back to Sign In",
-        dashHome: "Home",
-        dashInventory: "Inventory",
-        dashSales: "Sales",
-        dashFinance: "Finance",
-        dashHR: "HR",
-        dashAdmin: "Admin",
-        btnAddExpense: "+ Add an expense",
-        helloGreeting: "Hello!",
-        btnLogout: "Logout",
-        phSearchFeature: "Search feature..."
+        navHome: "Home", navAbout: "About", navService: "Service", navContact: "Contact", navFeedback: "Feedback", navSignUp: "Sign up",
+        welcomeBackHeading: "Hello !<br>Welcome Back", createAccountHeading: "Create Account", otpHeading: "Enter OTP", resetPassHeading: "Reset Password",
+        phEnterEmail: "Enter Email", phPassword: "Password", phFullName: "Full Name", phEnterOtp: "Enter OTP", phRegisteredEmail: "Registered Email",
+        btnSignIn: "Sign in", btnContinueVerification: "Continue to Verification", btnVerifyProceed: "Verify & Proceed", btnSendResetLink: "Send Reset Link",
+        noAccountText: "Don't have an account ?", createAccountLink: "Create Account", hasAccountText: "Already have an account ?", signInLink: "Sign In",
+        backToSignIn: "Back to Sign In", dashHome: "Home", dashInventory: "Inventory", dashSales: "Sales", dashFinance: "Finance", dashHR: "HR",
+        dashAdmin: "Admin", btnAddExpense: "+ Add an expense", helloGreeting: "Hello!", btnLogout: "Logout", phSearchFeature: "Search feature..."
       },
       ru: {
-        navHome: "Главная",
-        navAbout: "О нас",
-        navService: "Услуги",
-        navContact: "Контакты",
-        navFeedback: "Отзывы",
-        navSignUp: "Регистрация",
-        welcomeBackHeading: "Привет !<br>С возвращением",
-        createAccountHeading: "Создать аккаунт",
-        otpHeading: "Введите OTP",
-        resetPassHeading: "Сброс пароля",
-        phEnterEmail: "Введите Email",
-        phPassword: "Пароль",
-        phFullName: "Полное имя",
-        phEnterOtp: "Введите OTP",
-        phRegisteredEmail: "Зарегистрированный Email",
-        btnSignIn: "Войти",
-        btnContinueVerification: "Продолжить проверку",
-        btnVerifyProceed: "Подтвердить и продолжить",
-        btnSendResetLink: "Отправить ссылку",
-        noAccountText: "Нет аккаунта ?",
-        createAccountLink: "Создать аккаунт",
-        hasAccountText: "Уже есть аккаунт ?",
-        signInLink: "Войти",
-        backToSignIn: "Назад к входу",
-        dashHome: "Главная",
-        dashInventory: "Инвентарь",
-        dashSales: "Продажи",
-        dashFinance: "Финансы",
-        dashHR: "Кадры",
-        dashAdmin: "Админ",
-        btnAddExpense: "+ Добавить расход",
-        helloGreeting: "Привет!",
-        btnLogout: "Выйти",
-        phSearchFeature: "Поиск..."
+        navHome: "Главная", navAbout: "О нас", navService: "Услуги", navContact: "Контакты", navFeedback: "Отзывы", navSignUp: "Регистрация",
+        welcomeBackHeading: "Привет !<br>С возвращением", createAccountHeading: "Создать аккаунт", otpHeading: "Введите OTP", resetPassHeading: "Сброс пароля",
+        phEnterEmail: "Введите Email", phPassword: "Пароль", phFullName: "Полное имя", phEnterOtp: "Введите OTP", phRegisteredEmail: "Зарегистрированный Email",
+        btnSignIn: "Войти", btnContinueVerification: "Продолжить проверку", btnVerifyProceed: "Подтвердить и продолжить", btnSendResetLink: "Отправить ссылку",
+        noAccountText: "Нет аккаунта ?", createAccountLink: "Создать аккаунт", hasAccountText: "Уже есть аккаунт ?", signInLink: "Войти",
+        backToSignIn: "Назад к входу", dashHome: "Главная", dashInventory: "Инвентарь", dashSales: "Продажи", dashFinance: "Финансы", dashHR: "Кадры",
+        dashAdmin: "Админ", btnAddExpense: "+ Добавить расход", helloGreeting: "Привет!", btnLogout: "Выйти", phSearchFeature: "Поиск..."
       },
       ta: {
-        navHome: "முகப்பு",
-        navAbout: "பற்றி",
-        navService: "சேவை",
-        navContact: "தொடர்பு",
-        navFeedback: "கருத்து",
-        navSignUp: "பதிவு செய்க",
-        welcomeBackHeading: "வணக்கம் !<br>மீண்டும் வருக",
-        createAccountHeading: "கணக்கை உருவாக்கு",
-        otpHeading: "OTP ஐ உள்ளிடவும்",
-        resetPassHeading: "கடவுச்சொல்லை மாற்றுக",
-        phEnterEmail: "மின்னஞ்சலை உள்ளிடவும்",
-        phPassword: "கடவுச்சொல்",
-        phFullName: "முழு பெயர்",
-        phEnterOtp: "OTP உள்ளிடவும்",
-        phRegisteredEmail: "பதிவுசெய்யப்பட்ட மின்னஞ்சல்",
-        btnSignIn: "உள்நுழைக",
-        btnContinueVerification: "சரிபார்ப்பிற்கு தொடரவும்",
-        btnVerifyProceed: "சரிபார்த்து தொடரவும்",
-        btnSendResetLink: "இணைப்பை அனுப்பு",
-        noAccountText: "கணக்கு இல்லையா ?",
-        createAccountLink: "கணக்கை உருவாக்கு",
-        hasAccountText: "ஏற்கனவே கணக்கு உள்ளதா ?",
-        signInLink: "உள்நுழைக",
-        backToSignIn: "மீண்டும் உள்நுழைவுக்கு",
-        dashHome: "முகப்பு",
-        dashInventory: "சரக்கு",
-        dashSales: "விற்பனை",
-        dashFinance: "நிதி",
-        dashHR: "மனிதவளம்",
-        dashAdmin: "நிர்வாகம்",
-        btnAddExpense: "+ செலவைச் சேர்",
-        helloGreeting: "வணக்கம்!",
-        btnLogout: "வெளியேறு",
-        phSearchFeature: "தேடு..."
+        navHome: "முகப்பு", navAbout: "பற்றி", navService: "சேவை", navContact: "தொடர்பு", navFeedback: "கருத்து", navSignUp: "பதிவு செய்க",
+        welcomeBackHeading: "வணக்கம் !<br>மீண்டும் வருக", createAccountHeading: "கணக்கை உருவாக்கு", otpHeading: "OTP ஐ உள்ளிடவும்", resetPassHeading: "கடவுச்சொல்லை மாற்றுக",
+        phEnterEmail: "மின்னஞ்சலை உள்ளிடவும்", phPassword: "கடவுச்சொல்", phFullName: "முழு பெயர்", phEnterOtp: "OTP உள்ளிடவும்", phRegisteredEmail: "பதிவுசெய்யப்பட்ட மின்னஞ்சல்",
+        btnSignIn: "உள்நுழைக", btnContinueVerification: "சரிபார்ப்பிற்கு தொடரவும்", btnVerifyProceed: "சரிபார்த்து தொடரவும்", btnSendResetLink: "இணைப்பை அனுப்பு",
+        noAccountText: "கணக்கு இல்லையா ?", createAccountLink: "கணக்கை உருவாக்கு", hasAccountText: "ஏற்கனவே கணக்கு உள்ளதா ?", signInLink: "உள்நுழைக",
+        backToSignIn: "மீண்டும் உள்நுழைவுக்கு", dashHome: "முகப்பு", dashInventory: "சரக்கு", dashSales: "விற்பனை", dashFinance: "நிதி", dashHR: "மனிதவளம்",
+        dashAdmin: "நிர்வாகம்", btnAddExpense: "+ செலவைச் சேர்", helloGreeting: "வணக்கம்!", btnLogout: "வெளியேறு", phSearchFeature: "தேடு..."
       },
       hi: {
-        navHome: "होम",
-        navAbout: "हमारे बारे में",
-        navService: "सेवाएं",
-        navContact: "संपर्क करें",
-        navFeedback: "प्रतिक्रिया",
-        navSignUp: "साइन अप करें",
-        welcomeBackHeading: "नमस्ते !<br>वापसी पर स्वागत है",
-        createAccountHeading: "खाता बनाएं",
-        otpHeading: "ओटीपी दर्ज करें",
-        resetPassHeading: "पासवर्ड रीसेट करें",
-        phEnterEmail: "ईमेल दर्ज करें",
-        phPassword: "पासवर्ड",
-        phFullName: "पूरा नाम",
-        phEnterOtp: "ओटीपी दर्ज करें",
-        phRegisteredEmail: "पंजीकृत ईमेल",
-        btnSignIn: "साइन इन करें",
-        btnContinueVerification: "सत्यापन के लिए आगे बढ़ें",
-        btnVerifyProceed: "सत्यापित करें और आगे बढ़ें",
-        btnSendResetLink: "रीसेट लिंक भेजें",
-        noAccountText: "क्या आपके पास खाता नहीं है ?",
-        createAccountLink: "खाता बनाएं",
-        hasAccountText: "क्या आपके पास पहले से खाता है ?",
-        signInLink: "साइन इन करें",
-        backToSignIn: "साइन इन पर वापस जाएं",
-        dashHome: "होम",
-        dashInventory: "इन्वेंटरी",
-        dashSales: "बिक्री",
-        dashFinance: "वित्त",
-        dashHR: "एचआर",
-        dashAdmin: "एडमिन",
-        btnAddExpense: "+ व्यय जोड़ें",
-        helloGreeting: "नमस्ते!",
-        btnLogout: "लॉग आउट",
-        phSearchFeature: "खोजें..."
+        navHome: "होम", navAbout: "हमारे बारे में", navService: "सेवाएं", navContact: "संपर्क करें", navFeedback: "प्रतिक्रिया", navSignUp: "साइन अप करें",
+        welcomeBackHeading: "नमस्ते !<br>वापसी पर स्वागत है", createAccountHeading: "खाता बनाएं", otpHeading: "ओटीपी दर्ज करें", resetPassHeading: "पासवर्ड रीसेट करें",
+        phEnterEmail: "ईमेल दर्ज करें", phPassword: "पासवर्ड", phFullName: "पूरा नाम", phEnterOtp: "ओटीपी दर्ज करें", phRegisteredEmail: "पंजीकृत ईमेल",
+        btnSignIn: "साइन इन करें", btnContinueVerification: "सत्यापन के लिए आगे बढ़ें", btnVerifyProceed: "सत्यापित करें और आगे बढ़ें", btnSendResetLink: "रीसेट लिंक भेजें",
+        noAccountText: "क्या आपके पास खाता नहीं है ?", createAccountLink: "खाता बनाएं", hasAccountText: "क्या आपके पास पहले से खाता है ?", signInLink: "साइन इन करें",
+        backToSignIn: "साइन इन पर वापस जाएं", dashHome: "होम", dashInventory: "इन्वेंटरी", dashSales: "बिक्री", dashFinance: "वित्त", dashHR: "एचआर",
+        dashAdmin: "एडमिन", btnAddExpense: "+ व्यय जोड़ें", helloGreeting: "नमस्ते!", btnLogout: "लॉग आउट", phSearchFeature: "खोजें..."
       },
       bn: {
-        navHome: "হোম",
-        navAbout: "আমাদের সম্পর্কে",
-        navService: "সেবা",
-        navContact: "যোগাযোগ",
-        navFeedback: "মতামত",
-        navSignUp: "সাইন আপ করুন",
-        welcomeBackHeading: "হ্যালো !<br>স্বাগতম",
-        createAccountHeading: "অ্যাকাউন্ট তৈরি করুন",
-        otpHeading: "ওটিপি প্রদান করুন",
-        resetPassHeading: "পাসওয়ার্ড রিসেট করুন",
-        phEnterEmail: "ইমেল লিখুন",
-        phPassword: "পাসওয়ার্ড",
-        phFullName: "সম্পূর্ণ নাম",
-        phEnterOtp: "ওটিপি লিখুন",
-        phRegisteredEmail: "নিবন্ধিত ইমেল",
-        btnSignIn: "সাইন ইন করুন",
-        btnContinueVerification: "যাচাইকরণে এগিয়ে যান",
-        btnVerifyProceed: "যাচাই করুন এবং এগিয়ে যান",
-        btnSendResetLink: "রিসেট লিঙ্ক পাঠান",
-        noAccountText: "অ্যাকাউন্ট নেই ?",
-        createAccountLink: "অ্যাকাউন্ট তৈরি করুন",
-        hasAccountText: "ইতিমধ্যে একটি অ্যাকাউন্ট আছে ?",
-        signInLink: "সাইন ইন করুন",
-        backToSignIn: "সাইন ইন-এ ফিরে যান",
-        dashHome: "হোম",
-        dashInventory: "ইনভেন্টরি",
-        dashSales: "বিক্রয়",
-        dashFinance: "অর্থায়ন",
-        dashHR: "এইচআর",
-        dashAdmin: "অ্যাডমিন",
-        btnAddExpense: "+ খরচ যোগ করুন",
-        helloGreeting: "হ্যালো!",
-        btnLogout: "লগ আউট",
-        phSearchFeature: "অনুসন্ধান করুন..."
+        navHome: "হোম", navAbout: "আমাদের সম্পর্কে", navService: "সেবা", navContact: "যোগাযোগ", navFeedback: "মতামত", navSignUp: "সাইন আপ করুন",
+        welcomeBackHeading: "হ্যালো !<br>স্বাগতম", createAccountHeading: "অ্যাকাউন্ট তৈরি করুন", otpHeading: "ওটিপি প্রদান করুন", resetPassHeading: "পাসওয়ার্ড রিসেট করুন",
+        phEnterEmail: "ইমেল লিখুন", phPassword: "পাসওয়ার্ড", phFullName: "সম্পূর্ণ নাম", phEnterOtp: "ওটিপি লিখুন", phRegisteredEmail: "নিবন্ধিত ইমেল",
+        btnSignIn: "সাইন ইন করুন", btnContinueVerification: "যাচাইকরণে এগিয়ে যান", btnVerifyProceed: "যাচাই করুন এবং এগিয়ে যান", btnSendResetLink: "রিসেট লিঙ্ক পাঠান",
+        noAccountText: "অ্যাকাউন্ট নেই ?", createAccountLink: "অ্যাকাউন্ট তৈরি করুন", hasAccountText: "ইতিমধ্যে একটি অ্যাকাউন্ট আছে ?", signInLink: "সাইন ইন করুন",
+        backToSignIn: "সাইন ইন-এ ফিরে যান", dashHome: "হোম", dashInventory: "ইনভেন্টরি", dashSales: "বিক্রয়", dashFinance: "অর্থায়ন", dashHR: "এইচআর",
+        dashAdmin: "অ্যাডমিন", btnAddExpense: "+ খরচ যোগ করুন", helloGreeting: "হ্যালো!", btnLogout: "লগ আউট", phSearchFeature: "অনুসন্ধান করুন..."
       },
       te: {
-        navHome: "హోమ్",
-        navAbout: "గురించి",
-        navService: "సేవలు",
-        navContact: "సంప్రదించండి",
-        navFeedback: "అభిప్రాయం",
-        navSignUp: "సైన్ అప్ చేయండి",
-        welcomeBackHeading: "హలో !<br>సుస్వాగతం",
-        createAccountHeading: "ఖాతాను సృష్టించండి",
-        otpHeading: "OTP ని నమోదు చేయండి",
-        resetPassHeading: "పాస్‌వర్డ్‌ను రీసెట్ చేయండి",
-        phEnterEmail: "ఇమెయిల్ నమోదు చేయండి",
-        phPassword: "పాస్‌వర్డ్",
-        phFullName: "పూర్తి పేరు",
-        phEnterOtp: "OTP ని నమోదు చేయండి",
-        phRegisteredEmail: "నమోదిత ఇమెయిల్",
-        btnSignIn: "సైన్ ఇన్ చేయండి",
-        btnContinueVerification: "పరిశీలనకు కొనసాగండి",
-        btnVerifyProceed: "సరిచూసి ముందడుగు వేయండి",
-        btnSendResetLink: "రీసెట్ లింక్‌ను పంపండి",
-        noAccountText: "ఖాతా లేదా ?",
-        createAccountLink: "ఖాతాను సృష్టించండి",
-        hasAccountText: "ఇప్పటికే ఖాతా ఉందా ?",
-        signInLink: "సైన్ ఇన్ చేయండి",
-        backToSignIn: "సైన్ ఇన్ కి తిరిగి వెళ్ళండి",
-        dashHome: "హోమ్",
-        dashInventory: "ఇన్వెంటరీ",
-        dashSales: "సేల్స్",
-        dashFinance: "ఫైనాన్స్",
-        dashHR: "HR",
-        dashAdmin: "అడ్మిన్",
-        btnAddExpense: "+ ఖర్చును జోడించండి",
-        helloGreeting: "హలో!",
-        btnLogout: "లాగ్ అవుట్",
-        phSearchFeature: "శోధించండి..."
+        navHome: "హోమ్", navAbout: "గురించి", navService: "సేవలు", navContact: "సంప్రదించండి", navFeedback: "అభిప్రాయం", navSignUp: "సైన్ అప్ చేయండి",
+        welcomeBackHeading: "హలో !<br>సుస్వాగతం", createAccountHeading: "ఖాతాను సృష్టించండి", otpHeading: "OTP ని నమోదు చేయండి", resetPassHeading: "పాస్‌వర్డ్‌ను రీసెట్ చేయండి",
+        phEnterEmail: "ఇమెయిల్ నమోదు చేయండి", phPassword: "పాస్‌వర్డ్", phFullName: "పూర్తి పేరు", phEnterOtp: "OTP ని నమోదు చేయండి", phRegisteredEmail: "నమోదిత ఇమెయిల్",
+        btnSignIn: "సైన్ ఇన్ చేయండి", btnContinueVerification: "పరిశీలనకు కొనసాగండి", btnVerifyProceed: "సరిచూసి ముందడుగు వేయండి", btnSendResetLink: "రీసెట్ లింక్‌ను పంపండి",
+        noAccountText: "ఖాతా లేదా ?", createAccountLink: "ఖాతాను సృష్టించండి", hasAccountText: "ఇప్పటికే ఖాతా ఉందా ?", signInLink: "సైన్ ఇన్ చేయండి",
+        backToSignIn: "సైన్ ఇన్ కి తిరిగి వెళ్ళండి", dashHome: "హోమ్", dashInventory: "ఇన్వెంటరీ", dashSales: "సేల్స్", dashFinance: "ఫైనాన్స్", dashHR: "HR",
+        dashAdmin: "అడ్మిన్", btnAddExpense: "+ ఖర్చును జోడించండి", helloGreeting: "హలో!", btnLogout: "లాగ్ అవుట్", phSearchFeature: "శోధించండి..."
       },
       mr: {
-        navHome: "होम",
-        navAbout: "आमच्याबद्दल",
-        navService: "सेवा",
-        navContact: "संपर्क",
-        navFeedback: "प्रतिक्रिया",
-        navSignUp: "साइन अप करा",
-        welcomeBackHeading: "नमस्कार !<br>पुन्हा स्वागत आहे",
-        createAccountHeading: "खाते तयार करा",
-        otpHeading: "OTP प्रविष्ट करा",
-        resetPassHeading: "पासवर्ड रीसेट करा",
-        phEnterEmail: "ईमेल प्रविष्ट करा",
-        phPassword: "पासवर्ड",
-        phFullName: "पूर्ण नाव",
-        phEnterOtp: "OTP प्रविष्ट करा",
-        phRegisteredEmail: "नोंदणीकृत ईमेल",
-        btnSignIn: "साइन इन करा",
-        btnContinueVerification: "पडताळणीसाठी पुढे जा",
-        btnVerifyProceed: "पडताळणी करा आणि पुढे जा",
-        btnSendResetLink: "रीसेट लिंक पाठवा",
-        noAccountText: "खाते नाही ?",
-        createAccountLink: "खाते तयार करा",
-        hasAccountText: "आधीच खाते आहे ?",
-        signInLink: "साइन इन करा",
-        backToSignIn: "साइन इन वर परत जा",
-        dashHome: "होम",
-        dashInventory: "इन्व्हेंटरी",
-        dashSales: "विक्री",
-        dashFinance: "वित्त",
-        dashHR: "एचआर",
-        dashAdmin: "ॲडमिन",
-        btnAddExpense: "+ खर्च जोडा",
-        helloGreeting: "नमस्कार!",
-        btnLogout: "लॉग आउट",
-        phSearchFeature: "शोधा..."
+        navHome: "होम", navAbout: "आमच्याबद्दल", navService: "सेवा", navContact: "संपर्क", navFeedback: "प्रतिक्रिया", navSignUp: "साइन अप करा",
+        welcomeBackHeading: "नमस्कार !<br>पुन्हा स्वागत आहे", createAccountHeading: "खाते तयार करा", otpHeading: "OTP प्रविष्ट करा", resetPassHeading: "पासवर्ड रीसेट करा",
+        phEnterEmail: "ईमेल प्रविष्ट करा", phPassword: "पासवर्ड", phFullName: "पूर्ण नाव", phEnterOtp: "OTP प्रविष्ट करा", phRegisteredEmail: "नोंदणीकृत ईमेल",
+        btnSignIn: "साइन इन करा", btnContinueVerification: "पडताळणीसाठी पुढे जा", btnVerifyProceed: "पडताळणी करा आणि पुढे जा", btnSendResetLink: "रीसेट लिंक पाठवा",
+        noAccountText: "खाते नाही ?", createAccountLink: "खाते तयार करा", hasAccountText: "आधीच खाते आहे ?", signInLink: "साइन इन करा",
+        backToSignIn: "साinline वर परत जा", dashHome: "होम", dashInventory: "इन्व्हेंटरी", dashSales: "विक्री", dashFinance: "वित्त", dashHR: "एचआर",
+        dashAdmin: "ॲडमिन", btnAddExpense: "+ खर्च जोडा", helloGreeting: "नमस्कार!", btnLogout: "लॉग आउट", phSearchFeature: "शोधा..."
       }
     };
 
-    // LANGUAGE SWITCHER HANDLER
     const currentLangBtn = document.getElementById('current-lang-btn');
     const langMenu = document.getElementById('lang-menu');
 
@@ -1598,19 +1392,13 @@
       langMenu?.classList.toggle('hidden');
     });
 
-    document.addEventListener('click', () => {
-      langMenu?.classList.add('hidden');
-    });
+    document.addEventListener('click', () => langMenu?.classList.add('hidden'));
 
     document.querySelectorAll('.lang-option').forEach(opt => {
-      opt.addEventListener('click', (e) => {
+      opt.addEventListener('click', () => {
         const langKey = opt.getAttribute('data-lang');
         const langText = opt.innerText.split(' ')[0];
-        
-        if (currentLangBtn) {
-          currentLangBtn.innerText = `${langText} ▾`;
-        }
-
+        if (currentLangBtn) currentLangBtn.innerText = `${langText} ▾`;
         applyLanguage(langKey);
         langMenu?.classList.add('hidden');
       });
@@ -1618,19 +1406,13 @@
 
     function applyLanguage(lang) {
       const dict = translations[lang] || translations['en'];
-
       document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
-        if (dict[key]) {
-          el.innerHTML = dict[key];
-        }
+        if (dict[key]) el.innerHTML = dict[key];
       });
-
       document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
         const key = el.getAttribute('data-i18n-placeholder');
-        if (dict[key]) {
-          el.placeholder = dict[key];
-        }
+        if (dict[key]) el.placeholder = dict[key];
       });
     }
 
@@ -1639,20 +1421,17 @@
     let currentSalesType = 'Income';
     let currentSalesCategory = 'General';
 
-    // Application Data & Reporting Filters
     let salesData = [];
     let stockData = [];
     let activeSalesPeriod = 'daily';
     let activeStockPeriod = 'daily';
 
-    // Set Initial Filter Values
     const todayStr = new Date().toISOString().split('T')[0];
     const sCal = document.getElementById('sales-calendar-filter');
     const stCal = document.getElementById('stock-calendar-filter');
     if (sCal) sCal.value = todayStr;
     if (stCal) stCal.value = todayStr;
 
-    // Navigation Switcher
     const navItems = document.querySelectorAll('.sidebar-nav .nav-item');
     const panels = document.querySelectorAll('.panel-content');
     const stockSubtabs = document.getElementById('stock-subtabs');
@@ -1667,7 +1446,6 @@
 
         document.getElementById('page-title').innerText = `${panelName} management`;
 
-        // Toggle sub-tabs visibility based on current panel
         if (panelKey === 'stock') {
           stockSubtabs?.classList.remove('hidden');
         } else {
@@ -1697,7 +1475,6 @@
       });
     });
 
-    // Sub-tab Navigation (Products vs Dashboard in Stock View)
     const btnTabProducts = document.getElementById('tab-btn-products');
     const btnTabDashboard = document.getElementById('tab-btn-dashboard');
     const stockProductsSubview = document.getElementById('stock-products-subview');
@@ -1720,9 +1497,7 @@
 
     function updateStockDashboardMetrics() {
       let totalVal = 0;
-      stockData.forEach(item => {
-        totalVal += parseFloat(item.price) || 0;
-      });
+      stockData.forEach(item => { totalVal += parseFloat(item.price) || 0; });
       const count = stockData.length;
       const avgPrice = count > 0 ? (totalVal / count) : 0;
 
@@ -1735,7 +1510,6 @@
       if (avgEl) avgEl.innerText = `$ ${avgPrice.toFixed(2)}`;
     }
 
-    // Theme Toggle Handler
     const themeBtn = document.getElementById('theme-toggle');
     themeBtn?.addEventListener('click', () => {
       const currentTheme = document.documentElement.getAttribute('data-theme');
@@ -1748,7 +1522,6 @@
       }
     });
 
-    // Dynamic Search Toggle & Filter
     const searchContainer = document.getElementById('search-container');
     const searchToggleBtn = document.getElementById('btn-search-toggle');
     const searchInput = document.getElementById('global-search-input');
@@ -1771,22 +1544,15 @@
     function filterSidebar(query) {
       navItems.forEach(item => {
         const text = item.innerText.toLowerCase();
-        if (text.includes(query)) {
-          item.style.display = 'flex';
-        } else {
-          item.style.display = 'none';
-        }
+        item.style.display = text.includes(query) ? 'flex' : 'none';
       });
 
       if (query) {
         const visibleItems = Array.from(navItems).filter(item => item.style.display !== 'none');
-        if (visibleItems.length === 1) {
-          visibleItems[0].click();
-        }
+        if (visibleItems.length === 1) visibleItems[0].click();
       }
     }
 
-    // Action Button Listeners
     document.getElementById('btn-add-bill')?.addEventListener('click', () => {
       const codeInput = document.getElementById('bill-code');
       const nameInput = document.getElementById('bill-name');
@@ -1802,11 +1568,8 @@
       }
 
       const newItem = {
-        code,
-        name,
-        price: parseFloat(price),
-        category: currentSalesCategory,
-        type: currentSalesType,
+        code, name, price: parseFloat(price),
+        category: currentSalesCategory, type: currentSalesType,
         timestamp: new Date().toISOString()
       };
 
@@ -1830,15 +1593,10 @@
       });
 
       tbody.appendChild(tr);
-
-      codeInput.value = '';
-      nameInput.value = '';
-      priceInput.value = '';
-
+      codeInput.value = ''; nameInput.value = ''; priceInput.value = '';
       updateSalesReport();
     });
 
-    // CUSTOM ADD STOCK MODAL LOGIC
     const addStockModal = document.getElementById('add-stock-modal');
     const stockNameInput = document.getElementById('modal-stock-name');
     const stockPriceInput = document.getElementById('modal-stock-price');
@@ -1897,45 +1655,26 @@
       addStockModal?.classList.add('hidden');
     });
 
-    // DOM Elements - Modals & Buttons
     const salesReportModal = document.getElementById('sales-report-modal');
     const stockReportModal = document.getElementById('stock-report-modal');
     const metricDetailsModal = document.getElementById('metric-details-modal');
 
-    const btnOpenSalesReport = document.getElementById('btn-open-sales-report');
-    const btnCloseSalesReport = document.getElementById('btn-close-sales-report');
-    const btnOpenStockReport = document.getElementById('btn-open-stock-report');
-    const btnCloseStockReport = document.getElementById('btn-close-stock-report');
-    const btnCloseMetricDetails = document.getElementById('btn-close-metric-details');
-
-    // Filter Controls
-    const salesCalendarFilter = document.getElementById('sales-calendar-filter');
-    const stockCalendarFilter = document.getElementById('stock-calendar-filter');
-
-    // Modal Visibility Handlers
-    btnOpenSalesReport?.addEventListener('click', () => {
+    document.getElementById('btn-open-sales-report')?.addEventListener('click', () => {
       salesReportModal?.classList.remove('hidden');
       updateSalesReport();
     });
+    document.getElementById('btn-close-sales-report')?.addEventListener('click', () => salesReportModal?.classList.add('hidden'));
 
-    btnCloseSalesReport?.addEventListener('click', () => {
-      salesReportModal?.classList.add('hidden');
-    });
-
-    btnOpenStockReport?.addEventListener('click', () => {
+    document.getElementById('btn-open-stock-report')?.addEventListener('click', () => {
       stockReportModal?.classList.remove('hidden');
       updateStockReport();
     });
+    document.getElementById('btn-close-stock-report')?.addEventListener('click', () => stockReportModal?.classList.add('hidden'));
+    document.getElementById('btn-close-metric-details')?.addEventListener('click', () => metricDetailsModal?.classList.add('hidden'));
 
-    btnCloseStockReport?.addEventListener('click', () => {
-      stockReportModal?.classList.add('hidden');
-    });
+    const salesCalendarFilter = document.getElementById('sales-calendar-filter');
+    const stockCalendarFilter = document.getElementById('stock-calendar-filter');
 
-    btnCloseMetricDetails?.addEventListener('click', () => {
-      metricDetailsModal?.classList.add('hidden');
-    });
-
-    // Date/Tab Change Listeners for Sales Report
     salesCalendarFilter?.addEventListener('change', updateSalesReport);
     document.querySelectorAll('.sales-report-tab').forEach(tab => {
       tab.addEventListener('click', (e) => {
@@ -1946,7 +1685,6 @@
       });
     });
 
-    // Date/Tab Change Listeners for Stock Report
     stockCalendarFilter?.addEventListener('change', updateStockReport);
     document.querySelectorAll('.stock-report-tab').forEach(tab => {
       tab.addEventListener('click', (e) => {
@@ -1957,7 +1695,6 @@
       });
     });
 
-    // Date Filter Logic (Daily, Monthly, Yearly)
     function matchesPeriodFilter(itemDateStr, targetDateStr, period) {
       if (!itemDateStr || !targetDateStr) return true;
       const itemDate = new Date(itemDateStr);
@@ -1966,27 +1703,20 @@
       if (period === 'daily') {
         return itemDate.toISOString().split('T')[0] === targetDateStr;
       } else if (period === 'monthly') {
-        return itemDate.getFullYear() === targetDate.getFullYear() &&
-               itemDate.getMonth() === targetDate.getMonth();
+        return itemDate.getFullYear() === targetDate.getFullYear() && itemDate.getMonth() === targetDate.getMonth();
       } else if (period === 'yearly') {
         return itemDate.getFullYear() === targetDate.getFullYear();
       }
       return true;
     }
 
-    // Update Sales Report UI Logic
     function updateSalesReport() {
       const selectedDate = salesCalendarFilter.value;
       const filteredSales = salesData.filter(item => 
         matchesPeriodFilter(item.timestamp || item.date, selectedDate, activeSalesPeriod)
       );
 
-      let totalIncome = 0;
-      let totalCost = 0;
-      let roomsTotal = 0;
-      let foodTotal = 0;
-      let functionTotal = 0;
-      let stockCostTotal = 0;
+      let totalIncome = 0, totalCost = 0, roomsTotal = 0, foodTotal = 0, functionTotal = 0, stockCostTotal = 0;
 
       filteredSales.forEach(item => {
         const price = parseFloat(item.price) || 0;
@@ -2004,7 +1734,6 @@
       const netProfit = totalIncome - totalCost;
       const netLoss = netProfit < 0 ? Math.abs(netProfit) : 0;
 
-      // Update Dashboard & Modal Elements
       document.getElementById('sr-total-revenue').innerText = `$ ${totalIncome.toFixed(2)}`;
       document.getElementById('sr-total-cost').innerText = `$ ${totalCost.toFixed(2)}`;
       document.getElementById('sr-net-profit').innerText = `$ ${Math.max(0, netProfit).toFixed(2)}`;
@@ -2016,7 +1745,6 @@
       document.getElementById('sr-cat-stock').innerText = `$ ${stockCostTotal.toFixed(2)}`;
     }
 
-    // Update Stock Report UI Logic
     function updateStockReport() {
       const selectedDate = stockCalendarFilter.value;
       const filteredStock = stockData.filter(item => 
@@ -2049,7 +1777,6 @@
       document.getElementById('st-avg-price').innerText = `$ ${avgPrice.toFixed(2)}`;
     }
 
-    // Metric Details Drilldown Handler
     window.openMetricDetails = function(title, categoryFilter) {
       const modal = document.getElementById('metric-details-modal');
       const titleEl = document.getElementById('metric-details-title');
@@ -2079,7 +1806,6 @@
       modal?.classList.remove('hidden');
     };
 
-    // Auth Views Navigation
     const views = {
       signin: document.getElementById('signin-view'),
       signup: document.getElementById('signup-view'),
@@ -2115,12 +1841,8 @@
     document.getElementById('btn-to-signin')?.addEventListener('click', () => showView('signin'));
     document.getElementById('top-nav-signup')?.addEventListener('click', () => showView('signup'));
     document.getElementById('btn-forgot-to-signin')?.addEventListener('click', () => showView('signin'));
-    
-    document.getElementById('btn-power')?.addEventListener('click', () => {
-      location.reload();
-    });
+    document.getElementById('btn-power')?.addEventListener('click', () => location.reload());
 
-    // SIGN UP FLOW & OTP DISPATCH
     document.getElementById('signup-form')?.addEventListener('submit', async (e) => {
       e.preventDefault();
       const name = document.getElementById('signup-name').value;
@@ -2148,7 +1870,6 @@
       }
     });
 
-    // VERIFY OTP & CREATE USER
     document.getElementById('otp-form')?.addEventListener('submit', async (e) => {
       e.preventDefault();
       const enteredOtp = document.getElementById('otp-input').value;
@@ -2176,7 +1897,6 @@
       }
     });
 
-    // SIGN IN
     document.getElementById('signin-form')?.addEventListener('submit', async (e) => {
       e.preventDefault();
       const email = document.getElementById('signin-email').value;
@@ -2189,7 +1909,6 @@
       }
     });
 
-    // FORGOT PASSWORD
     document.getElementById('forgot-form')?.addEventListener('submit', async (e) => {
       e.preventDefault();
       const email = document.getElementById('forgot-email').value;
@@ -2202,12 +1921,10 @@
       }
     });
 
-    // LOGOUT
     document.getElementById('btn-logout')?.addEventListener('click', () => {
       signOut(auth);
     });
 
-    // AUTH STATE LISTENER
     onAuthStateChanged(auth, (user) => {
       if (user) {
         currentUser = user;
