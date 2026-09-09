@@ -2120,6 +2120,57 @@
       location.reload();
     });
 
+    // SIGN IN FLOW
+    document.getElementById('signin-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('signin-email').value;
+      const pass = document.getElementById('signin-pass').value;
+
+      try {
+        await signInWithEmailAndPassword(auth, email, pass);
+      } catch (err) {
+        alert("Sign in failed: " + err.message);
+      }
+    });
+
+    // FORGOT PASSWORD FLOW
+    document.getElementById('forgot-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('forgot-email').value;
+
+      try {
+        await sendPasswordResetEmail(auth, email);
+        alert("Password reset email sent. Please check your inbox.");
+        showView('signin');
+      } catch (err) {
+        alert("Error: " + err.message);
+      }
+    });
+
+    // LOGOUT
+    document.getElementById('btn-logout')?.addEventListener('click', async () => {
+      try {
+        await signOut(auth);
+      } catch (err) {
+        alert("Error logging out: " + err.message);
+      }
+    });
+
+    // AUTH STATE OBSERVER
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        currentUser = user;
+        const name = user.displayName || user.email.split('@')[0];
+        document.getElementById('user-display-name').innerText = name;
+        document.getElementById('user-sidebar-name').innerText = name;
+        document.getElementById('user-sidebar-email').innerText = user.email;
+        showView('dashboard');
+      } else {
+        currentUser = null;
+        showView('signin');
+      }
+    });
+
     // SIGN UP FLOW & OTP DISPATCH
     document.getElementById('signup-form')?.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -2169,56 +2220,10 @@
             alert("Account created and verified successfully!");
           }
         } else {
-          alert(data.message || "Invalid OTP code.");
+          alert("Invalid OTP code. Please check and try again.");
         }
       } catch (err) {
-        alert("Verification error: " + err.message);
-      }
-    });
-
-    // SIGN IN
-    document.getElementById('signin-form')?.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const email = document.getElementById('signin-email').value;
-      const pass = document.getElementById('signin-pass').value;
-
-      try {
-        await signInWithEmailAndPassword(auth, email, pass);
-      } catch (err) {
-        alert("Authentication failed: " + err.message);
-      }
-    });
-
-    // FORGOT PASSWORD
-    document.getElementById('forgot-form')?.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const email = document.getElementById('forgot-email').value;
-      try {
-        await sendPasswordResetEmail(auth, email);
-        alert("Password reset email sent! Check your inbox.");
-        showView('signin');
-      } catch (err) {
-        alert("Error sending reset email: " + err.message);
-      }
-    });
-
-    // LOGOUT
-    document.getElementById('btn-logout')?.addEventListener('click', () => {
-      signOut(auth);
-    });
-
-    // AUTH STATE LISTENER
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        currentUser = user;
-        const nameVal = user.displayName || user.email.split('@')[0];
-        document.getElementById('user-display-name').innerText = nameVal;
-        document.getElementById('user-sidebar-name').innerText = nameVal;
-        document.getElementById('user-sidebar-email').innerText = user.email;
-        showView('dashboard');
-      } else {
-        currentUser = null;
-        showView('signin');
+        alert("Error verifying OTP: " + err.message);
       }
     });
   </script>
