@@ -140,7 +140,7 @@ app.post('/api/settings', (req, res) => {
 
 // Fallback Route for Single Page Application updated to index_6.html
 app.get(/(.*)/, (req, res) => {
-  res.sendFile(path.join(__dirname, 'index_6.html'));
+  res.sendFile(path.join(__dirname, 'index_9.html'));
 });
 
 // Start Server
