@@ -19,6 +19,20 @@ app.use(express.static(__dirname));
 // In-memory OTP store (stores email -> { otp, expiresAt })
 const otpStore = new Map();
 
+// In-memory System Settings store
+let settingsStore = {
+  brightness: 92,
+  nightLight: false,
+  adaptiveBrightness: true,
+  wallpaper: 'Live wallpaper',
+  sleep: 'After 30 seconds of inactivity',
+  autoRotate: true,
+  screenSaver: 'Clock',
+  colors: 'Natural',
+  fontSize: 'Default',
+  displaySize: 'Default',
+};
+
 // Configure Nodemailer Transporter
 const transporter = nodemailer.createTransport({
   service: process.env.EMAIL_SERVICE || 'gmail',
@@ -98,6 +112,29 @@ app.post('/api/verify-otp', async (req, res) => {
   } catch (err) {
     console.error('Error verifying OTP:', err);
     return res.status(500).json({ success: false, message: err.message || 'Server error verifying OTP.' });
+  }
+});
+
+// API Endpoint: Get Current System Settings
+app.get('/api/settings', (req, res) => {
+  try {
+    return res.status(200).json({ success: true, settings: settingsStore });
+  } catch (err) {
+    console.error('Error fetching settings:', err);
+    return res.status(500).json({ success: false, message: 'Server error retrieving settings.' });
+  }
+});
+
+// API Endpoint: Update System Settings
+app.post('/api/settings', (req, res) => {
+  try {
+    const newSettings = req.body;
+    settingsStore = { ...settingsStore, ...newSettings };
+    console.log('[SETTINGS DEBUG] Updated settings:', settingsStore);
+    return res.status(200).json({ success: true, settings: settingsStore, message: 'Settings updated successfully.' });
+  } catch (err) {
+    console.error('Error updating settings:', err);
+    return res.status(500).json({ success: false, message: 'Server error updating settings.' });
   }
 });
 
