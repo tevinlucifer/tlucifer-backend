@@ -685,7 +685,7 @@
       margin-bottom: 0;
     }
 
-    .form-row input {
+    .form-row input, .form-row select {
       width: 100%;
       padding: 10px 14px;
       background: var(--input-bg);
@@ -813,7 +813,7 @@
       font-weight: 600;
     }
 
-    .modal-form-group input {
+    .modal-form-group input, .modal-form-group select {
       width: 100%;
       padding: 12px 14px;
       background: var(--input-bg);
@@ -824,7 +824,7 @@
       outline: none;
     }
 
-    .modal-form-group input:focus {
+    .modal-form-group input:focus, .modal-form-group select:focus {
       border-color: var(--primary-brand);
     }
 
@@ -977,7 +977,7 @@
       </nav>
 
       <div style="margin-top:20px; margin-bottom: 20px;">
-        <button class="btn-primary" style="width:100%;" data-i18n="btnAddExpense">+ Add an expense</button>
+        <button class="btn-primary" id="btn-sidebar-add-expense" style="width:100%;" data-i18n="btnAddExpense">+ Add an expense</button>
       </div>
 
       <div class="sidebar-footer">
@@ -991,7 +991,7 @@
 
     <main class="dashboard-wrapper">
       <header class="navbar">
-        <div class="user-profile" style="width:100%; justify-space-between;">
+        <div class="user-profile" style="width:100%; justify-content: space-between;">
           <div style="display:flex; align-items:center; gap:12px;">
             <button id="theme-toggle" class="theme-toggle-btn" title="Toggle Theme">☀️</button>
             <!-- Interactive Search Bar -->
@@ -1033,9 +1033,14 @@
 
       <div id="panel-sales" class="panel-content hidden animated-view">
         <div style="display:flex; gap:12px; margin-bottom:16px;">
-          <input type="text" placeholder="🔍 Search products" style="flex:1; padding:10px 14px; background:var(--input-bg); border:1px solid var(--border-subtle); border-radius:8px; outline:none;" />
-          <select style="padding:10px 14px; background:var(--input-bg); border:1px solid var(--border-subtle); border-radius:8px; outline:none; font-weight:600;">
-            <option>Product category</option>
+          <input type="text" id="sales-search-input" placeholder="🔍 Search products" style="flex:1; padding:10px 14px; background:var(--input-bg); border:1px solid var(--border-subtle); border-radius:8px; outline:none;" />
+          <select id="sales-category-filter" style="padding:10px 14px; background:var(--input-bg); border:1px solid var(--border-subtle); border-radius:8px; outline:none; font-weight:600;">
+            <option value="All">All Categories</option>
+            <option value="Rooms">Rooms</option>
+            <option value="Food">Food</option>
+            <option value="Function">Function</option>
+            <option value="Stock">Stock</option>
+            <option value="General">General</option>
           </select>
         </div>
 
@@ -1051,8 +1056,25 @@
               <input type="text" id="bill-code" placeholder="AUTO-101">
             </div>
             <div class="input-group">
-              <label style="display:block; font-size:12px; margin-bottom:4px; color:var(--text-muted);">Customer Name</label>
+              <label style="display:block; font-size:12px; margin-bottom:4px; color:var(--text-muted);">Customer / Item Name</label>
               <input type="text" id="bill-name" placeholder="Enter Name">
+            </div>
+            <div class="input-group">
+              <label style="display:block; font-size:12px; margin-bottom:4px; color:var(--text-muted);">Category</label>
+              <select id="bill-category">
+                <option value="Rooms">Rooms</option>
+                <option value="Food">Food</option>
+                <option value="Function">Function</option>
+                <option value="Stock">Stock</option>
+                <option value="General" selected>General</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label style="display:block; font-size:12px; margin-bottom:4px; color:var(--text-muted);">Type</label>
+              <select id="bill-type">
+                <option value="Income">Income</option>
+                <option value="Cost">Cost</option>
+              </select>
             </div>
             <div class="input-group">
               <label style="display:block; font-size:12px; margin-bottom:4px; color:var(--text-muted);">Price ($)</label>
@@ -1067,8 +1089,9 @@
                 <tr>
                   <th>Code</th>
                   <th>Name</th>
-                  <th>Price ($)</th>
+                  <th>Type</th>
                   <th>Category</th>
+                  <th>Price ($)</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -1636,8 +1659,6 @@
 
     let tempUserData = { mode: '', name: '', email: '', pass: '' };
     let currentUser = null;
-    let currentSalesType = 'Income';
-    let currentSalesCategory = 'General';
 
     // Application Data & Reporting Filters
     let salesData = [];
@@ -1649,8 +1670,10 @@
     const todayStr = new Date().toISOString().split('T')[0];
     const sCal = document.getElementById('sales-calendar-filter');
     const stCal = document.getElementById('stock-calendar-filter');
+    const stPanelCal = document.getElementById('stock-panel-calendar-filter');
     if (sCal) sCal.value = todayStr;
     if (stCal) stCal.value = todayStr;
+    if (stPanelCal) stPanelCal.value = todayStr;
 
     // Navigation Switcher
     const navItems = document.querySelectorAll('.sidebar-nav .nav-item');
@@ -1786,15 +1809,74 @@
       }
     }
 
+    // Render Sales Table View with Filters
+    function renderSalesTable() {
+      const tbody = document.getElementById('sales-table-body');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      const searchQuery = document.getElementById('sales-search-input')?.value.toLowerCase().trim() || '';
+      const catFilter = document.getElementById('sales-category-filter')?.value || 'All';
+
+      const filtered = salesData.filter(item => {
+        const matchesQuery = (item.code && item.code.toLowerCase().includes(searchQuery)) || 
+                             (item.name && item.name.toLowerCase().includes(searchQuery));
+        const matchesCategory = (catFilter === 'All') || (item.category === catFilter);
+        return matchesQuery && matchesCategory;
+      });
+
+      filtered.forEach(newItem => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${newItem.code}</td>
+          <td>${newItem.name}</td>
+          <td><span style="color:${newItem.type === 'Income' ? '#10b981' : '#ef4444'}; font-weight:600;">${newItem.type}</span></td>
+          <td>${newItem.category}</td>
+          <td>$ ${newItem.price.toFixed(2)}</td>
+          <td><button style="color:#ef4444; background:none; border:none; cursor:pointer;" class="btn-delete-row">Delete</button></td>
+        `;
+
+        tr.querySelector('.btn-delete-row').addEventListener('click', () => {
+          const idx = salesData.indexOf(newItem);
+          if (idx > -1) salesData.splice(idx, 1);
+          renderSalesTable();
+          updateSalesReport();
+        });
+
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Sales Table Event Listeners for Filters
+    document.getElementById('sales-search-input')?.addEventListener('input', renderSalesTable);
+    document.getElementById('sales-category-filter')?.addEventListener('change', renderSalesTable);
+
+    // Sidebar Add Expense Quick Button Handler
+    document.getElementById('btn-sidebar-add-expense')?.addEventListener('click', () => {
+      const salesNavItem = document.querySelector('.sidebar-nav .nav-item[data-panel="sales"]');
+      if (salesNavItem) salesNavItem.click();
+
+      const typeSelect = document.getElementById('bill-type');
+      const catSelect = document.getElementById('bill-category');
+      if (typeSelect) typeSelect.value = 'Cost';
+      if (catSelect) catSelect.value = 'Stock';
+
+      document.getElementById('bill-name')?.focus();
+    });
+
     // Action Button Listeners
     document.getElementById('btn-add-bill')?.addEventListener('click', () => {
       const codeInput = document.getElementById('bill-code');
       const nameInput = document.getElementById('bill-name');
       const priceInput = document.getElementById('bill-price');
+      const catInput = document.getElementById('bill-category');
+      const typeInput = document.getElementById('bill-type');
 
       const code = codeInput.value.trim() || 'AUTO-' + Math.floor(Math.random() * 1000);
       const name = nameInput.value.trim();
       const price = priceInput.value.trim();
+      const category = catInput ? catInput.value : 'General';
+      const type = typeInput ? typeInput.value : 'Income';
 
       if (!name || !price) {
         alert('Please enter Name and Price.');
@@ -1805,31 +1887,14 @@
         code,
         name,
         price: parseFloat(price),
-        category: currentSalesCategory,
-        type: currentSalesType,
+        category,
+        type,
         timestamp: new Date().toISOString()
       };
 
       salesData.push(newItem);
 
-      const tbody = document.getElementById('sales-table-body');
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${newItem.code}</td>
-        <td>${newItem.name}</td>
-        <td>$ ${newItem.price.toFixed(2)}</td>
-        <td>${newItem.category}</td>
-        <td><button style="color:#ef4444; background:none; border:none; cursor:pointer;" class="btn-delete-row">Delete</button></td>
-      `;
-      
-      tr.querySelector('.btn-delete-row').addEventListener('click', () => {
-        const idx = salesData.indexOf(newItem);
-        if (idx > -1) salesData.splice(idx, 1);
-        tr.remove();
-        updateSalesReport();
-      });
-
-      tbody.appendChild(tr);
+      renderSalesTable();
 
       codeInput.value = '';
       nameInput.value = '';
@@ -1837,6 +1902,42 @@
 
       updateSalesReport();
     });
+
+    // Render Stock Table
+    function renderStockTable() {
+      const tbody = document.getElementById('stock-table-body');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      const filterDate = stPanelCal?.value;
+      const filteredStock = stockData.filter(item => {
+        if (!filterDate) return true;
+        const itemDate = new Date(item.timestamp || item.date).toISOString().split('T')[0];
+        return itemDate === filterDate;
+      });
+
+      filteredStock.forEach(newItem => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${newItem.code}</td>
+          <td>${newItem.name}</td>
+          <td>$ ${newItem.price.toFixed(2)}</td>
+          <td><button style="color:#ef4444; background:none; border:none; cursor:pointer;" class="btn-delete-row">Delete</button></td>
+        `;
+
+        tr.querySelector('.btn-delete-row')?.addEventListener('click', () => {
+          const idx = stockData.indexOf(newItem);
+          if (idx > -1) stockData.splice(idx, 1);
+          renderStockTable();
+          updateStockReport();
+          updateStockDashboardMetrics();
+        });
+
+        tbody.appendChild(tr);
+      });
+    }
+
+    stPanelCal?.addEventListener('change', renderStockTable);
 
     // CUSTOM ADD STOCK MODAL LOGIC
     const addStockModal = document.getElementById('add-stock-modal');
@@ -1871,27 +1972,7 @@
 
       stockData.push(newItem);
 
-      const tbody = document.getElementById('stock-table-body');
-      if (tbody) {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${newItem.code}</td>
-          <td>${newItem.name}</td>
-          <td>$ ${newItem.price.toFixed(2)}</td>
-          <td><button style="color:#ef4444; background:none; border:none; cursor:pointer;" class="btn-delete-row">Delete</button></td>
-        `;
-
-        tr.querySelector('.btn-delete-row')?.addEventListener('click', () => {
-          const idx = stockData.indexOf(newItem);
-          if (idx > -1) stockData.splice(idx, 1);
-          tr.remove();
-          updateStockReport();
-          updateStockDashboardMetrics();
-        });
-
-        tbody.appendChild(tr);
-      }
-
+      renderStockTable();
       updateStockReport();
       updateStockDashboardMetrics();
       addStockModal?.classList.add('hidden');
